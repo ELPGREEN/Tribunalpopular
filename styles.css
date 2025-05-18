@@ -1,20 +1,25 @@
 /* Estilo Geral */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e9ecef;
     margin: 0;
-    padding: 20px;
-    color: #333;
+    padding: 30px 20px;
+    color: #2c3e50;
 }
 
 .screen {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: #fff;
+    padding: 30px 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0 auto 40px auto;
     text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.screen:hover {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.18);
 }
 
 .hidden {
@@ -23,12 +28,12 @@ body {
 
 /* Animações */
 .fade-in {
-    animation: fadeIn 0.5s ease-in;
+    animation: fadeIn 0.6s ease-in forwards;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
 }
 
 /* Notificações */
@@ -37,12 +42,14 @@ body {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #333;
+    background: linear-gradient(90deg, #007bff, #0056b3);
     color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 14px 30px;
+    border-radius: 30px;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.4s ease;
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.6);
+    font-weight: 600;
     z-index: 1000;
 }
 
@@ -53,40 +60,67 @@ body {
 /* Barras de Progresso */
 progress {
     width: 100%;
-    height: 20px;
-    margin: 10px 0;
+    height: 24px;
+    margin: 15px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    appearance: none;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #ddd;
 }
 
 progress::-webkit-progress-value {
-    background: #4caf50;
+    background: linear-gradient(90deg, #4caf50, #2e7d32);
+    transition: width 0.3s ease;
 }
 
 progress::-moz-progress-bar {
-    background: #4caf50;
+    background: linear-gradient(90deg, #4caf50, #2e7d32);
+    transition: width 0.3s ease;
 }
 
 /* Botões */
 button {
-    background: #007bff;
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
+    padding: 12px 30px;
+    margin: 10px 5px;
+    border-radius: 30px;
     cursor: pointer;
-    transition: background 0.3s;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 button:hover {
-    background: #0056b3;
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    box-shadow: 0 8px 20px rgba(0, 86, 179, 0.7);
+}
+
+button i {
+    font-size: 1.3rem;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
 /* Erros */
 #nameError {
-    color: red;
-    margin-top: 10px;
+    color: #e74c3c;
+    margin-top: 15px;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease;
+    font-weight: 600;
 }
 
 #nameError.show {
@@ -96,10 +130,42 @@ button:hover {
 /* Telas Específicas */
 #case-evidences, #investigation-options, #decision-options {
     text-align: left;
-    margin: 20px 0;
+    margin: 30px 0;
+    padding-left: 15px;
+    border-left: 4px solid #007bff;
+    font-size: 1.1rem;
+    color: #34495e;
 }
 
 #media-reactions {
     text-align: left;
     font-style: italic;
+    color: #6c757d;
+    margin-top: 15px;
 }
+
+/* Ícones FontAwesome (caso use) */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* Exemplo para usar ícones dentro do seu html:
+<button><i class="fas fa-play"></i> Play</button>
+*/
+  .intro-image {
+      max-width: 90%;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .icon {
+      margin-right: 8px;
+      color: #444;
+    }
+    .screen p strong i {
+      margin-right: 5px;
+      color: #2c3e50;
+    }
+    progress {
+      width: 100%;
+      height: 20px;
+    }
