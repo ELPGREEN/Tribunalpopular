@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supremo Tribunal Popular - Jogo de Decisões</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Supremo Tribunal Popular</h1>
+        <div id="dificuldade">
+            <label>Escolha a Dificuldade:</label>
+            <select id="dificuldade-select">
+                <option value="Facil">Fácil</option>
+                <option value="Medio">Médio</option>
+                <option value="Dificil">Difícil</option>
+            </select>
+            <button id="iniciar-jogo">Iniciar Jogo</button>
+        </div>
+        <div id="jogo" style="display: none;">
+            <div id="status">
+                Nível: <span id="nivel">1</span> | Experiência: <span id="experiencia">0</span>/50 |
+                Reputação: <span id="reputacao">50</span> | Recursos: <span id="recursos">Financeiros: 20, Políticos: 10, Internacionais: 5</span> |
+                Pressão Pública: <span id="pressao">0</span> | Apoio Internacional: <span id="apoio">0</span> |
+                Integridade: <span id="integridade">100</span>
+            </div>
+            <div id="grupos">
+                Aprovação - Cidadãos: <span id="aprovacao-cidadaos">50</span> |
+                Imprensa: <span id="aprovacao-imprensa">50</span> |
+                Internacional: <span id="aprovacao-internacional">50</span>
+            </div>
+            <div id="reputacao-regional">
+                Reputação Regional - Norte: <span id="regiao-norte">50</span> |
+                Nordeste: <span id="regiao-nordeste">50</span> |
+                Sudeste: <span id="regiao-sudeste">50</span> |
+                Sul: <span id="regiao-sul">50</span> |
+                Centro-Oeste: <span id="regiao-centrooeste">50</span>
+            </div>
+            <div id="mapa"></div>
+            <div id="caso-texto"></div>
+            <div class="botoes">
+                <button id="condenar">Condenar</button>
+                <button id="absolver">Absolver</button>
+                <button id="investigar">Investigar Mais</button>
+                <button id="habilidades">Habilidades</button>
+                <button id="mitigar-protestos">Mitigar Protestos</button>
+            </div>
+            <div id="habilidades-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Escolha uma Habilidade</h2>
+                    <button id="olhar-investigativo">Olhar Investigativo</button>
+                    <button id="diplomacia-internacional">Diplomacia Internacional</button>
+                    <button id="carisma-publico">Carisma Público</button>
+                </div>
+            </div>
+            <div id="relatorio-modal" class="modal">
+                <div class="modal-content relatorio">
+                    <h2>Relatório de Investigação</h2>
+                    <div id="relatorio-texto"></div>
+                    <button id="fechar-relatorio">Fechar</button>
+                </div>
+            </div>
+            <div id="evento-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Evento</h2>
+                    <div id="evento-texto"></div>
+                    <div id="evento-escolhas"></div>
+                </div>
+            </div>
+            <div id="conquistas-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Conquistas</h2>
+                    <div id="conquistas-texto"></div>
+                    <button id="fechar-conquistas">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="bg-music" src="sounds/background.mp3" loop></audio>
+    <audio id="martelo-som" src="sounds/martelo.mp3"></audio>
+    <audio id="aplausos-som" src="sounds/aplausos.mp3"></audio>
+    <audio id="protesto-som" src="sounds/protesto.mp3"></audio>
+    <audio id="papel-som" src="sounds/papel.mp3"></audio>
+    <audio id="carimbo-som" src="sounds/carimbo.mp3"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
