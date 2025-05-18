@@ -1,77 +1,120 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Tribunal Supremo Popular</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Tribunal Supremo Popular</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-PvYOkZ6ZoIh1s6x3uMtcHZrV9LwAv4F7qXYTvZIo0nV7DqR+8cQe0qz3rLDr2EkqF+F9TCVwryiw7lC5WeJmZw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
 </head>
 <body>
-    <!-- Tela Inicial -->
-    <div id="intro-screen" class="screen">
-        <h1>Tribunal Supremo Popular</h1>
-        <p>Digite seu nome, Juiz Supremo:</p>
-        <input type="text" id="playerName" maxlength="20">
-        <div id="nameError"></div>
-        <button id="startButton">Iniciar</button>
-    </div>
 
-    <!-- Tela de Dificuldade -->
-    <div id="difficulty-screen" class="screen hidden">
-        <h2>Escolha a Dificuldade, <span id="displayName"></span></h2>
-        <button id="difficultyEasy">Fácil</button>
-        <button id="difficultyMedium">Médio</button>
-        <button id="difficultyHard">Difícil</button>
-    </div>
+<!-- Tela Inicial -->
+<div id="intro-screen" class="screen">
+  <img src="law-pictures-tna0v1l421r3uglj.jpg" alt="Sistema Legal Justo e Equilibrado" style="width:100%; height:auto;">
+  <h1><i class="fas fa-gavel icon"></i>Tribunal Supremo Popular</h1>
+  <p>Digite seu nome, Juiz Supremo:</p>
+  <input type="text" id="playerName" maxlength="20">
+  <div id="nameError"></div>
+  <button id="startButton">Iniciar</button>
+</div>
 
-    <!-- Tela do Caso -->
-    <div id="case-screen" class="screen hidden">
-        <h2 id="case-title"></h2>
-        <p id="case-description"></p>
-        <div id="case-evidences"></div>
-        <div id="investigation-options"></div>
-        <div id="decision-options"></div>
-        <button id="viewMediaButton">Ver Mídia</button>
-        <h3>Reputação</h3>
-        <p>Apoio Popular: <span id="apoioPopular"></span></p>
-        <progress id="apoioPopularBar" max="100" value="50"></progress>
-        <p>Respeito Institucional: <span id="respeitoInstitucional"></span></p>
-        <progress id="respeitoInstitucionalBar" max="100" value="50"></progress>
-        <p>Influência Política: <span id="influenciaPolitica"></span></p>
-        <progress id="influenciaPoliticaBar" max="100" value="50"></progress>
-        <p>Relação com a Imprensa: <span id="relacaoImprensa"></span></p>
-        <progress id="relacaoImprensaBar" max="100" value="50"></progress>
-        <p>Relação com o Governo: <span id="relacaoGoverno"></span></p>
-        <progress id="relacaoGovernoBar" max="100" value="50"></progress>
-        <p>Relação com ONGs: <span id="relacaoONGs"></span></p>
-        <progress id="relacaoONGsBar" max="100" value="50"></progress>
-    </div>
+<!-- Tela de Dificuldade -->
+<div id="difficulty-screen" class="screen hidden">
+  <h2><i class="fas fa-scale-balanced icon"></i>Escolha a Dificuldade, <span id="displayName"></span></h2>
 
-    <!-- Tela de Mídia -->
-    <div id="media-screen" class="screen hidden">
-        <h2 id="media-headline"></h2>
-        <div id="media-reactions"></div>
-        <button onclick="showDiplomacyScreen()">Continuar</button>
-    </div>
+  <img src="uma-sala-de-tribunal-com-um-tribunal-e-um-relogio-na-parede_836919-1837.jpg" 
+       alt="Martelo de Juiz - Justiça" 
+       style="width:100%; height:auto; margin-bottom:20px; border-radius:8px;">
 
-    <!-- Tela de Diplomacia -->
-    <div id="diplomacy-screen" class="screen hidden">
-        <h2>Ações Diplomáticas, <span id="diplomacyName"></span></h2>
-        <button id="diplomacy-imprensa">Fortalecer Imprensa</button>
-        <button id="diplomacy-governo">Negociar com Governo</button>
-        <button id="diplomacy-ongs">Apoiar ONGs</button>
-        <button id="skip-diplomacy">Pular</button>
-    </div>
+  <p class="game-description">
+    Como Juiz Supremo do Tribunal Supremo Popular, você será responsável por julgar casos de grande impacto político e social.
+    Suas decisões afetarão a reputação com a população, governo, imprensa e organizações.
+    Cada escolha molda o equilíbrio de poder e revela as verdades ocultas de uma sociedade à beira do colapso.
+    Escolha a dificuldade e prepare-se para enfrentar dilemas morais, pressão diplomática e o peso da justiça.
+  </p>
 
-    <!-- Tela Final -->
-    <div id="end-screen" class="screen hidden">
-        <h2>Fim de Jogo, <span id="endName"></span></h2>
-        <p id="end-description"></p>
-        <button id="restartButton">Reiniciar</button>
-    </div>
+  <button id="difficultyEasy">Fácil</button>
+  <button id="difficultyMedium">Médio</button>
+  <button id="difficultyHard">Difícil</button>
+</div>
 
-    <!-- Notificação -->
-    <div id="notification"></div>
+<!-- Tela do Caso -->
+<div id="case-screen" class="screen hidden">
+  <h2 id="case-title"><i class="fas fa-file-alt icon"></i></h2>
+  <p id="case-description"></p>
+  <div id="case-evidences"></div>
+  <div id="investigation-options"></div>
+  <div id="decision-options"></div>
+  <button id="viewMediaButton"><i class="fas fa-newspaper icon"></i>Ver Mídia</button>
 
-    <script src="script.js"></script>
+  <h3><i class="fas fa-star-half-alt icon"></i>Reputação</h3>
+  
+  <p><strong><i class="fas fa-users"></i>Apoio Popular:</strong> Mede a confiança da população em suas decisões.</p>
+  <p>Apoio Popular: <span id="apoioPopular"></span></p>
+  <progress id="apoioPopularBar" max="100" value="50"></progress>
+
+  <p><strong><i class="fas fa-university"></i>Respeito Institucional:</strong> Consideração das instituições do Estado.</p>
+  <p>Respeito Institucional: <span id="respeitoInstitucional"></span></p>
+  <progress id="respeitoInstitucionalBar" max="100" value="50"></progress>
+
+  <p><strong><i class="fas fa-handshake"></i>Influência Política:</strong> Impacto de suas decisões no poder político.</p>
+  <p>Influência Política: <span id="influenciaPolitica"></span></p>
+  <progress id="influenciaPoliticaBar" max="100" value="50"></progress>
+
+  <p><strong><i class="fas fa-bullhorn"></i>Relação com a Imprensa:</strong> Como a mídia vê suas ações.</p>
+  <p>Relação com a Imprensa: <span id="relacaoImprensa"></span></p>
+  <progress id="relacaoImprensaBar" max="100" value="50"></progress>
+
+  <p><strong><i class="fas fa-landmark"></i>Relação com o Governo:</strong> Cooperação com os poderes executivos.</p>
+  <p>Relação com o Governo: <span id="relacaoGoverno"></span></p>
+  <progress id="relacaoGovernoBar" max="100" value="50"></progress>
+
+  <p><strong><i class="fas fa-leaf"></i>Relação com ONGs:</strong> Aprovação de entidades civis e humanitárias.</p>
+  <p>Relação com ONGs: <span id="relacaoONGs"></span></p>
+  <progress id="relacaoONGsBar" max="100" value="50"></progress>
+</div>
+
+<!-- Tela de Mídia -->
+<div id="media-screen" class="screen hidden">
+  <h2><i class="fas fa-tv icon"></i><span id="media-headline"></span></h2>
+  <div id="media-reactions"></div>
+  <button onclick="showDiplomacyScreen()">Continuar</button>
+</div>
+
+<!-- Tela de Diplomacia -->
+<div id="diplomacy-screen" class="screen hidden">
+  <h2><i class="fas fa-globe icon"></i>Ações Diplomáticas, <span id="diplomacyName"></span></h2>
+  <p class="diplomacy-description">
+    Neste momento, você pode influenciar diretamente o cenário externo ao tribunal.
+    Suas ações diplomáticas afetam a percepção e as relações com diferentes setores da sociedade.
+  </p>
+  <button id="diplomacy-imprensa"><i class="fas fa-bullhorn icon"></i>Fortalecer Imprensa</button>
+  <p><small>Melhora sua relação com a mídia.</small></p>
+
+  <button id="diplomacy-governo"><i class="fas fa-landmark icon"></i>Negociar com Governo</button>
+  <p><small>Aumenta a relação com o governo.</small></p>
+
+  <button id="diplomacy-ongs"><i class="fas fa-hand-holding-heart icon"></i>Apoiar ONGs</button>
+  <p><small>Fortalece laços com entidades civis.</small></p>
+
+  <button id="skip-diplomacy"><i class="fas fa-forward icon"></i>Pular</button>
+  <p><small>Seguir sem ação diplomática neste turno.</small></p>
+</div>
+
+<!-- Tela Final -->
+<div id="end-screen" class="screen hidden">
+  <h2><i class="fas fa-balance-scale icon"></i>Fim de Jogo, <span id="endName"></span></h2>
+  <p id="end-description"></p>
+  <p class="end-explanation">
+    Sua trajetória como Juiz Supremo chegou ao fim — mas o destino da justiça popular nunca está escrito em pedra.
+  </p>
+  <button id="restartButton"><i class="fas fa-redo icon"></i>Reiniciar</button>
+</div>
+
+<!-- Notificação -->
+<div id="notification"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
