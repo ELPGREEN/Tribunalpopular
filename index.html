@@ -83,20 +83,21 @@
     </div>
 
     <!-- Tela de Diplomacia -->
-    <div id="diplomacy-screen" class="screen hidden">
-      <h2><i class="fas fa-globe"></i> Ações Diplomáticas, <span id="diplomacyName"></span></h2>
-      <p class="diplomacy-description">
-        Entre no jogo de poder além do tribunal. Suas ações diplomáticas moldarão alianças e rivalidades com a mídia, governo e ONGs, influenciando o futuro da nação.
-      </p>
-      <button id="diplomacy-imprensa" aria-label="Fortalecer relação com a imprensa"><i class="fas fa-bullhorn"></i> Fortalecer Imprensa</button>
-      <p class="action-description"><small>Conquiste a mídia, mas cuidado com a desconfiança do governo.</small></p>
-      <button id="diplomacy-governo" aria-label="Negociar com o governo"><i class="fas fa-landmark"></i> Negociar com Governo</button>
-      <p class="action-description"><small>Fortaleça laços políticos, mas a imprensa pode questionar sua imparcialidade.</small></p>
-      <button id="diplomacy-ongs" aria-label="Apoiar ONGs"><i class="fas fa-hand-holding-heart"></i> Apoiar ONGs</button>
-      <p class="action-description"><small>Ganhe apoio de organizações civis, mas tensione relações com o governo.</small></p>
-      <button id="skip-diplomacy" aria-label="Pular ações diplomáticas"><i class="fas fa-forward"></i> Pular</button>
-      <p class="action-description"><small>Prossiga sem ações diplomáticas, mantendo o status atual.</small></p>
-    </div>
+<div id="diplomacy-screen" class="screen hidden">
+    <img src="assets/images/diplomacy_background.jpg" alt="Imagem de uma mesa de negociações">
+    <h2><i class="fas fa-handshake"></i> Diplomacia, <span id="diplomacyName"></span></h2>
+    <p class="game-description">
+        Negocie com setores-chave para fortalecer sua posição. Cada ação consome recursos, mas pode melhorar suas relações.
+    </p>
+    <button id="diplomacy-imprensa" aria-label="Negociar com a imprensa"><i class="fas fa-newspaper"></i> Imprensa</button>
+    <p class="action-description"><small>Ganhe +10 de relação com a imprensa, mas perca -100 de orçamento.</small></p>
+    <button id="diplomacy-governo" aria-label="Negociar com o governo"><i class="fas fa-users-cog"></i> Governo</button>
+    <p class="action-description"><small>Ganhe +10 de relação com o governo, mas perca -10 de apoio popular.</small></p>
+    <button id="diplomacy-ongs" aria-label="Negociar com ONGs"><i class="fas fa-leaf"></i> ONGs</button>
+    <p class="action-description"><small>Ganhe +10 de relação com ONGs, mas perca -100 de orçamento.</small></p>
+    <button id="skip-diplomacy" aria-label="Pular diplomacia"><i class="fas fa-forward"></i> Pular</button>
+    <p class="action-description"><small>Continue sem negociar, preservando recursos.</small></p>
+</div>
 
     <!-- Tela Final -->
     <div id="end-screen" class="screen hidden">
@@ -110,7 +111,53 @@
 
     <!-- Notificação -->
     <div id="notification" role="alert"></div>
+    <!-- Adicionar antes do </main> no index.html -->
+    <!-- Tela de Nível Avançado -->
+    <div id="advanced-screen" class="screen hidden">
+      <img id="advanced-image" src="assets/images/placeholder_advanced.jpg" alt="Imagem do projeto estratégico">
+      <h2 id="advanced-title"><i class="fas fa-globe"></i> Projeto Estratégico</h2>
+      <p id="advanced-description"></p>
+      <div id="advanced-details"></div>
+      <div id="advanced-options"></div>
+      <h3><i class="fas fa-star-half-alt"></i> Recursos Estratégicos</h3>
+      <div class="reputation">
+        <p><strong><i class="fas fa-money-bill-wave"></i> Verba Nacional:</strong> <span id="verba">1000</span></p>
+        <progress id="verbaBar" max="10000" value="1000" aria-label="Verba disponível para projetos nacionais"></progress>
+        <p><strong><i class="fas fa-shield-alt"></i> Armas:</strong> <span id="armas">100</span></p>
+        <progress id="armasBar" max="500" value="100" aria-label="Nível de armamento nacional"></progress>
+        <p><strong><i class="fas fa-users"></i> Soldados:</strong> <span id="soldados">1000</span></p>
+        <progress id="soldadosBar" max="10000" value="1000" aria-label="Número de soldados disponíveis"></progress>
+        <p><strong><i class="fas fa-chart-line"></i> Crescimento Econômico:</strong> <span id="crescimento">50</span></p>
+        <progress id="crescimentoBar" max="100" value="50" aria-label="Nível de crescimento econômico"></progress>
+        <p><strong><i class="fas fa-shield"></i> Defesa Nacional:</strong> <span id="defesa">50</span></p>
+        <progress id="defesaBar" max="100" value="50" aria-label="Nível de defesa nacional"></progress>
+        <p><strong><i class="fas fa-coins"></i> Riqueza Pessoal:</strong> <span id="riqueza">0</span></p>
+        <progress id="riquezaBar" max="1000000" value="0" aria-label="Riqueza pessoal acumulada"></progress>
+      </div>
+    </div>
+    <!-- Adicionar antes do </main> no index.html -->
+    <!-- Tela de Diplomacia Global -->
+    <div id="diplomacy-screen-global" class="screen hidden">
+      <img src="assets/images/diplomacy_global.jpg" alt="Imagem de uma cúpula internacional com líderes globais">
+      <h2><i class="fas fa-globe"></i> Diplomacia Global, <span id="diplomacyGlobalName"></span></h2>
+      <p class="game-description">
+        Suas decisões ecoam pelo mundo. Países reagem, oferecendo alianças, apoio ou oposição. Escolha com sabedoria para liderar o país à glória ou evitar o caos global.
+      </p>
+      <h3><i class="fas fa-handshake"></i> Status Diplomático</h3>
+      <div id="diplomacy-status"></div>
+      <div id="diplomacy-actions"></div>
+      <button id="skipDiplomacyGlobal" aria-label="Prosseguir sem ações diplomáticas"><i class="fas fa-forward"></i> Prosseguir</button>
+      <p class="action-description"><small>Continue sem negociar, mantendo o status diplomático atual.</small></p>
+      <h3><i class="fas fa-star"></i> Influência Global</h3>
+      <p><strong><i class="fas fa-globe-americas"></i> Influência Global:</strong> <span id="influenciaGlobal">50</span></p>
+      <progress id="influenciaGlobalBar" max="100" value="50" aria-label="Nível de influência global"></progress>
+    </div>
+
+<!-- Adicionar antes do </body> -->
+  
   </main>
   <script src="script.js"></script>
+  <script src="script_advanced.js"></script>
+  <script src="script_diplomacy.js"></script>
 </body>
 </html>

@@ -12,8 +12,8 @@ const state = {
     currentCase: null,
     investigationsDone: 0,
     maxInvestigations: 2,
-    orcamento: 100,
-    custoManutencao: 10
+    orcamento: 10000, // R$ 100.000
+    custoManutencao: 1000 // R$ 10.000
 };
 
 // === Eventos Aleatórios ===
@@ -729,7 +729,9 @@ function applyEffects(effects) {
                 metricElement.classList.add('metric-decrease');
                 setTimeout(() => metricElement.classList.remove('metric-decrease'), 1000);
             }
+            metricElement.textContent = Math.max(0, Number(metricElement.textContent) + value);
         }
+        if (key === 'orcamento') state.orcamento = Math.max(0, state.orcamento + value);
         if (key === 'apoioPopular') state.apoioPopular = Math.max(0, Math.min(100, state.apoioPopular + value));
         if (key === 'respeitoInstitucional') state.respeitoInstitucional = Math.max(0, Math.min(100, state.respeitoInstitucional + value));
         if (key === 'influenciaPolitica') state.influenciaPolitica = Math.max(0, Math.min(100, state.influenciaPolitica + value));
@@ -799,16 +801,16 @@ function startGame() {
 function setDifficulty(level) {
     state.dificuldade = level;
     if (level === 'fácil') {
-        state.orcamento = 150;
-        state.custoManutencao = 5;
+        state.orcamento = 5000; // R$ 50.000
+        state.custoManutencao = 500; // R$ 5.000
         state.maxInvestigations = 3;
     } else if (level === 'médio') {
-        state.orcamento = 100;
-        state.custoManutencao = 10;
+        state.orcamento = 10000; // R$ 100.000
+        state.custoManutencao = 1000; // R$ 10.000
         state.maxInvestigations = 2;
     } else if (level === 'difícil') {
-        state.orcamento = 75;
-        state.custoManutencao = 15;
+        state.orcamento = 15000; // R$ 150.000
+        state.custoManutencao = 1500; // R$ 15.000
         state.maxInvestigations = 1;
     }
     transitionScreen('case-screen', 'difficulty-screen');
@@ -863,11 +865,11 @@ function investigate(index) {
         return;
     }
     const inv = state.currentCase.investigacoes[index];
-    if (state.orcamento < 20) {
+    if (state.orcamento < 1000) {
         showNotification('Orçamento insuficiente para realizar a investigação!');
         return;
     }
-    state.orcamento -= 20;
+    state.orcamento -= 2000; // R$ 20.000
     state.investigationsDone++;
     applyEffects(inv.custo);
     state.currentCase.provas.push(inv.novaProva);
@@ -876,46 +878,46 @@ function investigate(index) {
 }
 
 function makeDecision(index) {
-  const decision = state.currentCase.decisoes.filter(d => !d.requiresInvestigation || state.investigationsDone > 0)[index];
-  applyEffects(decision.efeitos);
-  state.casosJulgados++;
-  state.orcamento -= state.custoManutencao;
-  
-  if (state.orcamento <= 0 || state.apoioPopular <= 0 || state.respeitoInstitucional <= 0 ||
-    state.influenciaPolitica <= 0 || state.relacaoImprensa <= 0 || state.relacaoGoverno <= 0 || state.relacaoONGs <= 0) {
-    endGame();
-    return;
-  }
-  
-  if (state.casosJulgados === 3 || state.casosJulgados === 7 || state.casosJulgados === 9) {
-    showCrisisEvent();
-    return;
-  }
-  
-  const randomEventChance = Math.random();
-  let eventMessage = '';
-  if (randomEventChance < 0.35) {
-    const possibleEvents = eventosAleatorios.filter(e => !e.condicao || e.condicao());
-    if (possibleEvents.length > 0) {
-      const event = possibleEvents[Math.floor(Math.random() * possibleEvents.length)];
-      eventMessage = `<p><strong>Evento Inesperado:</strong> ${event.texto}</p>`;
-      applyEffects(event.efeitos);
-      document.getElementById('case-image').src = event.imagem;
+    const decision = state.currentCase.decisoes.filter(d => !d.requiresInvestigation || state.investigationsDone > 0)[index];
+    applyEffects(decision.efeitos);
+    state.casosJulgados++;
+    state.orcamento -= state.custoManutencao;
+    
+    if (state.orcamento <= 0 || state.apoioPopular <= 0 || state.respeitoInstitucional <= 0 ||
+        state.influenciaPolitica <= 0 || state.relacaoImprensa <= 0 || state.relacaoGoverno <= 0 || state.relacaoONGs <= 0) {
+        endGame();
+        return;
     }
-  }
-  
-  const mediaHeadline = document.getElementById('media-headline');
-  const mediaReactions = document.getElementById('media-reactions');
-  if (mediaHeadline && mediaReactions) {
-    mediaHeadline.textContent = decision.manchete;
-    mediaReactions.innerHTML = `
+    
+    if (state.casosJulgados === 3 || state.casosJulgados === 7 || state.casosJulgados === 9) {
+        showCrisisEvent();
+        return;
+    }
+    
+    const randomEventChance = Math.random();
+    let eventMessage = '';
+    if (randomEventChance < 0.35) {
+        const possibleEvents = eventosAleatorios.filter(e => !e.condicao || e.condicao());
+        if (possibleEvents.length > 0) {
+            const event = possibleEvents[Math.floor(Math.random() * possibleEvents.length)];
+            eventMessage = `<p><strong>Evento Inesperado:</strong> ${event.texto}</p>`;
+            applyEffects(event.efeitos);
+            document.getElementById('case-image').src = event.imagem;
+        }
+    }
+    
+    const mediaHeadline = document.getElementById('media-headline');
+    const mediaReactions = document.getElementById('media-reactions');
+    if (mediaHeadline && mediaReactions) {
+        mediaHeadline.textContent = decision.manchete;
+        mediaReactions.innerHTML = `
             ${eventMessage}
             <p><strong>Reação Popular:</strong> ${decision.reacaoPopular}</p>
             <p><strong>Reação da Mídia:</strong> ${decision.reacaoMidia}</p>
         `;
-    document.getElementById('case-image').src = state.currentCase.imagem;
-  }
-  transitionScreen('media-screen', 'case-screen');
+        document.getElementById('case-image').src = state.currentCase.imagem;
+    }
+    transitionScreen('media-screen', 'case-screen');
 }
 
 function showCrisisEvent() {
@@ -976,50 +978,62 @@ function skipDiplomacy() {
 }
 
 function endGame() {
-  let finalText = '';
-  let legacyScore = (state.apoioPopular + state.respeitoInstitucional + state.influenciaPolitica +
-    state.relacaoImprensa + state.relacaoGoverno + state.relacaoONGs) / 6;
-  let casesCompleted = state.casosJulgados;
-  
-  if (state.orcamento <= 0) {
-    finalText = `${state.playerName}, o tribunal faliu! Sem recursos, você foi destituído do cargo.`;
-  } else if (state.apoioPopular <= 0) {
-    finalText = `${state.playerName}, a fúria do povo selou seu destino. Multidões invadiram o tribunal.`;
-  } else if (state.respeitoInstitucional <= 0) {
-    finalText = `${state.playerName}, as instituições voltaram-se contra você. O Supremo foi dissolvido.`;
-  } else if (state.influenciaPolitica <= 0) {
-    finalText = `${state.playerName}, as elites isolaram você. Seu tribunal foi extinto.`;
-  } else if (state.relacaoImprensa <= 0) {
-    finalText = `${state.playerName}, a imprensa destruiu sua reputação. Escândalos forçaram seu afastamento.`;
-  } else if (state.relacaoGoverno <= 0) {
-    finalText = `${state.playerName}, o governo conspirou contra você. O Congresso dissolveu seu tribunal.`;
-  } else if (state.relacaoONGs <= 0) {
-    finalText = `${state.playerName}, ONGs denunciaram suas decisões. Você renunciou.`;
-  } else if (casesCompleted >= 10) {
-    if (legacyScore > 80) {
-      finalText = `${state.playerName}, você é uma lenda da justiça! Após julgar todos os 10 casos, sua imparcialidade conquistou a nação.`;
-    } else if (legacyScore > 50) {
-      finalText = `${state.playerName}, você completou os 10 casos com equilíbrio. Seu legado é respeitado, mas não unânime.`;
+    let finalText = '';
+    let legacyScore = (state.apoioPopular + state.respeitoInstitucional + state.influenciaPolitica +
+        state.relacaoImprensa + state.relacaoGoverno + state.relacaoONGs) / 6;
+    let casesCompleted = state.casosJulgados;
+    
+    if (state.orcamento <= 0) {
+        finalText = `${state.playerName}, o tribunal faliu! Sem recursos, você foi destituído do cargo.`;
+    } else if (state.apoioPopular <= 0) {
+        finalText = `${state.playerName}, a fúria do povo selou seu destino. Multidões invadiram o tribunal.`;
+    } else if (state.respeitoInstitucional <= 0) {
+        finalText = `${state.playerName}, as instituições voltaram-se contra você. O Supremo foi dissolvido.`;
+    } else if (state.influenciaPolitica <= 0) {
+        finalText = `${state.playerName}, as elites isolaram você. Seu tribunal foi extinto.`;
+    } else if (state.relacaoImprensa <= 0) {
+        finalText = `${state.playerName}, a imprensa destruiu sua reputação. Escândalos forçaram seu afastamento.`;
+    } else if (state.relacaoGoverno <= 0) {
+        finalText = `${state.playerName}, o governo conspirou contra você. O Congresso dissolveu seu tribunal.`;
+    } else if (state.relacaoONGs <= 0) {
+        finalText = `${state.playerName}, ONGs denunciaram suas decisões. Você renunciou.`;
+    } else if (casesCompleted >= casos.length) {
+        if (legacyScore > 80) {
+            finalText = `${state.playerName}, você é uma lenda da justiça! Após julgar todos os ${casos.length} casos, sua imparcialidade conquistou a nação.`;
+            finalText += `<br><br><strong>Parabéns!</strong> Você desbloqueou o Nível Avançado: Projetos Nacionais.`;
+            finalText += `<br><button id="continueAdvancedButton" aria-label="Continuar para o nível avançado"><i class="fas fa-forward"></i> Continuar para Projetos Nacionais</button>`;
+        } else if (legacyScore > 50) {
+            finalText = `${state.playerName}, você completou os ${casos.length} casos com equilíbrio. Seu legado é respeitado, mas não unânime.`;
+        } else {
+            finalText = `${state.playerName}, após ${casos.length} casos, suas decisões dividiram a nação. Seu tribunal sobreviveu, mas sob críticas.`;
+        }
     } else {
-      finalText = `${state.playerName}, após 10 casos, suas decisões dividiram a nação. Seu tribunal sobreviveu, mas sob críticas.`;
+        finalText = `${state.playerName}, sua trajetória foi controversa. Seu legado divide opiniões após ${casesCompleted} casos.`;
     }
-  } else {
-    finalText = `${state.playerName}, sua trajetória foi controversa. Seu legado divide opiniões após ${casesCompleted} casos.`;
-  }
-  
-  finalText += `<br><br><strong>Resumo:</strong><br>
-        Casos Julgados: ${casesCompleted}/10<br>
+    
+    finalText += `<br><br><strong>Resumo:</strong><br>
+        Casos Julgados: ${casesCompleted}/${casos.length}<br>
         Orçamento Restante: ${state.orcamento}<br>
         Média de Reputação: ${Math.round(legacyScore)}`;
-  
-  const endName = document.getElementById('endName');
-  const endDescription = document.getElementById('end-description');
-  if (endName && endDescription) {
-    endName.textContent = state.playerName;
-    endDescription.innerHTML = finalText; // Usar innerHTML para suportar quebras de linha
-  }
-  transitionScreen('end-screen', 'case-screen');
+    
+    const endName = document.getElementById('endName');
+    const endDescription = document.getElementById('end-description');
+    if (endName && endDescription) {
+        endName.textContent = state.playerName;
+        endDescription.innerHTML = finalText;
+    } else {
+        console.warn('Elementos endName ou endDescription não encontrados');
+    }
+    
+    transitionScreen('end-screen', 'case-screen');
+    
+    // Adicionar listener para o botão de nível avançado
+    const continueAdvancedButton = document.getElementById('continueAdvancedButton');
+    if (continueAdvancedButton) {
+        continueAdvancedButton.addEventListener('click', startAdvancedLevel);
+    }
 }
+
 
 function restartGame() {
     Object.assign(state, {
@@ -1035,8 +1049,8 @@ function restartGame() {
         currentCase: null,
         investigationsDone: 0,
         maxInvestigations: 2,
-        orcamento: 100,
-        custoManutencao: 10
+        orcamento: 10000, // R$ 100.000
+        custoManutencao: 1000 // R$ 10.000
     });
     const playerName = document.getElementById('playerName');
     if (playerName) playerName.value = '';
@@ -1044,68 +1058,285 @@ function restartGame() {
 }
 
 // === Inicialização ===
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        const startButton = document.getElementById('startButton');
-        if (!startButton) throw new Error('Botão startButton não encontrado');
-        startButton.addEventListener('click', startGame);
-
-        const difficultyEasy = document.getElementById('difficultyEasy');
-        const difficultyMedium = document.getElementById('difficultyMedium');
-        const difficultyHard = document.getElementById('difficultyHard');
-        if (difficultyEasy) difficultyEasy.addEventListener('click', () => setDifficulty('fácil'));
-        if (difficultyMedium) difficultyMedium.addEventListener('click', () => setDifficulty('médio'));
-        if (difficultyHard) difficultyHard.addEventListener('click', () => setDifficulty('difícil'));
-
-        const investigationOptions = document.getElementById('investigation-options');
-        if (investigationOptions) {
-            investigationOptions.addEventListener('click', (e) => {
-                const index = e.target.dataset.investigation;
-                if (index !== undefined) investigate(Number(index));
-            });
-        }
-
-        const decisionOptions = document.getElementById('decision-options');
-        if (decisionOptions) {
-            decisionOptions.addEventListener('click', (e) => {
-                const index = e.target.dataset.decision;
-                if (index !== undefined) makeDecision(Number(index));
-            });
-        }
-
-        const viewMediaButton = document.getElementById('viewMediaButton');
-        if (viewMediaButton) viewMediaButton.addEventListener('click', viewMedia);
-
-        const mediaReactions = document.getElementById('media-reactions');
-        if (mediaReactions) {
-            mediaReactions.addEventListener('click', (e) => {
-                const index = e.target.dataset.crisis;
-                if (index !== undefined) {
-                    const crisis = eventosCrise[0];
-                    const decision = crisis.opcoes[Number(index)];
-                    applyEffects(decision.efeitos);
-                    showNotification(decision.resultado);
-                    showDiplomacyScreen();
-                }
-            });
-        }
-
-        const continueButton = document.getElementById('continueButton');
-        if (continueButton) continueButton.addEventListener('click', showDiplomacyScreen);
-
-        const diplomacyImprensa = document.getElementById('diplomacy-imprensa');
-        const diplomacyGoverno = document.getElementById('diplomacy-governo');
-        const diplomacyOngs = document.getElementById('diplomacy-ongs');
-        const skipDiplomacy = document.getElementById('skip-diplomacy');
-        if (diplomacyImprensa) diplomacyImprensa.addEventListener('click', () => diplomacyAction('imprensa'));
-        if (diplomacyGoverno) diplomacyGoverno.addEventListener('click', () => diplomacyAction('governo'));
-        if (diplomacyOngs) diplomacyOngs.addEventListener('click', () => diplomacyAction('ongs'));
-        if (skipDiplomacy) skipDiplomacy.addEventListener('click', skipDiplomacy);
-
-        const restartButton = document.getElementById('restartButton');
-        if (restartButton) restartButton.addEventListener('click', restartGame);
-    } catch (error) {
-        console.error('Erro ao inicializar eventos:', error);
-        showNotification('Falha ao carregar o jogo. Por favor, tente novamente.');
+// Função para alternar sessões
+function switchSession(session) {
+    const session1 = document.getElementById('session1');
+    const session2 = document.getElementById('session2');
+    if (!session1 || !session2) {
+        console.error('Seções session1 ou session2 não encontradas');
+        showNotification('Erro ao alternar sessões. Recarregue a página.');
+        return;
     }
+    if (session === 'session2') {
+        session1.style.display = 'none';
+        session2.style.display = 'block';
+    } else {
+        session1.style.display = 'block';
+        session2.style.display = 'none';
+    }
+}
+
+// Função endGame (ajustada para transição de sessão)
+function endGame() {
+    let finalText = '';
+    let legacyScore = (state.apoioPopular + state.respeitoInstitucional + state.influenciaPolitica +
+        state.relacaoImprensa + state.relacaoGoverno + state.relacaoONGs) / 6;
+    let casesCompleted = state.casosJulgados;
+    
+    if (state.orcamento <= 0) {
+        finalText = `${state.playerName}, o tribunal faliu! Sem recursos, você foi destituído do cargo.`;
+    } else if (state.apoioPopular <= 0) {
+        finalText = `${state.playerName}, a fúria do povo selou seu destino. Multidões invadiram o tribunal.`;
+    } else if (state.respeitoInstitucional <= 0) {
+        finalText = `${state.playerName}, as instituições voltaram-se contra você. O Supremo foi dissolvido.`;
+    } else if (state.influenciaPolitica <= 0) {
+        finalText = `${state.playerName}, as elites isolaram você. Seu tribunal foi extinto.`;
+    } else if (state.relacaoImprensa <= 0) {
+        finalText = `${state.playerName}, a imprensa destruiu sua reputação. Escândalos forçaram seu afastamento.`;
+    } else if (state.relacaoGoverno <= 0) {
+        finalText = `${state.playerName}, o governo conspirou contra você. O Congresso dissolveu seu tribunal.`;
+    } else if (state.relacaoONGs <= 0) {
+        finalText = `${state.playerName}, ONGs denunciaram suas decisões. Você renunciou.`;
+    } else if (casesCompleted >= casos.length) {
+        if (legacyScore > 80) {
+            finalText = `${state.playerName}, você é uma lenda da justiça! Após julgar todos os ${casos.length} casos, sua imparcialidade conquistou a nação.`;
+            finalText += `<br><br><strong>Parabéns!</strong> Escolha seu próximo caminho:`;
+        } else if (legacyScore > 50) {
+            finalText = `${state.playerName}, você completou os ${casos.length} casos com equilíbrio. Seu legado é respeitado, mas não unânime.`;
+        } else {
+            finalText = `${state.playerName}, após ${casos.length} casos, suas decisões dividiram a nação. Seu tribunal sobreviveu, mas sob críticas.`;
+        }
+    } else {
+        finalText = `${state.playerName}, sua trajetória foi controversa. Seu legado divide opiniões após ${casesCompleted} casos.`;
+    }
+    
+    finalText += `<br><br><strong>Resumo:</strong><br>
+        Casos Julgados: ${casesCompleted}/${casos.length}<br>
+        Orçamento Restante: ${state.orcamento}<br>
+        Média de Reputação: ${Math.round(legacyScore)}`;
+    
+    const endName = document.getElementById('endName');
+    const endDescription = document.getElementById('end-description');
+    if (endName && endDescription) {
+        endName.textContent = state.playerName;
+        endDescription.innerHTML = finalText;
+    } else {
+        console.warn('Elementos endName ou endDescription não encontrados');
+    }
+    
+    // Exibir choice-screen se todos os casos foram julgados com legacyScore > 80
+    if (casesCompleted >= casos.length && legacyScore > 80) {
+        const choiceName = document.getElementById('choiceName');
+        if (choiceName) {
+            choiceName.textContent = state.playerName;
+        }
+        transitionScreen('choice-screen', 'case-screen');
+    } else {
+        transitionScreen('end-screen', 'case-screen');
+    }
+}
+
+// Função handlePathChoice (ajustada para iniciar Sessão 2)
+function handlePathChoice(choice) {
+  if (choice === 'projects' || choice === 'leader') {
+    switchSession('session2');
+    stateAdvanced.playerName = state.playerName; // Transferir nome do jogador
+    initializeAdvancedSession(); // Inicializa Sessão 2
+    initializeDiplomacySession(); // Inicializa diplomacia
+    transitionScreen('advanced-screen', 'choice-screen');
+    if (choice === 'projects') {
+      loadAdvancedCase();
+    } else {
+      loadLeaderCase();
+    }
+  } else if (choice === 'restart') {
+    window.location.reload();
+  }
+}
+
+
+// Funções de Diplomacia (Sessão 1)
+function handleDiplomacyImprensa() {
+  try {
+    const custos = { easy: -500, medium: -1000, hard: -1500 }; // R$ 5.000, 10.000, 15.000
+    applyEffects({
+      relacaoImprensa: 15,
+      orcamento: custos[state.dificuldade]
+    });
+    showNotification(`Negociação com a imprensa bem-sucedida! Relação +15, Orçamento -R$${Math.abs(custos[state.dificuldade] * 10)}.`);
+    proceedAfterLocalDiplomacy();
+  } catch (error) {
+    console.error('Erro em handleDiplomacyImprensa:', error);
+    showNotification('Erro ao negociar com a imprensa.');
+  }
+}
+
+function handleDiplomacyGoverno() {
+  try {
+    applyEffects({
+      relacaoGoverno: 10,
+      relacaoImprensa: -5,
+      orcamento: -10 // R$ 100
+    });
+    showNotification('Negociação com o governo concluída! Relação +10, Orçamento -R$100.');
+    proceedAfterLocalDiplomacy();
+  } catch (error) {
+    console.error('Erro em handleDiplomacyGoverno:', error);
+    showNotification('Erro ao negociar com o governo.');
+  }
+}
+
+function handleDiplomacyONGs() {
+  try {
+    applyEffects({
+      relacaoONGs: 10,
+      relacaoGoverno: -5,
+      orcamento: -5 // R$ 50
+    });
+    showNotification('Apoio das ONGs garantido! Relação +10, Orçamento -R$50.');
+    proceedAfterLocalDiplomacy();
+  } catch (error) {
+    console.error('Erro em handleDiplomacyONGs:', error);
+    showNotification('Erro ao negociar com ONGs.');
+  }
+}
+
+function proceedAfterLocalDiplomacy() {
+  transitionScreen('case-screen', 'diplomacy-screen');
+  loadCase(); // Carrega o próximo caso
+}
+
+// Função auxiliar para aplicar efeitos (assumida como existente, mas incluída para clareza)
+function applyEffects(effects) {
+  for (const [key, value] of Object.entries(effects)) {
+    const metricElement = document.getElementById(key);
+    if (metricElement) {
+      if (value > 0) {
+        metricElement.classList.add('metric-increase');
+        setTimeout(() => metricElement.classList.remove('metric-increase'), 1000);
+      } else if (value < 0) {
+        metricElement.classList.add('metric-decrease');
+        setTimeout(() => metricElement.classList.remove('metric-decrease'), 1000);
+      }
+      metricElement.textContent = Math.max(0, Number(metricElement.textContent) + value);
+    }
+    if (key === 'orcamento') state.orcamento = Math.max(0, state.orcamento + value);
+    if (key === 'apoioPopular') state.apoioPopular = Math.max(0, Math.min(100, state.apoioPopular + value));
+    if (key === 'respeitoInstitucional') state.respeitoInstitucional = Math.max(0, Math.min(100, state.respeitoInstitucional + value));
+    if (key === 'influenciaPolitica') state.influenciaPolitica = Math.max(0, Math.min(100, state.influenciaPolitica + value));
+    if (key === 'relacaoImprensa') state.relacaoImprensa = Math.max(0, Math.min(100, state.relacaoImprensa + value));
+    if (key === 'relacaoGoverno') state.relacaoGoverno = Math.max(0, Math.min(100, state.relacaoGoverno + value));
+    if (key === 'relacaoONGs') state.relacaoONGs = Math.max(0, Math.min(100, state.relacaoONGs + value));
+    
+    const progressBar = document.getElementById(`${key}Bar`);
+    if (progressBar) {
+      progressBar.value = state[key] || Number(metricElement.textContent);
+    }
+  }
+}
+
+// Inicialização de eventos (Sessão 1)
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    // Botão de início
+    const startButton = document.getElementById('startButton');
+    if (!startButton) throw new Error('Botão startButton não encontrado');
+    startButton.addEventListener('click', startGame);
+    
+    // Botões de dificuldade
+    const difficultyButtons = {
+      'difficultyEasy': 'easy',
+      'difficultyMedium': 'medium',
+      'difficultyHard': 'hard'
+    };
+    Object.keys(difficultyButtons).forEach(buttonId => {
+      const button = document.getElementById(buttonId);
+      if (!button) console.warn(`Botão ${buttonId} não encontrado`);
+      else button.addEventListener('click', () => setDifficulty(difficultyButtons[buttonId]));
+    });
+    
+    // Opções de investigação
+    const investigationOptions = document.getElementById('investigation-options');
+    if (investigationOptions) {
+      investigationOptions.addEventListener('click', (e) => {
+        const index = e.target.dataset.investigation;
+        if (index !== undefined) investigate(Number(index));
+      });
+    } else {
+      console.warn('Elemento investigation-options não encontrado');
+    }
+    
+    // Opções de decisão
+    const decisionOptions = document.getElementById('decision-options');
+    if (decisionOptions) {
+      decisionOptions.addEventListener('click', (e) => {
+        const index = e.target.dataset.decision;
+        if (index !== undefined) makeDecision(Number(index));
+      });
+    } else {
+      console.warn('Elemento decision-options não encontrado');
+    }
+    
+    // Botão de visualizar mídia
+    const viewMediaButton = document.getElementById('viewMediaButton');
+    if (viewMediaButton) {
+      viewMediaButton.addEventListener('click', viewMedia);
+    } else {
+      console.warn('Botão viewMediaButton não encontrado');
+    }
+    
+    // Botão de continuar (mídia para diplomacia local)
+    const continueButton = document.getElementById('continueButton');
+    if (continueButton) {
+      continueButton.addEventListener('click', () => {
+        console.log('Continue button clicked, transitioning to diplomacy-screen');
+        transitionScreen('diplomacy-screen', 'media-screen');
+      });
+    } else {
+      console.warn('Botão continueButton não encontrado');
+    }
+    
+    // Botões de diplomacia (nível inicial)
+    const diplomacyButtons = {
+      'diplomacy-imprensa': handleDiplomacyImprensa,
+      'diplomacy-governo': handleDiplomacyGoverno,
+      'diplomacy-ongs': handleDiplomacyONGs,
+      'skip-diplomacy': skipDiplomacy
+    };
+    Object.keys(diplomacyButtons).forEach(buttonId => {
+      const button = document.getElementById(buttonId);
+      if (!button) {
+        console.warn(`Botão ${buttonId} não encontrado`);
+      } else {
+        button.addEventListener('click', () => {
+          console.log(`Botão ${buttonId} clicado`);
+          diplomacyButtons[buttonId]();
+        });
+      }
+    });
+    
+    // Botões da choice-screen
+    const choiceButtons = {
+      'chooseProjects': 'projects',
+      'chooseLeader': 'leader',
+      'chooseRestart': 'restart'
+    };
+    Object.keys(choiceButtons).forEach(buttonId => {
+      const button = document.getElementById(buttonId);
+      if (!button) console.warn(`Botão ${buttonId} não encontrado`);
+      else button.addEventListener('click', () => handlePathChoice(choiceButtons[buttonId]));
+    });
+    
+    // Botão de reinício
+    const restartButton = document.getElementById('restartButton');
+    if (restartButton) {
+      restartButton.addEventListener('click', () => window.location.reload());
+    } else {
+      console.warn('Botão restartButton não encontrado');
+    }
+    
+  } catch (error) {
+    console.error('Erro ao inicializar eventos da Sessão 1:', error);
+    showNotification(`Falha ao carregar o jogo: ${error.message}. Tente recarregar a página.`);
+  }
 });

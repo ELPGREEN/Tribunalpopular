@@ -315,4 +315,93 @@ img {
   #media-reactions {
     font-size: 0.8rem;
   }
-  }
+}
+.metric-increase {
+    color: green;
+    transition: color 0.5s;
+}
+
+.metric-decrease {
+    color: red;
+    transition: color 0.5s;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#diplomacy-imprensa, #diplomacy-governo, #diplomacy-ongs, #skip-diplomacy {
+    transition: background-color 0.3s;
+}
+
+#diplomacy-imprensa.error, #diplomacy-governo.error, #diplomacy-ongs.error, #skip-diplomacy.error {
+    background-color: red;
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+.metric-increase {
+    color: green;
+    transition: color 0.5s;
+}
+
+.metric-decrease {
+    color: red;
+    transition: color 0.5s;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#diplomacy-imprensa, #diplomacy-governo, #diplomacy-ongs, #skip-diplomacy {
+    transition: background-color 0.3s;
+}
+
+#diplomacy-imprensa.error, #diplomacy-governo.error, #diplomacy-ongs.error, #skip-diplomacy.error {
+    background-color: red;
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+#session2 {
+    display: none;
+}
