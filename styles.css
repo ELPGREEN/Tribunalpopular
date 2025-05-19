@@ -31,7 +31,6 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
 }
 
 .container {
@@ -105,6 +104,18 @@ button:hover {
   box-shadow: 0 2px 8px rgba(184,156,91,0.4);
 }
 
+#media-reactions button {
+  width: 100%;
+  margin: 0.5rem 0;
+  background: linear-gradient(45deg, var(--secondary), var(--accent));
+  border: 1px solid var(--error);
+}
+#media-reactions button:hover {
+  background: linear-gradient(45deg, var(--error), var(--gold));
+  transform: scale(1.03);
+  box-shadow: 0 2px 8px rgba(230,57,70,0.4);
+}
+
 .error-message {
   color: var(--error);
   font-size: 0.8rem;
@@ -127,6 +138,7 @@ button:hover {
   font-size: 0.85rem;
   margin-bottom: 0.4rem;
   display: flex;
+  align-items: center;
   gap: 0.4rem;
 }
 progress {
@@ -136,13 +148,24 @@ progress {
   background: var(--progress-bg);
   border: 1px solid var(--accent);
 }
-progress::-webkit-progress-bar,
-progress::-moz-progress-bar {
+progress::-webkit-progress-bar {
   background: var(--progress-bg);
 }
-progress::-webkit-progress-value,
+progress::-webkit-progress-value {
+  background: var(--progress-fill);
+}
 progress::-moz-progress-bar {
   background: var(--progress-fill);
+}
+
+#orcamentoBar {
+  border-color: var(--gold);
+}
+#orcamentoBar::-webkit-progress-value {
+  background: var(--gold);
+}
+#orcamentoBar::-moz-progress-bar {
+  background: var(--gold);
 }
 
 .case-content {
@@ -233,6 +256,28 @@ img {
   opacity: 1;
 }
 
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.metric-increase {
+  color: var(--success);
+  animation: pulse 0.5s ease-in-out;
+}
+.metric-decrease {
+  color: var(--error);
+  animation: pulse 0.5s ease-in-out;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
 @media (max-width: 1024px) {
   .case-content {
     flex-direction: column;
@@ -251,6 +296,10 @@ img {
   h1 { font-size: clamp(1.4rem, 3.5vw, 1.8rem); }
   button { width: 100%; padding: 0.6rem 1rem; }
   .notification { left: 0.5rem; right: 0.5rem; }
+  #media-reactions button {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -260,4 +309,10 @@ img {
     font-size: 0.8rem;
   }
   img { max-width: 100%; }
+  .reputation p {
+    font-size: 0.8rem;
+  }
+  #media-reactions {
+    font-size: 0.8rem;
+  }
 }
