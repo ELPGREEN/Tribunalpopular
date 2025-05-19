@@ -1,349 +1,263 @@
-/* Reset para consistência */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Variáveis CSS */
 :root {
-  --primary-color: #1a2a44; /* Azul-marinho */
-  --secondary-color: #8b0000; /* Vermelho bordô */
-  --background-color: #0f172a; /* Cinza-azulado escuro */
-  --text-color: #e2e8f0; /* Branco acinzentado */
-  --accent-color: #4b5e8c; /* Azul-acinzentado */
-  --progress-bar-bg: #334155; /* Fundo das barras */
-  --progress-bar-fill: #3b82f6; /* Azul claro para barras */
-  --error-color: #dc2626; /* Vermelho para erros */
-  --success-color: #166534; /* Verde escuro */
-  --font-family: 'Montserrat', sans-serif;
+  --primary: #1a2639;
+  --secondary: #6b1c1c;
+  --bg: #0a101e;
+  --text: #d4d7e0;
+  --accent: #5a6a9a;
+  --gold: #b89c5b;
+  --progress-bg: #2d3748;
+  --progress-fill: #4f9be8;
+  --error: #e63946;
+  --success: #2a9d8f;
+  --font-main: 'Roboto', sans-serif;
+  --font-title: 'Cinzel', serif;
   --transition: all 0.3s ease;
 }
 
-/* Estilo global */
 body {
-  font-family: var(--font-family);
-  background-color: var(--background-color);
-  color: var(--text-color);
+  font-family: var(--font-main);
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.5;
+  min-height: 100vh;
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
 }
 
-/* Container */
 .container {
-  max-width: 1280px;
-  margin: 0 auto;
+  max-width: 1000px;
+  margin: 1rem auto;
   padding: 1rem;
-  min-height: 100vh;
+  min-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Telas */
 .screen {
   width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(to bottom, var(--primary-color), var(--background-color));
-  padding: 1rem;
+  max-width: 600px;
+  background: linear-gradient(180deg, rgba(26,38,57,0.9), rgba(10,16,30,0.9));
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  text-align: center;
 }
-
-/* Remover hidden apenas quando necessário */
 .screen.hidden {
   display: none;
 }
 
-/* Fundo de partículas */
-#particles-js {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0; /* Alterado para não cobrir conteúdo */
-  opacity: 0.4;
-}
-
-/* Títulos */
-h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-color);
-  text-transform: uppercase;
-  margin: 1rem 0;
+h1, h2, h3 {
+  font-family: var(--font-title);
+  color: var(--gold);
   text-align: center;
+  margin: 0.8rem 0;
 }
+h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+h2 { font-size: clamp(1.3rem, 3vw, 1.6rem); }
+h3 { font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--accent); }
 
-h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 1rem;
-}
-
-h3 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--accent-color);
-  margin-bottom: 0.8rem;
-}
-
-/* Inputs */
 input[type="text"] {
-  padding: 0.8rem;
-  font-size: 1rem;
-  background-color: #1e293b;
-  color: var(--text-color);
-  border: 1px solid var(--accent-color);
+  padding: 0.7rem;
+  font-size: 0.9rem;
+  background: #1e293b;
+  color: var(--text);
+  border: 1px solid var(--accent);
   border-radius: 4px;
   width: 100%;
-  max-width: 400px;
-  margin: 0.5rem 0;
+  max-width: 350px;
+  margin: 0.5rem 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   transition: var(--transition);
 }
-
 input[type="text"]:focus {
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 6px rgba(139, 0, 0, 0.3);
-  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 5px rgba(184,156,91,0.5);
 }
 
-/* Botões */
 button {
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-color);
-  background-color: var(--primary-color);
-  border: 1px solid var(--accent-color);
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: linear-gradient(45deg, var(--primary), var(--accent));
+  border: 1px solid var(--gold);
   border-radius: 4px;
   cursor: pointer;
   transition: var(--transition);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   text-transform: uppercase;
 }
-
 button:hover {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
+  background: linear-gradient(45deg, var(--secondary), var(--gold));
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(184,156,91,0.4);
 }
 
-button:focus {
-  outline: 2px solid var(--secondary-color);
-  outline-offset: 2px;
-}
-
-/* Erros */
-.error {
-  color: var(--error-color);
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
+.error-message {
+  color: var(--error);
+  font-size: 0.8rem;
+  margin: 0.4rem 0;
   text-align: center;
 }
 
-/* Métricas */
 .reputation {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.8rem;
   width: 100%;
-  max-width: 1000px;
-  margin: 1rem 0;
-  padding: 1rem;
-  background: rgba(15, 23, 42, 0.7);
-  border-radius: 8px;
-  border: 1px solid var(--accent-color);
+  max-width: 800px;
+  padding: 0.8rem;
+  background: rgba(10,16,30,0.8);
+  border-radius: 6px;
+  border: 1px solid var(--accent);
 }
-
-.metric {
-  flex: 1 1 200px;
+.reputation p {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
   display: flex;
-  flex-direction: column;
+  gap: 0.4rem;
 }
-
-.metric label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
 progress {
   width: 100%;
-  height: 14px;
+  height: 12px;
   border-radius: 4px;
-  background-color: var(--progress-bar-bg);
+  background: var(--progress-bg);
+  border: 1px solid var(--accent);
 }
-
-progress::-webkit-progress-bar {
-  background-color: var(--progress-bar-bg);
-}
-
-progress::-webkit-progress-value {
-  background-color: var(--progress-bar-fill);
-  transition: width 0.4s ease;
-}
-
+progress::-webkit-progress-bar,
 progress::-moz-progress-bar {
-  background-color: var(--progress-bar-fill);
-  transition: width 0.4s ease;
+  background: var(--progress-bg);
+}
+progress::-webkit-progress-value,
+progress::-moz-progress-bar {
+  background: var(--progress-fill);
 }
 
-/* Conteúdo do caso */
 .case-content {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
-  max-width: 1200px;
-  margin: 1rem 0;
-  padding: 1rem;
-  background: rgba(15, 23, 42, 0.7);
-  border-radius: 8px;
-  border: 1px solid var(--accent-color);
+  max-width: 900px;
+  padding: 0.8rem;
+  background: rgba(10,16,30,0.8);
+  border-radius: 6px;
+  border: 1px solid var(--accent);
 }
-
 .case-details {
-  flex: 3 1 600px;
-  text-align: left;
+  flex: 2 1 500px;
 }
-
 .case-details p,
-.case-details div {
-  margin-bottom: 1rem;
-  font-size: 1rem;
-}
-
 #case-evidences,
 #investigation-options,
 #decision-options {
-  background: rgba(30, 41, 59, 0.7);
-  padding: 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--accent-color);
-  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+  padding: 0.8rem;
+  background: rgba(30,41,59,0.8);
+  border-radius: 4px;
+}
+#case-evidences ul {
+  list-style: disc;
+  padding-left: 1.2rem;
+}
+#investigation-options button,
+#decision-options button {
+  width: 100%;
+  margin: 0.3rem 0;
 }
 
-.case-visuals {
-  flex: 2 1 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Imagens */
-#case-illustration,
-#case-illustration img,
-#character-portrait {
+img {
   width: 100%;
   max-width: 400px;
-  border-radius: 8px;
-  border: 1px solid var(--accent-color);
-  object-fit: cover;
-  display: block !important; /* Garante que imagens apareçam */
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  margin: 0.5rem auto;
+  display: block;
 }
 
-.intro-image {
-  width: 100%;
-  max-width: 300px;
-  height: 200px;
-  background: url('https://images.pexels.com/photos/159306/construction-site-build-construction-work-159306.jpeg') center/cover no-repeat;
-  border-radius: 8px;
-  margin: 1rem 0;
-}
-
-/* Tela de mídia */
 #media-screen .container {
-  background: rgba(15, 23, 42, 0.7);
-  border-radius: 8px;
-  padding: 1.5rem;
-  max-width: 800px;
-  margin: 1rem auto;
+  max-width: 700px;
+  padding: 1rem;
 }
-
 #media-headline {
-  color: var(--secondary-color);
-  font-weight: 600;
+  color: var(--gold);
+  font-size: clamp(1.3rem, 3vw, 1.5rem);
 }
-
 #media-reactions {
   font-style: italic;
-  color: var(--accent-color);
+  color: var(--accent);
+  font-size: 0.85rem;
 }
 
-/* Tela de diplomacia */
-#nation-map {
-  width: 100%;
+#diplomacy-screen .container {
   max-width: 600px;
-  height: 300px;
-  border: 2px solid var(--accent-color);
-  border-radius: 8px;
-  margin: 1rem 0;
-  background: rgba(15, 23, 42, 0.7);
+}
+.diplomacy-description,
+.action-description {
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+.action-description {
+  color: var(--accent);
 }
 
-/* Notificações */
 .notification {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: var(--success-color);
-  color: var(--text-color);
-  padding: 1rem 1.5rem;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  bottom: 1rem;
+  right: 1rem;
+  background: var(--success);
+  color: var(--text);
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.3s;
+  max-width: 80%;
+  font-size: 0.8rem;
+  z-index: 1000;
 }
-
 .notification.show {
   opacity: 1;
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
   .case-content {
     flex-direction: column;
   }
-
   .reputation {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
-  .container {
+  .container,
+  .screen {
+    margin: 0.5rem auto;
     padding: 0.5rem;
   }
-
-  h1 {
-    font-size: 2rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  button {
-    width: 100%;
-    max-width: 300px;
-    margin: 0.5rem 0;
-  }
+  h1 { font-size: clamp(1.4rem, 3.5vw, 1.8rem); }
+  button { width: 100%; padding: 0.6rem 1rem; }
+  .notification { left: 0.5rem; right: 0.5rem; }
 }
 
 @media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
+  h1 { font-size: clamp(1.2rem, 3vw, 1.5rem); }
+  .case-details p,
+  #case-evidences li {
+    font-size: 0.8rem;
   }
-
-  .case-content {
-    padding: 0.5rem;
-  }
-
-  #case-illustration,
-  #case-illustration img,
-  #character-portrait {
-    max-width: 250px;
-  }
+  img { max-width: 100%; }
 }
