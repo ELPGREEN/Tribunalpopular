@@ -24,7 +24,7 @@ const eventosAleatorios = [
         Milhares de pessoas tomaram as ruas, erguendo barricadas de pneus em chamas. Com a hashtag <strong>#ForaJuiz</strong>, manifestantes expressam indignação contra uma decisão judicial.`,
         efeitos: { apoioPopular: -10, relacaoImprensa: -5 },
         condicao: () => state.relacaoImprensa < 25 || state.apoioPopular < 30,
-        imagem: "assets/images/protestos.jpg"
+        imagem: "images/protestos.jpg"
     },
     {
         id: "elogio_ong",
@@ -32,7 +32,7 @@ const eventosAleatorios = [
         A ONG Justiça Sem Fronteiras exalta o juiz como exemplo de integridade, oferecendo esperança em meio à crise.`,
         efeitos: { respeitoInstitucional: 10, relacaoONGs: 10 },
         condicao: () => state.relacaoONGs > 75,
-        imagem: "assets/images/elogio_ong.jpg"
+        imagem: "images/elogio_ong.jpg"
     },
     {
         id: "vazamento",
@@ -40,7 +40,7 @@ const eventosAleatorios = [
         Áudios sugerem uma aliança entre o juiz e o governo, abalando a confiança pública e desencadeando investigações.`,
         efeitos: { influenciaPolitica: -15, relacaoImprensa: -10 },
         condicao: () => state.relacaoGoverno > 75 && state.relacaoImprensa < 50,
-        imagem: "assets/images/vazamento.jpg"
+        imagem: "images/vazamento.jpg"
     },
     {
         id: "aplausos_imprensa",
@@ -48,7 +48,7 @@ const eventosAleatorios = [
         O Jornal do Povo publica editorial elogiando a imparcialidade do juiz, inspirando confiança na justiça.`,
         efeitos: { relacaoImprensa: 10, apoioPopular: 5 },
         condicao: () => state.relacaoImprensa > 75,
-        imagem: "assets/images/aplausos_imprensa.jpg"
+        imagem: "images/aplausos_imprensa.jpg"
     }
 ];
 
@@ -59,7 +59,7 @@ const eventosCrise = [
         texto: `**Crise Judicial: Greve Nacional de Magistrados**<br><br>
         Uma greve histórica paralisa o Judiciário, liderada por juízes que exigem melhores salários e condições. A população está dividida: alguns apoiam a causa, outros veem a paralisação como abandono do dever. Como Juiz Supremo, sua posição será crucial.<br><br>
         A nação observa enquanto o tribunal, símbolo da justiça, enfrenta sua maior prova. Escolha com cuidado: sua decisão pode fortalecer ou destruir a confiança no sistema judicial.`,
-        imagem: "assets/images/greve_judiciaria.jpg",
+        imagem: "images/greve_judiciaria.jpg",
         opcoes: [
             {
                 texto: "Apoiar a greve e negociar com os juízes",
@@ -86,7 +86,7 @@ const casos = [
         id: "caso_01",
         titulo: "O Roubo do Século na Fundação Esperança",
         descricao: `Brasília, 16 de março de 2024 – O deputado João Almeida, presidente da Fundação Esperança, é acusado de desviar R$ 2,3 bilhões destinados a salvar vidas. Imagens mostram malas de dinheiro em seu escritório, enquanto protestos eclodem. A ONG Futuro Global defende Almeida, mas o povo exige justiça.`,
-        imagem: "assets/images/caso_01_malas_dinheiro.jpg",
+        imagem: "images/caso_01_malas_dinheiro.jpg",
         provas: [
             `Vídeo clandestino mostra 15 malas de dinheiro no escritório de Almeida, com ele murmurando: "Isso é só o começo."`,
             `E-mails criptografados revelam transferências de R$ 500 milhões para empresas de fachada.`,
@@ -148,7 +148,7 @@ const casos = [
         id: "caso_02",
         titulo: "A Revolta do Bairro Liberdade",
         descricao: `São Paulo, 8 de julho de 2024 – Após a morte de um jovem por policiais, o Bairro Liberdade explode em protestos. A líder comunitária Ana Ribeiro é acusada de incitar saques e violência. A polícia exige prisão, mas ONGs apontam brutalidade policial como a causa.`,
-        imagem: "assets/images/caso_02_protestos.jpg",
+        imagem: "images/caso_02_protestos.jpg",
         provas: [
             `Vídeo mostra Ana discursando: "Não vamos nos calar!" antes dos saques.`,
             `Relatório policial cita 20 lojas destruídas e R$ 1,5 milhão em prejuízos.`,
@@ -209,7 +209,7 @@ const casos = [
         id: "caso_03",
         titulo: "O Escândalo da Vacina Falsa",
         descricao: `Rio de Janeiro, 12 de setembro de 2024 – A farmacêutica BioVida é acusada de vender 2 milhões de doses falsas de vacina contra uma nova epidemia. Pacientes morreram, e o CEO, Dr. Carlos Mendes, culpa sabotagem interna. O governo exige punição máxima.`,
-        imagem: "assets/images/caso_03_vacina.jpg",
+        imagem: "images/caso_03_vacina.jpg",
         provas: [
             `Laudos mostram que as vacinas eram solução salina, sem princípio ativo.`,
             `E-mails internos da BioVida sugerem que Mendes sabia da fraude.`,
@@ -270,7 +270,7 @@ const casos = [
         id: "caso_04",
         titulo: "O Desastre do Vale Verde",
         descricao: `Minas Gerais, 15 de novembro de 2024 – Um vazamento químico da mineradora Vale Verde contamina o rio Claro, matando 300 pessoas e destruindo o ecossistema. A ONG Frente Verde é acusada de sabotar a mina, enquanto a Vale Verde nega negligência. O povo exige justiça.`,
-        imagem: "assets/images/caso_04_vazamento.jpg",
+        imagem: "images/caso_04_vazamento.jpg",
         provas: [
             `Laudos mostram que o vazamento foi causado por falhas de segurança na mina.`,
             `Vídeo da Frente Verde mostra ativistas invadindo a mina dias antes.`,
@@ -331,7 +331,7 @@ const casos = [
         id: "caso_05",
         titulo: "Sombra: Herói ou Traidor da Nação?",
         descricao: `1º de maio de 2025 – O hacker Sombra, revelado como Lucas Ferreira, ex-analista do Ministério da Defesa, expôs 50 mil documentos secretos que incriminam a elite do poder. Os arquivos mostram corrupção envolvendo deputados, juízes e o vice-presidente, além de vigilância ilegal contra jornalistas e ativistas. Para milhões, Sombra é um herói; para o governo, um traidor que ameaça a segurança nacional. Com protestos pró-Sombra e pressão internacional, o tribunal decidirá seu destino.`,
-        imagem: "assets/images/caso_05_hacker.jpg",
+        imagem: "images/caso_05_hacker.jpg",
         provas: [
             `Documentos vazados em 30/04/2025 mostram propinas de R$ 50 milhões pagas a deputados por empreiteiras.`,
             `Relatórios da inteligência confirmam que Sombra acessou servidores secretos às 3h de 28/04/2025.`,
@@ -393,7 +393,7 @@ const casos = [
         id: "caso_06",
         titulo: "O Escândalo da Privatização da Água",
         descricao: `Salvador, 10 de junho de 2025 – A empresa AquaCorp é acusada de manipular a privatização do sistema de água, cobrando tarifas abusivas e deixando bairros sem abastecimento. O governador, aliado da AquaCorp, defende a privatização, enquanto moradores protestam por água potável. ONGs denunciam corrupção no processo.`,
-        imagem: "assets/images/caso_06_agua.jpg",
+        imagem: "images/caso_06_agua.jpg",
         provas: [
             `Contratos mostram que a AquaCorp pagou R$ 10 milhões a consultores ligados ao governador.`,
             `Relatórios indicam que 40% dos bairros pobres estão sem água há meses.`,
@@ -455,7 +455,7 @@ const casos = [
         id: "caso_07",
         titulo: "A Queda do Ídolo do Futebol",
         descricao: `Rio de Janeiro, 22 de agosto de 2025 – O astro do futebol Gabriel Lima é acusado de sonegar R$ 80 milhões em impostos, usando empresas offshore. Fãs o defendem como vítima de perseguição, enquanto a Receita Federal exige prisão. A imprensa explora a polêmica, dividindo a nação.`,
-        imagem: "assets/images/caso_07_futebol.jpg",
+        imagem: "images/caso_07_futebol.jpg",
         provas: [
             `Extratos mostram transferências de R$ 50 milhões para contas nas Ilhas Virgens.`,
             `E-mails sugerem que Gabriel sabia das operações ilegais.`,
@@ -517,7 +517,7 @@ const casos = [
         id: "caso_08",
         titulo: "O Julgamento da Inteligência Artificial",
         descricao: `São Paulo, 15 de outubro de 2025 – A empresa TechNova é acusada de usar sua IA, Aurora, para manipular eleições com campanhas de desinformação. A TechNova nega, alegando que a IA foi hackeada. Ativistas exigem o banimento da IA, enquanto o governo teme perder investimentos.`,
-        imagem: "assets/images/caso_08_ia.jpg",
+        imagem: "images/caso_08_ia.jpg",
         provas: [
             `Logs mostram que Aurora gerou 10 milhões de postagens falsas em redes sociais.`,
             `E-mails internos sugerem que a TechNova lucrou R$ 200 milhões com campanhas.`,
@@ -579,7 +579,7 @@ const casos = [
         id: "caso_09",
         titulo: "A Crise da Reforma Agrária",
         descricao: `Mato Grosso, 5 de dezembro de 2025 – O líder do Movimento Terra Livre, José Mendes, é acusado de invadir terras privadas e incitar conflitos que deixaram 10 mortos. Fazendeiros exigem sua prisão, enquanto camponeses o veem como herói da reforma agrária. O governo teme instabilidade no campo.`,
-        imagem: "assets/images/caso_09_reforma.jpg",
+        imagem: "images/caso_09_reforma.jpg",
         provas: [
             `Vídeos mostram José liderando ocupações de fazendas.`,
             `Relatórios policiais citam armas encontradas com membros do Terra Livre.`,
@@ -641,7 +641,7 @@ const casos = [
         id: "caso_10",
         titulo: "O Colapso da Barragem do Norte",
         descricao: `Pará, 20 de fevereiro de 2026 – Uma barragem da mineradora NorteMinas ruiu, matando 200 pessoas e devastando comunidades indígenas. A empresa culpa chuvas, mas laudos apontam negligência. Líderes indígenas exigem justiça, enquanto o governo protege a NorteMinas por empregos.`,
-        imagem: "assets/images/caso_10_barragem.jpg",
+        imagem: "images/caso_10_barragem.jpg",
         provas: [
             `Laudos mostram que a barragem tinha rachaduras ignoradas há dois anos.`,
             `E-mails da NorteMinas minimizam alertas de engenheiros.`,
