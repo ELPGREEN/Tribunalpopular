@@ -1,0 +1,48 @@
+Tribunal Supremo                      ← Pasta raiz do seu projeto
+│
+|
+├──.vscode
+|   ├── launch.json
+|   └── settings.json
+├── app.py                        ← Arquivo principal que executa a aplicação Flask
+│
+├── game/                         ← Pasta para a lógica do jogo (seu backend Python)
+│   ├── tribunal_supremo.py
+│   └── game_logic.py             ← Toda a lógica de jogo, estado, casos, eventos, etc.
+│
+├── index.html                      ← Página principal do jogo ← Arquivos HTML (renderizados pelo Flask)
+│                 
+│
+├── static/                       ← Arquivos estáticos como imagens, CSS, JS
+│   ├── css/
+│   │   └── style.css             ← (Opcional) Arquivo de estilos
+│   ├── js/
+│   │   └── script.js             ← Lógica de frontend (chamadas AJAX, interações, etc.)
+│   └── assets/
+│       └── images/
+│           ├── 
+│           ├── balança da justiça.avif
+│           ├── caso_01_malas_dinheiro.webp
+│           ├── caso_02_protestos.webp
+│           ├── caso_03_vacina.webp
+│           ├── caso_04_vazamento.jpg
+│           ├── caso_05_hacker.jpg
+│           ├── caso_06_agua.jpg
+│           ├── caso_10_barragem.avif
+│           ├── cyber-security-background-dz8qpz66ryu26ndb.webp
+│           ├── diplomacy_background.jpg
+│           ├── diplomacy_global.jpeg
+│           ├── f4995198-bbdd-4abe-a5b7-3a849631a37.jpeg
+│           ├── Imagemdeumamesadenegociações.jpg
+│           ├── law-pictures-tna0vl14z1r3u9lj.jpg
+│           ├── law-pictures.jpg
+│           ├── mala de dinheiro.webp
+│           ├── pf-3.jpg
+│           ├── placeholder_advanced.png
+│           ├── pngwing.com.png
+│           ├── Ponte-ciclopedonale-e-condotto-idrico-1.jpg
+│           ├── Schermata-2022-02-27-alle-21.09.24.png
+│           └──  uma-sala-de-tribunal-com-um-tribunal-e-um-relogio-na-parede_836919-1837.jpg
+│           
+│
+└── requirements.txt              ← (Opcional) Dependências do projeto, como Flask
