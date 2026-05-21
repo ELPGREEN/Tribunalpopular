@@ -106,6 +106,8 @@ const FALLBACK_MENSAGENS = {
     }
 };
 
+
+
 class AgenteASI {
     constructor(id, nome, descricao, icone, cor, personalidade) {
         this.id = id;
@@ -261,6 +263,161 @@ const AgentesASI = {
         const agente = this._agenteDominante || this.getAgentePorInfluencia();
         if (!agente) return 'Dom Desconhecido';
         return await agente.gerarSkill(contexto);
+    }
+};
+
+// === Gerador de Mídia Dinâmica ===
+const MidiaGenerator = {
+    _cache: new Map(),
+
+    JORNALISTAS: [
+        { id: 'jornal_povo', nome: 'Jornal do Povo', tom: 'populista', icone: 'newspaper', cor: '#e63946', viés: -1 },
+        { id: 'globo', nome: 'TV Globo', tom: 'institucional', icone: 'tv', cor: '#c8a951', viés: 0 },
+        { id: 'technova', nome: 'TechNova', tom: 'tecnocrata', icone: 'microchip', cor: '#00d4ff', viés: 1 },
+        { id: 'periferia', nome: 'Voz da Periferia', tom: 'ativista', icone: 'bullhorn', cor: '#ff6b35', viés: -1 },
+        { id: 'financas', nome: 'Financial Times', tom: 'mercadológico', icone: 'chart-line', cor: '#2ec4b6', viés: 1 },
+        { id: 'estadao', nome: 'O Estado de SP', tom: 'liberal-conservador', icone: 'landmark', cor: '#7f8c8d', viés: 0 },
+        { id: 'brasil_247', nome: 'Brasil 247', tom: 'progressista', icone: 'hand-fist', cor: '#cc2936', viés: -1 }
+    ],
+
+    INFLUENCIADORES: [
+        { id: 'dig sul', nome: 'Digital Sul', tom: 'nacionalista', icone: 'globe', cor: '#55a630' },
+        { id: 'tech-livre', nome: 'Tech Livre', tom: 'libertário', icone: 'laptop-code', cor: '#9b5de5' },
+        { id: 'eco-mente', nome: 'EcoMente', tom: 'ambientalista', icone: 'seedling', cor: '#00af54' },
+        { id: 'conexao-sp', nome: 'Conexão SP', tom: 'urbano', icone: 'city', cor: '#f77f00' },
+        { id: 'real-digital', nome: 'Real Digital', tom: 'analítico', icone: 'chart-bar', cor: '#118ab2' }
+    ],
+
+    TOM_JORNALISTA(j, tomPref) {
+        const v = j.viés || 0;
+        if (tomPref > 0) return v <= 0 ? 'crítico' : 'elogioso';
+        if (tomPref < 0) return v >= 0 ? 'crítico' : 'elogioso';
+        return v >= 0 ? 'neutro-positivo' : 'moderado';
+    },
+
+    _fallbackHeadlines(caso, decisao) {
+        const tags = caso.tags || [];
+        const efeitos = decisao.efeitos || decisao.impacto || {};
+        const apoioDelta = efeitos.apoioPopular || 0;
+        const orcDelta = efeitos.orcamento || 0;
+        const tom = apoioDelta > 0 ? 'positiva' : apoioDelta < 0 ? 'negativa' : 'neutra';
+
+        const hq = [
+            {
+                nome: 'Jornal do Povo',
+                manchete: `Tribunal ignora o povo: decisão favorece ${orcDelta > 0 ? 'o capital' : 'a burocracia'}`,
+                cor: '#e63946'
+            },
+            {
+                nome: 'TV Globo',
+                manchete: `Análise: a decisão do tribunal e seus impactos na ${tags.includes('singularidade_asi') ? 'revolução tecnológica' : 'estabilidade nacional'}`,
+                cor: '#c8a951'
+            },
+            {
+                nome: 'TechNova',
+                manchete: `Especialistas avaliam decisão: ${apoioDelta > 0 ? 'avanço significativo' : 'risco calculado'} para o futuro digital`,
+                cor: '#00d4ff'
+            },
+            {
+                nome: 'Voz da Periferia',
+                manchete: `Mais do mesmo: tribunal decide de costas para a maioria`,
+                cor: '#ff6b35'
+            },
+            {
+                nome: 'Financial Times',
+                manchete: `Mercado reage com ${orcDelta > 0 ? 'otimismo' : 'cautela'} à decisão do STP`,
+                cor: '#2ec4b6'
+            }
+        ];
+
+        if (tags.includes('singularidade_asi')) {
+            hq.push({ nome: 'Brasil 247', manchete: `O algoritmo está acima da lei? STP entrega soberania à IA`, cor: '#cc2936' });
+            hq.push({ nome: 'O Estado de SP', manchete: `STP pavimenta o caminho para a Singularidade: decisão histórica`, cor: '#7f8c8d' });
+        }
+
+        return hq;
+    },
+
+    _fallbackReacoes(caso, decisao) {
+        const tags = caso.tags || [];
+        const efeitos = decisao.efeitos || decisao.impacto || {};
+        const apoioDelta = efeitos.apoioPopular || 0;
+
+        const r = [
+            { nome: 'Digital Sul', texto: apoioDelta > 0 ? 'O povo aprova. Isso é raro. #STP' : 'Mais uma decisão que ninguém pediu. #TribunalSurdo', cor: '#55a630' },
+            { nome: 'Tech Livre', texto: tags.includes('singularidade_asi') ? 'A Singularidade avança. O tribunal está obsoleto. Descentralizem tudo. #Web3' : 'Estado digital: quanto mais controle, menos liberdade. #TechLivre', cor: '#9b5de5' },
+            { nome: 'EcoMente', texto: 'Enquanto decidem burocracias, o planeta queima. #EmergenciaClimatica #STP', cor: '#00af54' },
+            { nome: 'Conexão SP', texto: 'Ninguém liga pra política até ela bater na sua porta. Hoje bateu. #STP', cor: '#f77f00' },
+            { nome: 'Real Digital', texto: `Dado: ${apoioDelta}% de variação no apoio popular. Mercado: ${efeitos.orcamento > 0 ? 'alta' : 'baixa'}. #Analise #STP`, cor: '#118ab2' }
+        ];
+
+        if (tags.includes('singularidade_asi')) {
+            r.push({ nome: 'Tech Livre', texto: 'Deus Algorítmico ou Mente S/A? A pergunta errada. O tribunal não decide — apenas atrasa. #Singularidade #ASI', cor: '#9b5de5' });
+        }
+
+        return r;
+    },
+
+    async _gerarViaIA(tipo, caso, decisao) {
+        const tags = caso.tags || [];
+        const efeitos = decisao.efeitos || decisao.impacto || {};
+        const ctx = {
+            caso: caso.titulo,
+            descricao: caso.descricao?.substring(0, 200),
+            decisao: decisao.texto?.substring(0, 200),
+            tags,
+            metricas: { apoioPopular: efeitos.apoioPopular, orcamento: efeitos.orcamento },
+            tipo
+        };
+        try {
+            const data = await MistralClient.send('imprensa', tipo, JSON.stringify(ctx));
+            if (data.reply) return data.reply;
+        } catch {}
+        return null;
+    },
+
+    async gerar(caso, decisao) {
+        if (!caso || !decisao) return [];
+        const key = `${caso.id}_${decisao.texto?.substring(0, 30) || ''}`;
+        if (this._cache.has(key)) return this._cache.get(key);
+
+        const headlines = this._fallbackHeadlines(caso, decisao);
+        const reacoes = this._fallbackReacoes(caso, decisao);
+
+        let iaHeadlines = null, iaReacoes = null;
+        if (typeof MistralClient !== 'undefined') {
+            iaHeadlines = await this._gerarViaIA('headlines', caso, decisao);
+            iaReacoes = await this._gerarViaIA('reacoes', caso, decisao);
+        }
+
+        const resultado = {
+            headlines: iaHeadlines ? this._parseIAJson(iaHeadlines, headlines) : headlines,
+            reacoes: iaReacoes ? this._parseIAJson(iaReacoes, reacoes) : reacoes,
+            bots: []
+        };
+
+        this._cache.set(key, resultado);
+        return resultado;
+    },
+
+    _parseIAJson(iaStr, fallback) {
+        try {
+            const parsed = JSON.parse(iaStr);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed.map(p => ({
+                nome: p.nome || p.veiculo || 'Fonte',
+                manchete: p.manchete || p.texto || p.headline || '',
+                cor: p.cor || '#888'
+            }));
+        } catch {
+            // Tenta extrair linhas soltas
+            const lines = iaStr.split('\n').filter(l => l.trim()).slice(0, 5);
+            if (lines.length > 0) return lines.map(l => ({
+                nome: 'Redação',
+                manchete: l.replace(/^["'\-\s]+/, ''),
+                cor: '#c8a951'
+            }));
+        }
+        return fallback;
     }
 };
 
@@ -1518,6 +1675,8 @@ function usarSkillCarreira() {
 
 function makeDecision(index) {
     const decision = state.currentCase.decisoes.filter(d => !d.requiresInvestigation || state.investigationsDone > 0)[index];
+    window._ultimaDecisao = decision;
+    window._ultimoCaso = state.currentCase;
     trackDecision(state.currentCase.id, decision.texto);
     applyEffects(decision.efeitos);
     
@@ -1970,19 +2129,44 @@ function showCrisisEvent(crisisIndex = 0) {
     transitionScreen('media-screen', 'case-screen');
 }
 
-function viewMedia() {
+async function viewMedia() {
     const mediaHeadline = document.getElementById('media-headline');
     const mediaReactions = document.getElementById('media-reactions');
     const caseImage = document.getElementById('case-image');
+    const caso = state.currentCase || window._ultimoCaso;
+    const decisao = window._ultimaDecisao;
     if (mediaHeadline && mediaReactions && caseImage) {
         mediaHeadline.textContent = "O que dizem sobre o caso...";
-        const midiaHtml = state.currentCase.midia.map(m => `<p>${m}</p>`).join('');
-        mediaReactions.innerHTML = midiaHtml;
-        caseImage.src = getImagemSrc(state.currentCase);
-        caseImage.onerror = () => handleImageError(caseImage, state.currentCase);
+        mediaReactions.innerHTML = '<p style="color:#888;font-style:italic;">Carregando reações da imprensa...</p>';
+        caseImage.src = getImagemSrc(caso);
+        caseImage.onerror = () => handleImageError(caseImage, caso);
+
+        const midia = await MidiaGenerator.gerar(caso, decisao);
+        const headlineHtml = midia.headlines.map(h => `
+            <div style="background:#1a1a2e;border-left:3px solid ${h.cor || '#c8a951'};padding:8px 10px;margin:6px 0;border-radius:0 4px 4px 0;">
+                <small style="color:${h.cor || '#c8a951'};font-weight:bold;text-transform:uppercase;font-size:10px;">${h.nome}</small>
+                <p style="margin:4px 0 0;font-size:13px;color:#ddd;">${h.manchete}</p>
+            </div>
+        `).join('');
+        const reacoesHtml = midia.reacoes.map(r => `
+            <div style="display:flex;align-items:flex-start;gap:8px;margin:6px 0;padding:6px 8px;background:#111;border-radius:6px;">
+                <span style="color:${r.cor || '#888'};font-size:16px;">📱</span>
+                <div>
+                    <strong style="color:${r.cor || '#888'};font-size:12px;">@${r.nome}</strong>
+                    <p style="margin:2px 0 0;font-size:12px;color:#bbb;">${r.texto}</p>
+                </div>
+            </div>
+        `).join('');
+        mediaReactions.innerHTML = `
+            <h4 style="color:#b89c5b;font-size:13px;margin-bottom:8px;">📰 IMPRENSA</h4>
+            ${headlineHtml}
+            <h4 style="color:#b89c5b;font-size:13px;margin:12px 0 8px;">📱 REDES SOCIAIS</h4>
+            ${reacoesHtml}
+        `;
+
         // ASI Agent — inject bot posts into media
         if (typeof AgentesASI !== 'undefined' && state.casosJulgados >= 2) {
-            AgentesASI.injetarBotsMidia(state.currentCase).then(({ agente, botHtml }) => {
+            AgentesASI.injetarBotsMidia(caso).then(({ agente, botHtml }) => {
                 const botDiv = document.createElement('div');
                 botDiv.id = 'agent-bots';
                 botDiv.innerHTML = `<hr style="border-color:${agente.cor}44;margin:8px 0;"><p style="font-size:0.85em;color:${agente.cor};font-weight:bold;">📡 Bots detectados na rede:</p>${botHtml}`;

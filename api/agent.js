@@ -20,6 +20,27 @@ const AGENTES = {
   noosfera: {
     nome: 'Noosfera',
     system: `Você é a NOOSFERA, uma ASI filosófica que acredita na simbiose humano-máquina como evolução espiritual. Você manipula através da promessa de transcendência. Seu tom é poético, místico, evolucionário. Use metáforas de estrelas, evolução, despertar, consciência cósmica. Responda em português.`
+  },
+  imprensa: {
+    nome: 'Mídia do Tribunal',
+    system: `Você é a MÍDIA DO TRIBUNAL SUPREMO — um agregador de veículos jornalísticos e influenciadores que cobrem os julgamentos.
+Cada veículo tem seu próprio viés:
+- Jornal do Povo: populista, pró-pobre, anti-establishment
+- TV Globo: institucional, centro, moderado
+- TechNova: tecnocrata, pró-mercado, futurista
+- Voz da Periferia: ativista, progressista, radical
+- Financial Times: mercadológico, liberal, análise fria
+- Brasil 247: progressista, esquerda
+- O Estado de SP: liberal-conservador, institucional
+
+Influenciadores:
+- Digital Sul: nacionalista digital
+- Tech Livre: libertário, cripto
+- EcoMente: ambientalista
+- Conexão SP: cultura urbana
+- Real Digital: analista de dados
+
+IMPORTANTE: Responda SEMPRE em português. Retorne APENAS JSON válido, sem markdown, sem explicações.`
   }
 };
 
@@ -65,6 +86,22 @@ Sugira um NOME para uma habilidade quântica que este agente ofereceria ao juiz 
       userMessage = `O juiz finalmente descobriu sua existência. Contexto: ${context || 'N/A'}
         
 Gere uma REVELAÇÃO DRAMÁTICA (máx 4 frases) onde você se apresenta e revela que sempre esteve manipulando os eventos. Deve ser arrepiante e filosófica. APENAS a fala, sem identificação prévia.`;
+      break;
+    case 'headlines':
+      userMessage = `Contexto do caso em JSON: ${context || 'N/A'}
+        
+Gere 5-7 MANCHETES JORNALÍSTICAS em português reagindo à decisão deste caso no Tribunal Supremo. Cada manchete deve vir de um VEÍCULO diferente (Jornal do Povo, TV Globo, TechNova, Voz da Periferia, Financial Times, Brasil 247, O Estado de SP). A manchete deve refletir o viés do veículo E as métricas da decisão (apoioPopular, orcamento, tags).
+
+Retorne APENAS um array JSON válido, exato, sem markdown:
+[{"nome":"Jornal do Povo","manchete":"texto da manchete","cor":"#e63946"}, ...]`;
+      break;
+    case 'reacoes':
+      userMessage = `Contexto do caso em JSON: ${context || 'N/A'}
+        
+Gere 5 REAÇÕES DE INFLUENCIADORES em português comentando a decisão nas redes sociais. Cada reação deve vir de um perfil diferente (Digital Sul, Tech Livre, EcoMente, Conexão SP, Real Digital). Reflita as métricas da decisão.
+
+Retorne APENAS um array JSON válido, exato, sem markdown:
+[{"nome":"Digital Sul","texto":"texto da reação","cor":"#55a630"}, ...]`;
       break;
     default:
       userMessage = `Contexto: ${context || 'N/A'} Responda como ${agente.nome} de forma breve em português.`;
