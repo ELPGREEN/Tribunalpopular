@@ -1255,10 +1255,53 @@ function normalizarCasos(data) {
                 reacaoMidia: o.reacaoMidia || '',
                 requiresInvestigation: o.requiresInvestigation || false
             })),
-            midia: c.midia || [],
+            condicao: c.condicao || null,
+            midia: c.midia || [`${c.titulo || 'Tribunal Supremo'} — análise dos especialistas.`],
+            tags: (() => {
+                if (c.tags) return c.tags;
+                const n = c.id || 0;
+                if (n >= 11) return ['nova_aurora', 'ng_plus'];
+                if (n >= 8) return ['nova_aurora', 'singularidade_asi'];
+                return ['nova_aurora'];
+            })(),
             tag: c.tag || null
         };
     });
+}
+
+function getCasosArray() {
+    if (!_casosFonte) return casos;
+    const dimTags = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.tags || [] : [];
+    const ngMode = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.ngMode || false : false;
+    const tagSet = new Set(dimTags);
+
+    // Filtra casos por condição e NG+
+    const grupos = {};
+    _casosFonte.forEach(c => {
+        const numId = parseInt(c.id.replace('caso_', ''), 10);
+        // NG+ (id >= 11) só aparece se ngMode estiver ativo
+        if (numId >= 11 && !ngMode) return;
+        const key = numId <= 10 ? numId : 'ng_' + numId;
+        if (!grupos[key]) grupos[key] = [];
+        grupos[key].push(c);
+    });
+
+    // Para cada grupo de ID, escolhe o caso que satisfaz a condição
+    const filtrados = [];
+    for (const key of Object.keys(grupos).sort()) {
+        const opcoes = grupos[key];
+        if (opcoes.length === 1) {
+            filtrados.push(opcoes[0]);
+        } else {
+            // Múltiplas versões do mesmo ID — escolhe por condição
+            const match = opcoes.find(c => {
+                if (!c.condicao) return true; // fallback sem condição
+                return tagSet.has(c.condicao);
+            });
+            filtrados.push(match || opcoes[0]);
+        }
+    }
+    return filtrados;
 }
 
 function converterImpactoParaEfeitos(impacto) {
@@ -1269,10 +1312,6 @@ function converterImpactoParaEfeitos(impacto) {
     if (impacto.apoio) efeitos.apoioPopular = impacto.apoio;
     if (impacto.orcamento) efeitos.orcamento = impacto.orcamento * 100; // escala para moeda antiga
     return efeitos;
-}
-
-function getCasosArray() {
-    return _casosFonte || casos;
 }
 
 function loadCase() {
@@ -2215,7 +2254,7 @@ function showCaseReport(decision) {
             <h4>Relatório do Julgamento</h4>
             <p><strong>Manchete:</strong> ${decision.manchete || 'Decisão tomada'}</p>
             <p><strong>Impactos:</strong> ${changes.join(', ') || 'Nenhum impacto direto'}</p>
-            <p><strong>Casos julgados:</strong> ${state.casosJulgados}/10</p>
+            <p><strong>Casos julgados:</strong> ${state.casosJulgados}/${getCasosArray().length}</p>
         </div>
     `;
 }
@@ -2267,8 +2306,9 @@ function endGame() {
         ? '<br><br><strong>Conquistas:</strong><br>' + achList.map(a => `&#9733; ${a.nome}`).join('<br>')
         : '';
 
+    const totalCasos = getCasosArray().length;
     finalText += `<br><br><strong>Resumo:</strong><br>
-        Casos Julgados: ${casesCompleted}/${casos.length}<br>
+        Casos Julgados: ${casesCompleted}/${totalCasos}<br>
         Orçamento Restante: ${state.orcamento}<br>
         Média de Reputação: ${Math.round(legacyScore)}${achText}`;
     
