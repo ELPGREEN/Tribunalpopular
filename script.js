@@ -2253,7 +2253,7 @@ function makeDecision(index) {
         estabilidade: Math.round(((decision.efeitos.orcamento || 0) + (decision.efeitos.influenciaPolitica || 0) - (decision.efeitos.apoioPopular || 0)) / 3),
         etica: Math.round((0 - (decision.efeitos.relacaoONGs || 0) - (decision.efeitos.relacaoImprensa || 0)) / 3),
         apoio: Math.round((decision.efeitos.apoioPopular || 0) / 2),
-        orcamento: -Math.round((decision.efeitos.orcamento || 0)),
+        orcamento: Math.round((decision.efeitos.orcamento || 0)),
         legado: 0,
         diplomacia: Math.round((decision.efeitos.relacaoGoverno || 0 + decision.efeitos.influenciaPolitica || 0) / 4)
     };
