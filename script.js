@@ -1561,12 +1561,14 @@ function updateReputation() {
 function atualizarHUD() {
     const hud = document.getElementById('player-hud');
     if (!hud) return;
+    const dim = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.metricas : null;
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
     set('hud-name', state.playerName);
-    set('hud-apoio', state.apoioPopular);
-    set('hud-respeito', state.respeitoInstitucional);
-    set('hud-imprensa', state.relacaoImprensa);
-    set('hud-orcamento', state.orcamento);
+    set('hud-estabilidade', dim ? dim.estabilidade : 50);
+    set('hud-etica', dim ? dim.etica : 50);
+    set('hud-apoio', dim ? dim.apoio : 50);
+    set('hud-orcamento', dim ? dim.orcamento : 50);
+    set('hud-diplomacia', dim ? dim.diplomacia : 50);
     set('hud-casos', `${state.casosJulgados}/${getCasosArray().length}`);
     set('hud-sp-val', typeof Skills !== 'undefined' ? Skills.pontosDisponiveis || 0 : 0);
     const careerInfo = document.getElementById('hud-career-info');
@@ -1782,7 +1784,19 @@ function loadCase() {
     state.currentCase = JSON.parse(JSON.stringify(arr[state.casosJulgados]));
     state.investigationsDone = 0;
     applyCaseModifications(state.casosJulgados);
-    showNotification(`Caso ${state.casosJulgados + 1} de ${arr.length}: ${state.currentCase.titulo}`);
+    
+    // Sementes sci-fi: adicionar elementos sutis de background nos primeiros casos
+    const casoNum = state.casosJulgados + 1;
+    const sementes = {
+        1: '\n\n📡 Notícias de fundo: "Radiotelescópio capta sinais anômalos vindos da constelação de Órion." — ninguém deu importância na época.',
+        2: '\n\n📡 Relatório confidencial classificado: "Padrão algébrico nos dados sugere inteligência não-humana. Projeto Aurora classificado como prioritário." — documento encontrado nos arquivos do ministério.',
+        3: '\n\n📡 Boletim científico vaza: "Algoritmo de previsão eleitoral com precisão de 99.7% — origem dos dados desconhecida." — a mídia não publicou.',
+    };
+    if (sementes[casoNum]) {
+        state.currentCase.descricao += sementes[casoNum];
+    }
+    
+    showNotification(`Caso ${casoNum} de ${arr.length}: ${state.currentCase.titulo}`);
     renderCase();
 }
 
@@ -2892,38 +2906,21 @@ function showCaseReport(decision) {
 // Função endGame (ajustada para transição de sessão)
 function endGame(returnOnly = false) {
     let finalText = '';
-    let legacyScore = Math.round((state.apoioPopular + state.respeitoInstitucional + state.influenciaPolitica +
-        state.relacaoImprensa + state.relacaoGoverno + state.relacaoONGs) / 6);
     let casesCompleted = state.casosJulgados;
     
     // Verificar dimensão final primeiro (ASI ou dimensional)
     const dimFinal = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.getDimensaoFinal() : null;
     
     if (!returnOnly && dimFinal && dimFinal.singularidade) {
-        // Singularidade ASI já foi tratada em mostrarSingularidade, não duplicar
         return '';
     }
     
-    // Game over por métricas dimensionais (legacy metrics viram avisos, não morte)
+    // Game over APENAS por métricas dimensionais
     const dim = MotorDimensional?.metricas || {};
     if (dim.estabilidade < 15) {
         finalText = `${state.playerName}, a estabilidade do país colapsou. A guerra civil engoliu Nova Aurora.`;
     } else if (dim.orcamento <= 0) {
         finalText = `${state.playerName}, o Estado faliu. Sem orçamento, Nova Aurora decretou falência soberana.`;
-    } else if (state.orcamento <= 0) {
-        finalText = `${state.playerName}, o tribunal faliu! Sem recursos, você foi destituído do cargo.`;
-    } else if (state.apoioPopular <= 0) {
-        finalText = `${state.playerName}, a fúria do povo selou seu destino. Multidões invadiram o tribunal.`;
-    } else if (state.respeitoInstitucional <= 0) {
-        finalText = `${state.playerName}, as instituições voltaram-se contra você. O Supremo foi dissolvido.`;
-    } else if (state.influenciaPolitica <= 0) {
-        finalText = `${state.playerName}, as elites isolaram você. Seu tribunal foi extinto.`;
-    } else if (state.relacaoImprensa <= 0) {
-        finalText = `${state.playerName}, a imprensa destruiu sua reputação. Escândalos forçaram seu afastamento.`;
-    } else if (state.relacaoGoverno <= 0) {
-        finalText = `${state.playerName}, o governo conspirou contra você. O Congresso dissolveu seu tribunal.`;
-    } else if (state.relacaoONGs <= 0) {
-        finalText = `${state.playerName}, ONGs denunciaram suas decisões. Você renunciou.`;
     } else {
         finalText = `${state.playerName}, sua trajetória foi controversa. Seu legado divide opiniões após ${casesCompleted} casos.`;
     }
@@ -2935,10 +2932,29 @@ function endGame(returnOnly = false) {
         : '';
 
     const totalCasos = getCasosArray().length;
+    
+    // Timeline de decisões
+    const timelineHtml = decisionHistory.length > 0
+        ? '<br><br><strong>📜 Linha do Tempo das Decisões:</strong><br><div style="font-size:11px;max-height:150px;overflow-y:auto;">' +
+          decisionHistory.map((d, i) => `<span style="color:#888;">#${i + 1}</span> ${d.caseId}: <span style="color:#ccc;">${d.decisionText?.substring(0, 60)}</span>`).join('<br>') +
+          '</div>'
+        : '';
+
+    // Métricas iniciais vs finais
+    const metricsHtml = dimFinal ? `
+        <br><br><strong>📊 Métricas Quânticas Finais:</strong><br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:11px;">
+            <span>🛡️ Estabilidade: <strong style="color:${dim.estabilidade > 50 ? '#2a9d8f' : '#e63946'};">${dim.estabilidade}%</strong></span>
+            <span>⚖️ Ética: <strong style="color:${dim.etica > 50 ? '#2a9d8f' : '#e63946'};">${dim.etica}%</strong></span>
+            <span>❤️ Apoio: <strong style="color:${dim.apoio > 50 ? '#2a9d8f' : '#e63946'};">${dim.apoio}%</strong></span>
+            <span>💰 Orçamento: <strong style="color:${dim.orcamento > 50 ? '#2a9d8f' : '#e63946'};">${dim.orcamento}%</strong></span>
+            <span>🌐 Diplomacia: <strong style="color:${dim.diplomacia > 50 ? '#2a9d8f' : '#e63946'};">${dim.diplomacia}%</strong></span>
+            <span>👑 Legado: <strong style="color:#c8a951;">${dim.legado || 0}</strong></span>
+        </div>
+    ` : '';
+
     finalText += `<br><br><strong>Resumo:</strong><br>
-        Casos Julgados: ${casesCompleted}/${totalCasos}<br>
-        Orçamento Restante: ${state.orcamento}<br>
-        Média de Reputação: ${Math.round(legacyScore)}${achText}`;
+        Casos Julgados: ${casesCompleted}/${totalCasos}${timelineHtml}${metricsHtml}${achText}`;
     
     // Dimensão Final Quântica
     if (typeof MotorDimensional !== 'undefined') {
@@ -3120,6 +3136,19 @@ function renderizarTags() {
     if (tags.length === 0) { container.innerHTML = ''; return; }
     container.innerHTML = '<h4 style="margin-top:8px;font-size:12px;color:#888;"><i class="fas fa-tags"></i> Tags Dimensionais</h4><div style="display:flex;flex-wrap:wrap;gap:4px;">' +
         tags.map(t => `<span style="background:#2a2a4a;color:#aaa;padding:2px 8px;border-radius:12px;font-size:10px;border:1px solid #444;">${t}</span>`).join('') + '</div>';
+    
+    // Dimensão Preview
+    const prevEl = document.getElementById('dimensao-preview-text');
+    if (!prevEl) return;
+    const dimPrev = DimensoesFinais.codificar(tags, MotorDimensional.metricas);
+    if (dimPrev) {
+        const pct = Math.round((tags.length / 6) * 100);
+        prevEl.innerHTML = `
+            <span style="color:${dimPrev.cor};font-weight:bold;">⬡ ${dimPrev.nome}</span>
+            <span style="color:#666;font-size:10px;"> (${Math.min(pct, 100)}% match)</span>
+            <span style="display:block;font-size:10px;color:#888;margin-top:4px;">${dimPrev.descricao.split('\n')[0].substring(0, 120)}...</span>
+        `;
+    }
 }
 
 // === Skills Screen ===

@@ -98,22 +98,9 @@
         <progress id="dimLegadoBar" max="100" value="0" class="dim-bar"></progress>
       </div>
       <div id="tags-display" class="tags-container"></div>
-      <h3><i class="fas fa-star-half-alt"></i> Reputação</h3>
-      <div class="reputation">
-        <p><strong><i class="fas fa-coins"></i> Orçamento do Tribunal:</strong> <span id="orcamento">100</span></p>
-        <progress id="orcamentoBar" max="100" value="100" aria-label="Orçamento disponível do tribunal"></progress>
-        <p><strong><i class="fas fa-users"></i> Apoio Popular:</strong> <span id="apoioPopular">50</span></p>
-        <progress id="apoioPopularBar" max="100" value="50" aria-label="Nível de apoio popular"></progress>
-        <p><strong><i class="fas fa-university"></i> Respeito Institucional:</strong> <span id="respeitoInstitucional">50</span></p>
-        <progress id="respeitoInstitucionalBar" max="100" value="50" aria-label="Nível de respeito institucional"></progress>
-        <p><strong><i class="fas fa-handshake"></i> Influência Política:</strong> <span id="influenciaPolitica">50</span></p>
-        <progress id="influenciaPoliticaBar" max="100" value="50" aria-label="Nível de influência política"></progress>
-        <p><strong><i class="fas fa-bullhorn"></i> Relação com a Imprensa:</strong> <span id="relacaoImprensa">50</span></p>
-        <progress id="relacaoImprensaBar" max="100" value="50" aria-label="Nível de relação com a imprensa"></progress>
-        <p><strong><i class="fas fa-landmark"></i> Relação com o Governo:</strong> <span id="relacaoGoverno">50</span></p>
-        <progress id="relacaoGovernoBar" max="100" value="50" aria-label="Nível de relação com o governo"></progress>
-        <p><strong><i class="fas fa-leaf"></i> Relação com ONGs:</strong> <span id="relacaoONGs">50</span></p>
-        <progress id="relacaoONGsBar" max="100" value="50" aria-label="Nível de relação com ONGs"></progress>
+      <div id="dimensao-preview" class="dimensao-preview" style="margin-top:8px;padding:8px;background:#0d0d1a;border:1px solid #2d3748;border-radius:6px;">
+        <h4 style="color:#b89c5b;font-size:12px;margin-bottom:6px;">🌀 PROJEÇÃO DIMENSIONAL</h4>
+        <p id="dimensao-preview-text" style="font-size:11px;color:#666;font-style:italic;">Suas escolhas moldarão o destino...</p>
       </div>
     </div>
 
@@ -196,13 +183,14 @@
     </div>
 
     <!-- HUD Flutuante (visível em todas as telas durante o jogo) -->
-    <div id="player-hud" class="hidden" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#0a0a1add;border-bottom:1px solid #b89c5b44;padding:4px 12px;display:flex;gap:12px;align-items:center;font-size:11px;backdrop-filter:blur(4px);flex-wrap:wrap;">
-      <span style="color:#b89c5b;font-weight:bold;font-family:'Cinzel',serif;font-size:13px;">⚖️ <span id="hud-name"></span></span>
-      <span style="color:#888;">❤️ <span id="hud-apoio" style="color:#e63946;">50</span></span>
-      <span style="color:#888;">🏛️ <span id="hud-respeito" style="color:#c8a951;">50</span></span>
-      <span style="color:#888;">🗞️ <span id="hud-imprensa" style="color:#888;">50</span></span>
-      <span style="color:#888;">💰 <span id="hud-orcamento" style="color:#2a9d8f;">10000</span></span>
-      <span style="color:#888;">📊 <span id="hud-casos" style="color:#00d4ff;">0/10</span></span>
+    <div id="player-hud" class="hidden" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#0a0a1add;border-bottom:1px solid #b89c5b44;padding:4px 12px;display:flex;gap:10px;align-items:center;font-size:10px;backdrop-filter:blur(4px);flex-wrap:wrap;">
+      <span style="color:#b89c5b;font-weight:bold;font-family:'Cinzel',serif;font-size:12px;">⚖️ <span id="hud-name"></span></span>
+      <span style="color:#2a9d8f;">🛡️ <span id="hud-estabilidade">50</span></span>
+      <span style="color:#8844ff;">⚖️ <span id="hud-etica">50</span></span>
+      <span style="color:#e63946;">❤️ <span id="hud-apoio">50</span></span>
+      <span style="color:#ffaa00;">💰 <span id="hud-orcamento">50</span></span>
+      <span style="color:#00d4ff;">🌐 <span id="hud-diplomacia">50</span></span>
+      <span style="color:#c8a951;">📊 <span id="hud-casos">0/10</span></span>
       <span id="hud-career-info" style="color:#8844ff;font-size:10px;"></span>
       <span id="hud-skill-points" style="color:#2a9d8f;font-size:10px;margin-left:auto;">🧠 <span id="hud-sp-val">0</span></span>
     </div>
