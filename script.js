@@ -1714,6 +1714,19 @@ function atualizarHUD() {
             agentEl.style.display = 'none';
         }
     }
+    
+    // Dimensão Final no HUD
+    const dimInd = document.getElementById('hud-dimensao-indicator');
+    if (dimInd && typeof DimensoesFinais !== 'undefined') {
+        const dimFinal = DimensoesFinais.codificar(MotorDimensional.tags, MotorDimensional.metricas);
+        if (dimFinal && MotorDimensional.tags.length > 0) {
+            dimInd.style.display = 'inline';
+            const pct = Math.min(100, Math.round((MotorDimensional.tags.length / 6) * 100));
+            dimInd.innerHTML = `<span style="color:${dimFinal.cor};">⬡ ${dimFinal.nome} <span style="color:#666;font-size:9px;">${pct}%</span></span>`;
+        } else {
+            dimInd.style.display = 'none';
+        }
+    }
     const careerInfo = document.getElementById('hud-career-info');
     if (careerInfo) {
         if (state.career && CARREIRAS[state.career]) {
@@ -2261,6 +2274,7 @@ function makeDecision(index) {
     MotorDimensional.salvarEstado();
     atualizarPainelDimensional();
     renderizarTags();
+    atualizarHUD();
     
     // Game over pós-decisão: apenas dimensões causam fim de jogo
     const dimPos = MotorDimensional.metricas;
