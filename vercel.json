@@ -1,12 +1,8 @@
 {
   "version": 2,
   "functions": {
-    "api/*.js": {
-      "runtime": "@vercel/node@3",
-      "maxDuration": 10
+    "api/agent.js": {
+      "maxDuration": 15
     }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" }
-  ]
+  }
 }
