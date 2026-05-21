@@ -1233,7 +1233,7 @@ function normalizarCasos(data) {
             id: c.id ? `caso_${String(c.id).padStart(2, '0')}` : `caso_${idx + 1}`,
             titulo: c.titulo || '',
             descricao: c.descricao || '',
-            imagem: c.imagem || 'images/placeholder.jpg',
+            imagem: c.imagem || '',
             provas: c.investigacao ? [c.investigacao] : (c.provas || []),
             investigacoes: c.investigacoes || [],
             decisoes: (c.opcoes || []).map(o => ({
@@ -1276,6 +1276,69 @@ function loadCase() {
     applyCaseModifications(state.casosJulgados);
     showNotification(`Caso ${state.casosJulgados + 1} de ${arr.length}: ${state.currentCase.titulo}`);
     renderCase();
+}
+
+// === Fallback de Imagens — SVG Placeholder Temático ===
+function gerarSVGParaCasos(titulo, tags = [], id = '') {
+    const corBase = tags.includes('singularidade_asi') ? '#ff0044' :
+                    tags.includes('conexao_neural') ? '#00ff88' :
+                    tags.includes('protocolo_fusao') ? '#8844ff' :
+                    tags.includes('crime') ? '#ff6600' :
+                    tags.includes('corrupcao') ? '#cc4400' : '#1a5276';
+    const corSec = tags.includes('singularidade_asi') ? '#440011' :
+                   tags.includes('crime') ? '#332200' : '#0a1628';
+    const icone = tags.includes('singularidade_asi') ? '◆' :
+                  tags.includes('conexao_neural') ? '⊞' :
+                  tags.includes('fusao') ? '◇' :
+                  tags.includes('futebol') ? '⚽' :
+                  tags.includes('agua') ? '💧' :
+                  tags.includes('hacker') ? '💻' :
+                  tags.includes('vacina') ? '💉' :
+                  tags.includes('protesto') ? '✊' :
+                  tags.includes('corrupcao') ? '💰' : '⚖️';
+    const tituloCurto = titulo.length > 50 ? titulo.substring(0, 47) + '...' : titulo;
+
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+        <defs>
+            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:${corSec}"/>
+                <stop offset="100%" style="stop-color:${corBase}22"/>
+            </linearGradient>
+            <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:${corBase};stop-opacity:0"/>
+                <stop offset="50%" style="stop-color:${corBase};stop-opacity:0.15"/>
+                <stop offset="100%" style="stop-color:${corBase};stop-opacity:0"/>
+            </linearGradient>
+            <filter id="glowFilter">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+        </defs>
+        <rect width="800" height="400" fill="url(#bg)"/>
+        <rect width="800" height="400" fill="url(#glow)"/>
+        <line x1="0" y1="200" x2="800" y2="200" stroke="${corBase}22" stroke-width="1"/>
+        <line x1="0" y1="200" x2="800" y2="200" stroke="${corBase}11" stroke-width="2" stroke-dasharray="10,10"/>
+        <circle cx="400" cy="200" r="120" fill="none" stroke="${corBase}33" stroke-width="2"/>
+        <circle cx="400" cy="200" r="80" fill="none" stroke="${corBase}22" stroke-width="1"/>
+        <text x="400" y="130" text-anchor="middle" font-size="64" fill="${corBase}" filter="url(#glowFilter)">${icone}</text>
+        <text x="400" y="260" text-anchor="middle" font-family="Cinzel,serif" font-size="18" fill="#d4d7e0" font-weight="bold">${tituloCurto}</text>
+        <text x="400" y="290" text-anchor="middle" font-family="Roboto,sans-serif" font-size="11" fill="${corBase}88">${id || `Sessão do Tribunal Supremo`}</text>
+        <text x="400" y="330" text-anchor="middle" font-family="monospace" font-size="9" fill="#ffffff22">⬡ JULGAMENTO EM PROGRESSO ⬡</text>
+        ${[0,1,2].map(i => `<circle cx="${100 + i*300}" cy="${350 + (i%2===0?10:-10)}" r="2" fill="${corBase}44"/>`).join('')}
+    </svg>`;
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+
+function getImagemSrc(caso) {
+    const src = caso.imagem || '';
+    if (!src) return gerarSVGParaCasos(caso.titulo, caso.tags || [], caso.id);
+    return src;
+}
+
+function handleImageError(img, caso) {
+    if (img && caso) {
+        img.src = gerarSVGParaCasos(caso.titulo, caso.tags || [], caso.id);
+    }
 }
 
 function renderCase() {
@@ -1328,7 +1391,8 @@ function renderCase() {
             whisperEl.style.opacity = '1';
         });
     }
-    caseImage.src = currentCase.imagem;
+    caseImage.src = getImagemSrc(currentCase);
+    caseImage.onerror = () => handleImageError(caseImage, currentCase);
     caseEvidences.innerHTML = '<h3>Provas:</h3><ul>' + 
         currentCase.provas.map(p => `<li>${p}</li>`).join('') + '</ul>';
     investigationOptions.innerHTML = state.investigationsDone < state.maxInvestigations ?
@@ -1838,7 +1902,8 @@ function showCrisisEvent(crisisIndex = 0) {
     const mediaReactions = document.getElementById('media-reactions');
     const caseImage = document.getElementById('case-image');
     if (mediaHeadline && mediaReactions && caseImage) {
-        caseImage.src = crisis.imagem;
+            caseImage.src = crisis.imagem || gerarSVGParaCasos(crisis.texto.replace(/<[^>]*>/g,'').substring(0,60), [], crisis.id);
+            caseImage.onerror = () => { caseImage.src = gerarSVGParaCasos('Crise: ' + (crisis.id||''), [], crisis.id); };
         mediaHeadline.textContent = "Crise Nacional!";
         mediaReactions.innerHTML = `
             <p>${crisis.texto}</p>
@@ -1857,7 +1922,8 @@ function viewMedia() {
         mediaHeadline.textContent = "O que dizem sobre o caso...";
         const midiaHtml = state.currentCase.midia.map(m => `<p>${m}</p>`).join('');
         mediaReactions.innerHTML = midiaHtml;
-        caseImage.src = state.currentCase.imagem;
+        caseImage.src = getImagemSrc(state.currentCase);
+        caseImage.onerror = () => handleImageError(caseImage, state.currentCase);
         // ASI Agent — inject bot posts into media
         if (typeof AgentesASI !== 'undefined' && state.casosJulgados >= 2) {
             AgentesASI.injetarBotsMidia(state.currentCase).then(({ agente, botHtml }) => {
