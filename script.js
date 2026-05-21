@@ -421,6 +421,187 @@ const MidiaGenerator = {
     }
 };
 
+// === Sistema de Entrevistas (Mídia Interativa) ===
+const PERGUNTAS_ENTREVISTA = [
+    {
+        veiculo: 'Jornal do Povo',
+        jornalista: 'Carlos Mendes',
+        pergunta: 'Juiz, o povo quer saber: por que o senhor tomou essa decisão? Ela beneficia os mesmos de sempre?',
+        cor: '#e63946',
+        viés: -1
+    },
+    {
+        veiculo: 'TV Globo',
+        jornalista: 'Renata Costa',
+        pergunta: 'Sua decisão gerou controvérsia. Poderia explicar os fundamentos jurídicos que a embasaram?',
+        cor: '#c8a951',
+        viés: 0
+    },
+    {
+        veiculo: 'TechNova',
+        jornalista: 'Fábio Luz',
+        pergunta: 'Como o senhor vê o impacto desta decisão no desenvolvimento tecnológico do país?',
+        cor: '#00d4ff',
+        viés: 1
+    },
+    {
+        veiculo: 'Voz da Periferia',
+        jornalista: 'Dandara Silva',
+        pergunta: 'As comunidades periféricas serão as mais afetadas. O senhor considerou isso ao decidir?',
+        cor: '#ff6b35',
+        viés: -1
+    },
+    {
+        veiculo: 'Financial Times',
+        jornalista: 'Robert Sterling',
+        pergunta: 'Qual sua avaliação do impacto econômico desta decisão para os mercados?',
+        cor: '#2ec4b6',
+        viés: 1
+    },
+    {
+        veiculo: 'Brasil 247',
+        jornalista: 'Joana Alves',
+        pergunta: 'O senhor não acha que esta decisão favorece elites em detrimento da maioria?',
+        cor: '#cc2936',
+        viés: -1
+    },
+    {
+        veiculo: 'O Estado de SP',
+        jornalista: 'Pedro Campos',
+        pergunta: 'Há quem critique a decisão como ativismo judicial. Como o senhor responde?',
+        cor: '#7f8c8d',
+        viés: 0
+    }
+];
+
+const AnalisadorEntrevista = {
+    _carregarPergunta() {
+        const idx = Math.floor(Math.random() * PERGUNTAS_ENTREVISTA.length);
+        return PERGUNTAS_ENTREVISTA[idx];
+    },
+
+    _analisar(texto, decisao, caso) {
+        if (!texto || texto.trim().length < 10) {
+            return { score: 0, feedback: 'Resposta muito curta. A imprensa ignorou.', efeitos: { relacaoImprensa: -5, apoioPopular: -3 } };
+        }
+
+        const lower = texto.toLowerCase();
+        const decLower = (decisao?.texto || '').toLowerCase();
+        const palavrasDecisao = decLower.split(/\s+/).filter(p => p.length > 4);
+        const palavrasTexto = lower.split(/\s+/);
+
+        // Coerência: quantas palavras-chave da decisão aparecem na resposta
+        const palavrasCoerentes = palavrasDecisao.filter(p => palavrasTexto.includes(p));
+        const coerencia = palavrasDecisao.length > 0 ? palavrasCoerentes.length / palavrasDecisao.length : 0.5;
+
+        // Tamanho: respostas mais longas são mais completas
+        const comprimento = Math.min(1, texto.length / 200);
+
+        // Tom: detecta defensividade vs abertura
+        const defensivo = ['culpa', 'injustiça', 'perseguição', 'conspiração', 'mentira', 'inimigo', 'eles que'].some(p => lower.includes(p));
+        const aberto = ['compreendo', 'entendo', 'considero', 'analisei', 'estudei', 'ouvi', 'dialogo', 'transparência'].some(p => lower.includes(p));
+
+        const tomScore = defensivo ? 0.2 : aberto ? 0.8 : 0.5;
+
+        // Score final (0-100)
+        const score = Math.round(((coerencia * 0.4 + comprimento * 0.3 + tomScore * 0.3)) * 100);
+
+        const nivel = score >= 70 ? 'bom' : score >= 40 ? 'medio' : 'ruim';
+        const feedbacks = {
+            bom: 'Entrevista convincente e coerente. A imprensa reagiu positivamente.',
+            medio: 'Entrevista razoável, mas alguns veículos distorceram suas palavras.',
+            ruim: 'Entrevista fraca. A imprensa ignorou ou distorceu sua defesa.'
+        };
+
+        const bonusImprensa = score >= 70 ? 8 : score >= 40 ? 2 : -5;
+        const bonusApoio = score >= 70 ? 5 : score >= 40 ? 1 : -3;
+
+        return {
+            score,
+            nivel,
+            feedback: feedbacks[nivel],
+            efeitos: { relacaoImprensa: bonusImprensa, apoioPopular: bonusApoio },
+            coerencia: Math.round(coerencia * 100),
+            comprimento: Math.round(comprimento * 100),
+            tom: Math.round(tomScore * 100)
+        };
+    },
+
+    _gerarArtigosPosEntrevista(texto, analise, decisao, caso) {
+        const tags = caso?.tags || [];
+        const temas = {
+            'singularidade_asi': 'A Singularidade é inevitável. A decisão do juiz acelera ou atrasa o futuro.',
+            'nova_aurora': 'A República de Nova Aurora observa: o tribunal define os rumos da nação.',
+            'default': 'A sociedade reage à decisão do Supremo Tribunal Popular.'
+        };
+        const tema = tags.find(t => temas[t]) || 'default';
+
+        const artigos = [
+            {
+                veiculo: analise.score >= 60 ? 'TV Globo' : 'Voz da Periferia',
+                manchete: analise.score >= 60
+                    ? `Juiz ${state.playerName} defende decisão com argumentos sólidos em entrevista`
+                    : `Juiz ${state.playerName} enrola e não convence em entrevista coletiva`,
+                tom: analise.score >= 60 ? 'neutro-positivo' : 'negativo',
+                cor: analise.score >= 60 ? '#c8a951' : '#ff6b35'
+            }
+        ];
+
+        if (analise.nivel === 'bom') {
+            artigos.push({
+                veiculo: 'Jornal do Povo',
+                manchete: `"${texto.substring(0, 50).trim()}..." — diz juiz, e o povo aprova`,
+                tom: 'positivo',
+                cor: '#e63946'
+            });
+            artigos.push({
+                veiculo: 'TechNova',
+                manchete: `Análise: a defesa do juiz e seu impacto no ${tema === 'singularidade_asi' ? 'futuro digital' : 'cenário nacional'}`,
+                tom: 'positivo',
+                cor: '#00d4ff'
+            });
+        } else if (analise.nivel === 'medio') {
+            artigos.push({
+                veiculo: 'O Estado de SP',
+                manchete: `Divisão de opiniões: entrevista do juiz não convence nem críticos nem apoiadores`,
+                tom: 'neutro',
+                cor: '#7f8c8d'
+            });
+            artigos.push({
+                veiculo: 'Brasil 247',
+                manchete: `Juiz tenta se explicar, mas deixa lacunas preocupantes`,
+                tom: 'negativo-leve',
+                cor: '#cc2936'
+            });
+        } else {
+            artigos.push({
+                veiculo: 'Jornal do Povo',
+                manchete: `Juiz ${state.playerName} ignora perguntas e apresenta defesa fraca`,
+                tom: 'negativo',
+                cor: '#e63946'
+            });
+            artigos.push({
+                veiculo: 'Financial Times',
+                manchete: `Mercado desconfia: entrevista do juiz gera mais incerteza que clareza`,
+                tom: 'negativo',
+                cor: '#2ec4b6'
+            });
+        }
+
+        // Se tem viés forte na pergunta, adicionar visão contrária
+        if (analise.coerencia < 30) {
+            artigos.push({
+                veiculo: 'Voz da Periferia',
+                manchete: `Juiz descolado da realidade: decisão ignora impacto nas comunidades`,
+                tom: 'negativo',
+                cor: '#ff6b35'
+            });
+        }
+
+        return artigos;
+    }
+};
+
 // === Estado do Jogo ===
 const state = {
     playerName: '',
@@ -2164,6 +2345,11 @@ async function viewMedia() {
             ${reacoesHtml}
         `;
 
+        // Reset interview area visibility
+        const interviewArea = document.getElementById('media-interview-area');
+        if (interviewArea) interviewArea.style.display = 'block';
+        window._entrevistaRealizada = null;
+
         // ASI Agent — inject bot posts into media
         if (typeof AgentesASI !== 'undefined' && state.casosJulgados >= 2) {
             AgentesASI.injetarBotsMidia(caso).then(({ agente, botHtml }) => {
@@ -2175,6 +2361,111 @@ async function viewMedia() {
         }
     }
     transitionScreen('media-screen', 'case-screen');
+}
+
+function mostrarEntrevista() {
+    const caso = window._ultimoCaso || state.currentCase;
+    const decisao = window._ultimaDecisao;
+    if (!caso || !decisao) { showNotification('Nenhum caso para comentar.'); return; }
+
+    window._entrevistaAtiva = AnalisadorEntrevista._carregarPergunta();
+
+    const veiculoEl = document.getElementById('entrevista-veiculo');
+    const perguntaEl = document.getElementById('entrevista-pergunta');
+    const respostaEl = document.getElementById('entrevista-resposta');
+    const charsEl = document.getElementById('entrevista-chars');
+
+    if (veiculoEl) veiculoEl.innerHTML = `<span style="color:${window._entrevistaAtiva.cor};">📺 ${window._entrevistaAtiva.veiculo}</span> — <span style="color:#aaa;">${window._entrevistaAtiva.jornalista}</span>`;
+    if (perguntaEl) perguntaEl.textContent = `"${window._entrevistaAtiva.pergunta}"`;
+    if (respostaEl) { respostaEl.value = ''; respostaEl.style.borderColor = '#2d3748'; }
+    if (charsEl) charsEl.textContent = '0/500 caracteres';
+
+    transitionScreen('entrevista-screen', 'media-screen');
+}
+
+window.atualizarContagemChars = function() {
+    const el = document.getElementById('entrevista-resposta');
+    const chars = document.getElementById('entrevista-chars');
+    if (el && chars) chars.textContent = `${el.value.length}/500 caracteres`;
+};
+
+async function submitInterview() {
+    const resposta = document.getElementById('entrevista-resposta');
+    if (!resposta) return;
+    const texto = resposta.value.trim();
+    const caso = window._ultimoCaso || state.currentCase;
+    const decisao = window._ultimaDecisao;
+
+    if (texto.length < 10) {
+        resposta.style.borderColor = '#ff4444';
+        showNotification('Escreva pelo menos 10 caracteres para uma resposta válida.');
+        return;
+    }
+
+    const analise = AnalisadorEntrevista._analisar(texto, decisao, caso);
+    applyEffects(analise.efeitos);
+    updateReputation();
+    showNotification(analise.feedback);
+
+    const artigos = AnalisadorEntrevista._gerarArtigosPosEntrevista(texto, analise, decisao, caso);
+    window._entrevistaRealizada = { texto, analise, artigos };
+
+    // Re-render media screen with interview results appended
+    const mediaReactions = document.getElementById('media-reactions');
+    if (mediaReactions) {
+        const entrevistaHtml = `
+            <hr style="border-color:#b89c5b44;margin:12px 0;">
+            <h4 style="color:#b89c5b;font-size:13px;margin-bottom:8px;">🎙️ REPERCUSSÃO DA ENTREVISTA</h4>
+            <div style="background:#0a1628;border-left:4px solid ${window._entrevistaAtiva.cor};padding:8px;margin:4px 0;border-radius:0 4px 4px 0;">
+                <small style="color:${window._entrevistaAtiva.cor};font-weight:bold;">${window._entrevistaAtiva.veiculo}</small>
+                <p style="color:#888;font-size:12px;font-style:italic;margin:4px 0;">"${texto.substring(0, 120)}..."</p>
+            </div>
+            <div style="font-size:11px;color:#666;margin:4px 0;">
+                Coerência: ${analise.coerencia}% | Tom: ${analise.tom}% | Score: ${analise.score}/100
+            </div>
+            ${artigos.map(a => `
+                <div style="background:#1a1a2e;border-left:3px solid ${a.cor};padding:8px 10px;margin:6px 0;border-radius:0 4px 4px 0;">
+                    <small style="color:${a.cor};font-weight:bold;text-transform:uppercase;font-size:10px;">${a.veiculo}</small>
+                    <p style="margin:4px 0 0;font-size:13px;color:#ddd;">${a.manchete}</p>
+                </div>
+            `).join('')}
+        `;
+        mediaReactions.insertAdjacentHTML('beforeend', entrevistaHtml);
+
+        // Se score >= 60, mostrar badge de destaque
+        if (analise.nivel === 'bom') {
+            const badge = document.createElement('div');
+            badge.id = 'entrevista-badge';
+            badge.innerHTML = `
+                <div style="margin-top:8px;padding:8px;background:linear-gradient(135deg,#1a3a1a,#0d2610);border:1px solid #2a9d8f;border-radius:6px;text-align:center;">
+                    <span style="color:#2a9d8f;font-weight:bold;">🏆 ENTREVISTA DESTAQUE</span>
+                    <p style="color:#888;font-size:11px;margin-top:4px;">Sua defesa foi bem recebida pela opinião pública.</p>
+                </div>
+            `;
+            mediaReactions.appendChild(badge);
+        }
+    }
+
+    // Hide interview section, show continue
+    const interviewArea = document.getElementById('media-interview-area');
+    if (interviewArea) interviewArea.style.display = 'none';
+
+    const mediaHeadline = document.getElementById('media-headline');
+    if (mediaHeadline) mediaHeadline.textContent = "Repercussão da sua entrevista...";
+
+    transitionScreen('media-screen', 'entrevista-screen');
+}
+
+function skipInterview() {
+    const analise = AnalisadorEntrevista._analisar('', null, null);
+    applyEffects({ relacaoImprensa: -3 });
+    updateReputation();
+    showNotification('Você recusou a entrevista. A imprensa não gostou.');
+
+    const interviewArea = document.getElementById('media-interview-area');
+    if (interviewArea) interviewArea.style.display = 'none';
+
+    transitionScreen('media-screen', 'entrevista-screen');
 }
 
 function showDiplomacyScreen() {
@@ -2815,6 +3106,30 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     } else {
       console.warn('Botão continueButton não encontrado');
+    }
+    
+    // Botão de conceder entrevista
+    const grantInterviewBtn = document.getElementById('grantInterviewBtn');
+    if (grantInterviewBtn) {
+      grantInterviewBtn.addEventListener('click', mostrarEntrevista);
+    } else {
+      console.warn('Botão grantInterviewBtn não encontrado');
+    }
+    
+    // Botões da tela de entrevista
+    const submitInterviewBtn = document.getElementById('submitInterviewBtn');
+    if (submitInterviewBtn) {
+      submitInterviewBtn.addEventListener('click', submitInterview);
+    }
+    const skipInterviewBtn = document.getElementById('skipInterviewBtn');
+    if (skipInterviewBtn) {
+      skipInterviewBtn.addEventListener('click', skipInterview);
+    }
+    
+    // Contador de caracteres da entrevista
+    const entrevistaResposta = document.getElementById('entrevista-resposta');
+    if (entrevistaResposta) {
+      entrevistaResposta.addEventListener('input', window.atualizarContagemChars);
     }
     
     // Botões de diplomacia (nível inicial)

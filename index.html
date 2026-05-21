@@ -121,7 +121,27 @@
     <div id="media-screen" class="screen hidden">
       <h2><i class="fas fa-tv"></i> <span id="media-headline"></span></h2>
       <div id="media-reactions"></div>
+      <div id="media-interview-area" style="margin-top:12px;padding:10px;background:#0d0d1a;border:1px solid #b89c5b44;border-radius:6px;">
+        <p style="color:#888;font-size:12px;margin-bottom:8px;">📺 A imprensa quer ouvir sua versão. Conceder entrevista?</p>
+        <button id="grantInterviewBtn" aria-label="Conceder entrevista"><i class="fas fa-microphone"></i> Conceder Entrevista</button>
+      </div>
       <button id="continueButton" aria-label="Continuar para ações diplomáticas"><i class="fas fa-forward"></i> Continuar</button>
+    </div>
+
+    <!-- Tela de Entrevista -->
+    <div id="entrevista-screen" class="screen hidden">
+      <h2><i class="fas fa-microphone"></i> Entrevista Coletiva</h2>
+      <div id="entrevista-jornalista" style="padding:8px;background:#111827;border-radius:6px;margin-bottom:10px;">
+        <p id="entrevista-veiculo" style="font-size:13px;color:#b89c5b;font-weight:bold;"></p>
+        <p id="entrevista-pergunta" style="font-size:14px;color:#ddd;font-style:italic;"></p>
+      </div>
+      <label for="entrevista-resposta" style="color:#888;font-size:12px;">Sua defesa:</label>
+      <textarea id="entrevista-resposta" rows="4" maxlength="500" placeholder="Escreva sua defesa pública..." style="width:100%;background:#0f172a;border:1px solid #2d3748;border-radius:4px;padding:10px;color:#ddd;font-size:14px;resize:vertical;"></textarea>
+      <small id="entrevista-chars" style="color:#666;">0/500 caracteres</small>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button id="submitInterviewBtn" aria-label="Enviar resposta"><i class="fas fa-paper-plane"></i> Publicar Resposta</button>
+        <button id="skipInterviewBtn" aria-label="Recusar entrevista"><i class="fas fa-times"></i> Recusar</button>
+      </div>
     </div>
 
     <!-- Tela de Diplomacia -->
