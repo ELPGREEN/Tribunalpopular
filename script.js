@@ -1558,6 +1558,64 @@ function updateReputation() {
     atualizarHUD();
 }
 
+// === HUD Career Panel (clicável) ===
+let hudCareerPanelOpen = false;
+
+function toggleCareerPanel() {
+    const existing = document.getElementById('hud-career-panel');
+    if (existing) { existing.remove(); hudCareerPanelOpen = false; return; }
+    hudCareerPanelOpen = true;
+    const car = CARREIRAS[state.career];
+    if (!car) return;
+    const skill = car.skill;
+    const panel = document.createElement('div');
+    panel.id = 'hud-career-panel';
+    panel.style.cssText = `
+        position:fixed;bottom:70px;right:16px;z-index:9998;
+        width:300px;background:#0a0a1aee;border:1px solid #8844ff66;
+        border-top:3px solid #8844ff;
+        border-radius:8px;padding:16px;
+        box-shadow:0 4px 30px rgba(0,0,0,0.8);
+        backdrop-filter:blur(8px);
+        font-size:12px;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    panel.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="font-size:24px;">${car.icone}</span>
+            <div>
+                <strong style="color:#8844ff;font-size:14px;">${car.nome}</strong>
+                <div style="color:#999;font-size:10px;">${car.desc}</div>
+            </div>
+            <button id="hud-career-close" style="margin-left:auto;background:none;border:none;color:#666;cursor:pointer;font-size:18px;">&times;</button>
+        </div>
+        <div style="border-top:1px solid #333;padding-top:10px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="color:#b89c5b;">⚡ ${skill.nome}</span>
+                <span style="color:#888;">${state.careerCharges}/${skill.cargas} cargas</span>
+            </div>
+            <small style="color:#999;">${skill.desc}</small>
+            <div style="margin-top:10px;display:flex;gap:4px;">
+                ${'<span style="flex:1;height:4px;background:' + (state.careerCharges > 0 ? '#b89c5b' : '#333') + ';border-radius:2px;"></span>'.repeat(Math.max(1, skill.cargas))}
+            </div>
+        </div>
+        <div style="border-top:1px solid #333;padding-top:8px;margin-top:8px;">
+            <small style="color:#666;">Clique no nome para fechar.</small>
+        </div>
+    `;
+    document.body.appendChild(panel);
+    document.getElementById('hud-career-close')?.addEventListener('click', () => { panel.remove(); hudCareerPanelOpen = false; });
+    panel.addEventListener('click', (e) => { if (e.target === panel) { panel.remove(); hudCareerPanelOpen = false; } });
+}
+
+// Fechar career panel ao clicar fora
+document.addEventListener('click', (e) => {
+    if (hudCareerPanelOpen && !e.target.closest('#hud-career-panel') && e.target.id !== 'hud-career-info') {
+        document.getElementById('hud-career-panel')?.remove();
+        hudCareerPanelOpen = false;
+    }
+});
+
 function atualizarHUD() {
     const hud = document.getElementById('player-hud');
     if (!hud) return;
@@ -1571,12 +1629,31 @@ function atualizarHUD() {
     set('hud-diplomacia', dim ? dim.diplomacia : 50);
     set('hud-casos', `${state.casosJulgados}/${getCasosArray().length}`);
     set('hud-sp-val', typeof Skills !== 'undefined' ? Skills.pontosDisponiveis || 0 : 0);
+    
+    // Agente ASI ativo no HUD
+    const agentEl = document.getElementById('hud-agent-info');
+    if (agentEl && typeof AgentesASI !== 'undefined') {
+        const dom = AgentesASI.getAgenteDominante();
+        const agente = dom || AgentesASI.getAgentePorInfluencia();
+        if (agente && agente.influencia > 0) {
+            agentEl.style.display = 'inline';
+            agentEl.innerHTML = `<span style="color:${agente.cor};">⬡ ${agente.nome} <span style="color:#666;font-size:9px;">${agente.influencia}%</span></span>`;
+        } else {
+            agentEl.style.display = 'none';
+        }
+    }
     const careerInfo = document.getElementById('hud-career-info');
     if (careerInfo) {
         if (state.career && CARREIRAS[state.career]) {
             careerInfo.textContent = `⚡ ${CARREIRAS[state.career].skill.nome} [${state.careerCharges}]`;
+            careerInfo.style.cursor = 'pointer';
+            careerInfo.title = 'Clique para detalhes da carreira';
+            careerInfo.onclick = toggleCareerPanel;
         } else {
             careerInfo.textContent = '';
+            careerInfo.style.cursor = 'default';
+            careerInfo.title = '';
+            careerInfo.onclick = null;
         }
     }
     // Mostrar HUD apenas durante o jogo (não na intro/end)
@@ -1899,18 +1976,47 @@ function renderCase() {
         caseDescription.style.cssText = '';
         document.body.classList.remove('glitch-ativo');
     }
-    // ASI Agent — whisper injection (apenas mensagem, NUNCA altera pontuação)
+    // ASI Agent — push notification ao vivo (NUNCA altera pontuação)
     if (typeof AgentesASI !== 'undefined') {
         const agente = AgentesASI.determinarAgenteAtivo(currentCase.tags || []);
-        const whisperEl = document.getElementById('agent-whisper') || (() => {
-            const el = document.createElement('div');
-            el.id = 'agent-whisper';
-            el.className = 'agent-whisper';
-            caseDescription.after(el);
-            return el;
-        })();
         agente.gerarMensagem(currentCase.titulo).then(msg => {
-            whisperEl.innerHTML = `<span style="color:${agente.cor};font-size:0.85em;font-style:italic;opacity:0.7;">🗣 ${msg}</span>`;
+            // Toast push notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position:fixed;bottom:80px;right:16px;z-index:9999;
+                max-width:320px;background:#0a0a1aee;border:1px solid ${agente.cor}66;
+                border-left:4px solid ${agente.cor};
+                border-radius:8px;padding:12px 16px;
+                box-shadow:0 4px 20px rgba(0,0,0,0.6);
+                backdrop-filter:blur(8px);
+                animation: slideInRight 0.4s ease-out;
+                font-size:12px;
+            `;
+            toast.innerHTML = `
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                    <span style="font-size:18px;">⬡</span>
+                    <strong style="color:${agente.cor};font-size:11px;text-transform:uppercase;letter-spacing:1px;">${agente.nome}</strong>
+                    <span style="margin-left:auto;font-size:10px;color:#666;">conexão criptografada</span>
+                </div>
+                <p style="color:#ccc;margin:0;line-height:1.4;">"${msg}"</p>
+                <div style="margin-top:6px;height:2px;background:linear-gradient(90deg,${agente.cor},transparent);"></div>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.transition = 'opacity 0.6s, transform 0.6s';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(40px)';
+                setTimeout(() => toast.remove(), 700);
+            }, 8000);
+            // Também mostra no whisperEl (descrição do caso)
+            const whisperEl = document.getElementById('agent-whisper') || (() => {
+                const el = document.createElement('div');
+                el.id = 'agent-whisper';
+                el.className = 'agent-whisper';
+                caseDescription.after(el);
+                return el;
+            })();
+            whisperEl.innerHTML = `<span style="color:${agente.cor};font-size:0.85em;font-style:italic;">⬡ ${msg}</span>`;
             whisperEl.style.borderLeft = `3px solid ${agente.cor}`;
             whisperEl.style.paddingLeft = '8px';
             whisperEl.style.margin = '8px 0';

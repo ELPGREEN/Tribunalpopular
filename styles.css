@@ -473,6 +473,16 @@ img {
     }
 }
 
+@keyframes slideInRight {
+    from { transform: translateX(60px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
 /* ===== TRANSIÇÃO ORBITAL E CRISE TENSORIAL ===== */
 #transition-screen {
     padding: 20px;
