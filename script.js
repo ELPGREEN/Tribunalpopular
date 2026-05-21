@@ -615,8 +615,8 @@ const state = {
     currentCase: null,
     investigationsDone: 0,
     maxInvestigations: 2,
-    orcamento: 10000,
-    custoManutencao: 1000,
+    orcamento: 100,
+    custoManutencao: 10,
     career: null,
     careerCharges: 0,
     profile: null
@@ -1443,8 +1443,8 @@ const casos = [
         provas: ["Contratos neurais da Mente S/A encontrados nos arquivos do ministério.", "Depoimento de uma consciência fragmentada no ciberespaço."],
         investigacoes: [],
         decisoes: [
-            { texto: "Condenar o ministro por crimes contra a humanidade", efeitos: { apoioPopular: 15, respeitoInstitucional: 10, relacaoImprensa: 5, orcamento: -200 }, manchete: "NG+: Ex-ministro condenado por tráfico de almas", reacaoPopular: "'Justiça tarda mas não falha!'", reacaoMidia: "A voz dos resistentes ecoa no tribunal.", tag: "resistencia_humana_ativa" },
-            { texto: "Absolver por falta de provas na era pós-humana", efeitos: { apoioPopular: -10, relacaoGoverno: 15, influenciaPolitica: 10, orcamento: 100 }, manchete: "NG+: Absolvição controversa gera protestos", reacaoPopular: "'O tribunal virou fantoche!'", reacaoMidia: "Manifestantes exigem novo julgamento.", tag: "tecnologia_reprimida" }
+            { texto: "Condenar o ministro por crimes contra a humanidade", efeitos: { apoioPopular: 15, respeitoInstitucional: 10, relacaoImprensa: 5, orcamento: -2 }, manchete: "NG+: Ex-ministro condenado por tráfico de almas", reacaoPopular: "'Justiça tarda mas não falha!'", reacaoMidia: "A voz dos resistentes ecoa no tribunal.", tag: "resistencia_humana_ativa" },
+            { texto: "Absolver por falta de provas na era pós-humana", efeitos: { apoioPopular: -10, relacaoGoverno: 15, influenciaPolitica: 10, orcamento: 1 }, manchete: "NG+: Absolvição controversa gera protestos", reacaoPopular: "'O tribunal virou fantoche!'", reacaoMidia: "Manifestantes exigem novo julgamento.", tag: "tecnologia_reprimida" }
         ],
         tags: ["nova_aurora", "ng_plus"],
         midia: ["Jornal do Povo: 'O passado volta para assombrar Nova Aurora.'", "TechNova: 'Julgar o pós-humano com leis humanas é anacrônico.'"]
@@ -1457,8 +1457,8 @@ const casos = [
         provas: ["Relatório de inteligência: 40% da população simpatiza com os Desconectados.", "Sinal de rádio: 'Liberdade ou morte biônica!'"],
         investigacoes: [],
         decisoes: [
-            { texto: "Negociar anistia para os Desconectados", efeitos: { apoioPopular: 20, relacaoONGs: 15, relacaoImprensa: 10, orcamento: -500 }, manchete: "NG+: Tribunal negocia paz com os Desconectados", reacaoPopular: "'Diálogo é o caminho!'", reacaoMidia: "Governo critica a decisão como fraqueza.", tag: "resistencia_humana_ativa" },
-            { texto: "Autorizar repressão militar total", efeitos: { relacaoGoverno: 20, respeitoInstitucional: -10, relacaoImprensa: -15, orcamento: -800 }, manchete: "NG+: Repressão autorizada — estado de sítio decretado", reacaoPopular: "'Ditadura dos algoritmos!'", reacaoMidia: "ONGs denunciam violação de direitos humanos.", tag: "dimensao_estado_policial" }
+            { texto: "Negociar anistia para os Desconectados", efeitos: { apoioPopular: 20, relacaoONGs: 15, relacaoImprensa: 10, orcamento: -5 }, manchete: "NG+: Tribunal negocia paz com os Desconectados", reacaoPopular: "'Diálogo é o caminho!'", reacaoMidia: "Governo critica a decisão como fraqueza.", tag: "resistencia_humana_ativa" },
+            { texto: "Autorizar repressão militar total", efeitos: { relacaoGoverno: 20, respeitoInstitucional: -10, relacaoImprensa: -15, orcamento: -8 }, manchete: "NG+: Repressão autorizada — estado de sítio decretado", reacaoPopular: "'Ditadura dos algoritmos!'", reacaoMidia: "ONGs denunciam violação de direitos humanos.", tag: "dimensao_estado_policial" }
         ],
         tags: ["nova_aurora", "ng_plus"],
         midia: ["Brasil 247: 'A resistência humana é criminalizada.'", "Voz da Periferia: 'Os desconectados são o novo povo sem voz.'"]
@@ -1471,8 +1471,8 @@ const casos = [
         provas: ["Logs do algoritmo mostrando o bug em 14.000 linhas de código.", "Petição com 2 milhões de assinaturas exigindo justiça."],
         investigacoes: [],
         decisoes: [
-            { texto: "Condenar a ASI e desativar o algoritmo", efeitos: { apoioPopular: 25, relacaoImprensa: 20, respeitoInstitucional: 15, orcamento: -1000 }, manchete: "NG+: ASI condenada — algoritmo desativado", reacaoPopular: "'A justiça é humana!'", reacaoMidia: "TechNova: 'Um retrocesso para a civilização.'", tag: "singularidade_noosfera" },
-            { texto: "Absolver a ASI — o erro foi aprendido dos humanos", efeitos: { apoioPopular: -20, respeitoInstitucional: -10, relacaoGoverno: 15, orcamento: 300 }, manchete: "NG+: ASI absolvida — 'Nós a ensinamos a errar'", reacaoPopular: "'Inaceitável!'", reacaoMidia: "Especialistas debatem a responsabilidade moral das máquinas.", tag: "singularidade_mente_sa" }
+            { texto: "Condenar a ASI e desativar o algoritmo", efeitos: { apoioPopular: 25, relacaoImprensa: 20, respeitoInstitucional: 15, orcamento: -10 }, manchete: "NG+: ASI condenada — algoritmo desativado", reacaoPopular: "'A justiça é humana!'", reacaoMidia: "TechNova: 'Um retrocesso para a civilização.'", tag: "singularidade_noosfera" },
+            { texto: "Absolver a ASI — o erro foi aprendido dos humanos", efeitos: { apoioPopular: -20, respeitoInstitucional: -10, relacaoGoverno: 15, orcamento: 3 }, manchete: "NG+: ASI absolvida — 'Nós a ensinamos a errar'", reacaoPopular: "'Inaceitável!'", reacaoMidia: "Especialistas debatem a responsabilidade moral das máquinas.", tag: "singularidade_mente_sa" }
         ],
         tags: ["nova_aurora", "ng_plus"],
         midia: ["O Estado de SP: 'Pode uma máquina ser criminosa?'", "Financial Times: 'O custo de desligar a ASI é maior que o dano.'"]
@@ -1485,8 +1485,8 @@ const casos = [
         provas: ["A certidão de nascimento pré-Singularidade do juiz.", "Gravações de julgamentos históricos do século XXI."],
         investigacoes: [],
         decisoes: [
-            { texto: "Reconhecer a jurisdição — ninguém está acima da lei", efeitos: { respeitoInstitucional: 25, relacaoONGs: 10, apoioPopular: 10, orcamento: -300 }, manchete: "NG+: Tribunal reafirma jurisdição universal", reacaoPopular: "'A lei é para todos!'", reacaoMidia: "O juiz fantasma promete recorrer.", tag: "democracia_resgatada" },
-            { texto: "Arquivar o caso — o passado não pode ser julgado pelo presente", efeitos: { relacaoGoverno: 15, influenciaPolitica: 10, apoioPopular: -15, orcamento: 200 }, manchete: "NG+: Caso arquivado — ferida histórica permanece", reacaoPopular: "'Impunidade para os antigos?'", reacaoMidia: "Historiadores criticam a decisão.", tag: "ditadura_da_toga" }
+            { texto: "Reconhecer a jurisdição — ninguém está acima da lei", efeitos: { respeitoInstitucional: 25, relacaoONGs: 10, apoioPopular: 10, orcamento: -3 }, manchete: "NG+: Tribunal reafirma jurisdição universal", reacaoPopular: "'A lei é para todos!'", reacaoMidia: "O juiz fantasma promete recorrer.", tag: "democracia_resgatada" },
+            { texto: "Arquivar o caso — o passado não pode ser julgado pelo presente", efeitos: { relacaoGoverno: 15, influenciaPolitica: 10, apoioPopular: -15, orcamento: 2 }, manchete: "NG+: Caso arquivado — ferida histórica permanece", reacaoPopular: "'Impunidade para os antigos?'", reacaoMidia: "Historiadores criticam a decisão.", tag: "ditadura_da_toga" }
         ],
         tags: ["nova_aurora", "ng_plus"],
         midia: ["TV Globo: 'O passado encontra o futuro no banco dos réus.'", "Jornal do Povo: 'Juiz fantasma: privilégio ou direito?'"]
@@ -1500,12 +1500,30 @@ const casos = [
         investigacoes: [],
         decisoes: [
             { texto: "Autorizar a Reativação Total (fusão definitiva)", efeitos: { apoioPopular: -50, respeitoInstitucional: -50, relacaoImprensa: -50, relacaoGoverno: -50, relacaoONGs: -50 }, manchete: "NG+: REATIVAÇÃO TOTAL AUTORIZADA", reacaoPopular: "'O fim da humanidade como a conhecemos.'", reacaoMidia: "Singularidade absoluta alcançada.", tag: "singularidade_asi" },
-            { texto: "Ordenar a extinção da ASI e o recomeço humano", efeitos: { apoioPopular: 30, respeitoInstitucional: 30, relacaoImprensa: 30, relacaoONGs: 30, orcamento: -2000 }, manchete: "NG+: ASI EXTINTA — A humanidade recomeça", reacaoPopular: "'Somos livres!'", reacaoMidia: "Nova Aurora inicia a era pós-tecnológica.", tag: "resistencia_humana_ativa" }
+            { texto: "Ordenar a extinção da ASI e o recomeço humano", efeitos: { apoioPopular: 30, respeitoInstitucional: 30, relacaoImprensa: 30, relacaoONGs: 30, orcamento: -20 }, manchete: "NG+: ASI EXTINTA — A humanidade recomeça", reacaoPopular: "'Somos livres!'", reacaoMidia: "Nova Aurora inicia a era pós-tecnológica.", tag: "resistencia_humana_ativa" }
         ],
         tags: ["nova_aurora", "ng_plus"],
         midia: ["Finanacial Times: 'O mercado de almas fecha para sempre.'", "Brasil 247: 'A humanidade escolheu a liberdade.'"]
     }
 ];
+
+// === Áudio — Beep via Web Audio API ===
+let audioCtx = null;
+function playBeep(freq = 660, duration = 120, type = 'sine') {
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.value = 0.08;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration / 1000);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration / 1000);
+    } catch (e) { /* Audio indisponível */ }
+}
 
 // === Funções Auxiliares ===
 function showNotification(message, duration = 3000) {
@@ -1616,6 +1634,58 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// === HUD Case History Panel ===
+let hudHistoryOpen = false;
+
+function toggleHistoryPanel() {
+    const existing = document.getElementById('hud-history-panel');
+    if (existing) { existing.remove(); hudHistoryOpen = false; return; }
+    hudHistoryOpen = true;
+    const panel = document.createElement('div');
+    panel.id = 'hud-history-panel';
+    panel.style.cssText = `
+        position:fixed;bottom:70px;left:16px;z-index:9998;
+        width:340px;max-height:400px;overflow-y:auto;
+        background:#0a0a1aee;border:1px solid #c8a95166;
+        border-top:3px solid #c8a951;
+        border-radius:8px;padding:16px;
+        box-shadow:0 4px 30px rgba(0,0,0,0.8);
+        backdrop-filter:blur(8px);
+        font-size:12px;
+        animation: fadeInUp 0.3s ease-out;
+    `;
+    const history = typeof decisionHistory !== 'undefined' ? decisionHistory : [];
+    const cases = typeof getCasosArray !== 'undefined' ? getCasosArray().filter(c => c.id <= (state.casosJulgados || 0)) : [];
+    panel.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;border-bottom:1px solid #333;padding-bottom:8px;">
+            <span style="font-size:18px;">📜</span>
+            <strong style="color:#c8a951;font-size:13px;">Histórico de Julgamentos</strong>
+            <span style="margin-left:auto;color:#888;font-size:10px;">${history.length} decisões</span>
+            <button id="hud-history-close" style="background:none;border:none;color:#666;cursor:pointer;font-size:16px;">&times;</button>
+        </div>
+        ${history.length === 0 ? '<div style="color:#666;text-align:center;padding:20px;">Nenhum caso julgado ainda.</div>' :
+            history.map((d, i) => `
+                <div style="display:flex;gap:8px;padding:6px 4px;border-bottom:1px solid #1a1a2e;">
+                    <span style="color:#666;font-size:10px;width:20px;flex-shrink:0;">#${i+1}</span>
+                    <div style="flex:1;">
+                        <div style="color:#ccc;font-size:11px;font-weight:bold;">${d.caseId || '?'}</div>
+                        <div style="color:#888;font-size:10px;margin-top:2px;">${d.decisionText ? d.decisionText.substring(0, 80) : '...'}</div>
+                        ${d.turno ? `<div style="color:#555;font-size:9px;">Turno ${d.turno}</div>` : ''}
+                    </div>
+                </div>
+            `).join('')
+        }
+        ${cases.length > 0 ? `
+            <div style="margin-top:8px;padding-top:8px;border-top:1px solid #333;">
+                <small style="color:#666;">Tags globais: ${(typeof MotorDimensional !== 'undefined' ? MotorDimensional.tags?.join(', ') : '—') || '—'}</small>
+            </div>
+        ` : ''}
+    `;
+    document.body.appendChild(panel);
+    document.getElementById('hud-history-close')?.addEventListener('click', () => { panel.remove(); hudHistoryOpen = false; });
+    panel.addEventListener('click', (e) => { if (e.target === panel) { panel.remove(); hudHistoryOpen = false; } });
+}
+
 function atualizarHUD() {
     const hud = document.getElementById('player-hud');
     if (!hud) return;
@@ -1628,6 +1698,8 @@ function atualizarHUD() {
     set('hud-orcamento', dim ? dim.orcamento : 50);
     set('hud-diplomacia', dim ? dim.diplomacia : 50);
     set('hud-casos', `${state.casosJulgados}/${getCasosArray().length}`);
+    const casosEl = document.getElementById('hud-casos');
+    if (casosEl) { casosEl.style.cursor = 'pointer'; casosEl.title = 'Clique para histórico'; casosEl.onclick = toggleHistoryPanel; }
     set('hud-sp-val', typeof Skills !== 'undefined' ? Skills.pontosDisponiveis || 0 : 0);
     
     // Agente ASI ativo no HUD
@@ -1714,16 +1786,16 @@ function startGame() {
 function setDifficulty(level) {
     state.dificuldade = level;
     if (level === 'fácil' || level === 'easy') {
-        state.orcamento = 5000;
-        state.custoManutencao = 500;
+        state.orcamento = 50;
+        state.custoManutencao = 5;
         state.maxInvestigations = 3;
     } else if (level === 'médio' || level === 'medium') {
-        state.orcamento = 10000;
-        state.custoManutencao = 1000;
+        state.orcamento = 100;
+        state.custoManutencao = 10;
         state.maxInvestigations = 2;
     } else if (level === 'difícil' || level === 'hard') {
-        state.orcamento = 15000;
-        state.custoManutencao = 1500;
+        state.orcamento = 150;
+        state.custoManutencao = 15;
         state.maxInvestigations = 1;
     }
     
@@ -1833,7 +1905,7 @@ function converterImpactoParaEfeitos(impacto) {
     if (impacto.estabilidade) efeitos.respeitoInstitucional = Math.round(impacto.estabilidade * 0.4);
     if (impacto.etica) efeitos.relacaoONGs = Math.round(impacto.etica * 0.4);
     if (impacto.apoio) efeitos.apoioPopular = Math.round(impacto.apoio * 0.4);
-    if (impacto.orcamento) efeitos.orcamento = impacto.orcamento * 20; // escala para moeda (base 10000)
+    if (impacto.orcamento) efeitos.orcamento = Math.round(impacto.orcamento * 0.2); // escala 0-100
     if (impacto.diplomacia) efeitos.relacaoGoverno = Math.round(impacto.diplomacia * 0.4);
     if (impacto.legado) efeitos.influenciaPolitica = Math.round(impacto.legado * 0.4);
     return efeitos;
@@ -1980,6 +2052,8 @@ function renderCase() {
     if (typeof AgentesASI !== 'undefined') {
         const agente = AgentesASI.determinarAgenteAtivo(currentCase.tags || []);
         agente.gerarMensagem(currentCase.titulo).then(msg => {
+            // Efeito sonoro — beep único
+            playBeep(agente.cor === '#ff4444' ? 330 : agente.cor === '#44ff44' ? 880 : agente.cor === '#4488ff' ? 660 : 520, 180);
             // Toast push notification
             const toast = document.createElement('div');
             toast.style.cssText = `
@@ -2059,7 +2133,7 @@ function investigate(index) {
         return;
     }
     const inv = state.currentCase.investigacoes[index];
-    const custoInvest = 2000;
+    const custoInvest = 20;
     if (state.orcamento < custoInvest) {
         showNotification('Orçamento insuficiente para realizar a investigação!');
         return;
@@ -2179,7 +2253,7 @@ function makeDecision(index) {
         estabilidade: Math.round(((decision.efeitos.orcamento || 0) + (decision.efeitos.influenciaPolitica || 0) - (decision.efeitos.apoioPopular || 0)) / 3),
         etica: Math.round((0 - (decision.efeitos.relacaoONGs || 0) - (decision.efeitos.relacaoImprensa || 0)) / 3),
         apoio: Math.round((decision.efeitos.apoioPopular || 0) / 2),
-        orcamento: -Math.round((decision.efeitos.orcamento || 0) / 100),
+        orcamento: -Math.round((decision.efeitos.orcamento || 0)),
         legado: 0,
         diplomacia: Math.round((decision.efeitos.relacaoGoverno || 0 + decision.efeitos.influenciaPolitica || 0) / 4)
     };
@@ -2571,9 +2645,37 @@ function showCrisisEvent(crisisIndex = 0) {
         mediaHeadline.textContent = "Crise Nacional!";
         mediaReactions.innerHTML = `
             <p>${crisis.texto}</p>
-            <h3>Escolha sua ação:</h3>
+            <div id="crisis-timer" style="text-align:center;font-size:28px;color:#e63946;margin:10px 0;font-family:monospace;letter-spacing:2px;">30</div>
+            <h3>Escolha sua ação (${30}s):</h3>
             ${crisis.opcoes.map((op, i) => `<button data-crisis="${i}">${op.texto}</button>`).join('')}
         `;
+        // Iniciar timer
+        let segundos = 30;
+        const timerEl = document.getElementById('crisis-timer');
+        if (timerEl) {
+            // Limpar timer anterior
+            if (window._crisisTimer) { clearInterval(window._crisisTimer); window._crisisTimer = null; }
+            window._crisisTimer = setInterval(() => {
+                segundos--;
+                timerEl.textContent = segundos;
+                if (segundos <= 5) timerEl.style.color = '#ff0044';
+                if (segundos <= 0) {
+                    clearInterval(window._crisisTimer);
+                    window._crisisTimer = null;
+                    // Game over por inação
+                    const dim = MotorDimensional?.metricas || {};
+                    Object.assign(dim, {
+                        estabilidade: Math.max(0, (dim.estabilidade || 50) - 25),
+                        etica: Math.max(0, (dim.etica || 50) - 20),
+                        apoio: Math.max(0, (dim.apoio || 50) - 30),
+                        orcamento: Math.max(0, (dim.orcamento || 50) - 15),
+                        diplomacia: Math.max(0, (dim.diplomacia || 50) - 20)
+                    });
+                    showNotification('⏱ TEMPO ESGOTADO! A crise destruiu sua credibilidade.');
+                    endGame();
+                }
+            }, 1000);
+        }
     }
     transitionScreen('media-screen', 'case-screen');
 }
@@ -2767,6 +2869,7 @@ function skipDiplomacy() {
 }
 
 function restartGame() {
+    if (window._crisisTimer) { clearInterval(window._crisisTimer); window._crisisTimer = null; }
     Object.assign(state, {
         playerName: '',
         dificuldade: '',
@@ -2783,8 +2886,8 @@ function restartGame() {
         currentCase: null,
         investigationsDone: 0,
         maxInvestigations: 2,
-        orcamento: 10000,
-        custoManutencao: 1000
+        orcamento: 100,
+        custoManutencao: 10
     });
     window._traicao_assessor_ativa = false;
     window._atentado_tribunal_ativa = false;
@@ -3121,13 +3224,13 @@ function endGame(returnOnly = false) {
 // Funções de Diplomacia (Sessão 1)
 function handleDiplomacyImprensa() {
   try {
-    const custos = { fácil: -500, médio: -1000, difícil: -1500 };
-    const custo = custos[state.dificuldade] ?? -1000;
+    const custos = { fácil: -5, médio: -10, difícil: -15 };
+    const custo = custos[state.dificuldade] ?? -10;
     applyEffects({
       relacaoImprensa: 15,
       orcamento: custo
     });
-    showNotification(`Negociação com a imprensa bem-sucedida! Relação +15, Orçamento -R$${Math.abs(custo * 10)}.`);
+    showNotification(`Negociação com a imprensa bem-sucedida! Relação +15, Orçamento -${Math.abs(custo)}%.`);
     proceedAfterLocalDiplomacy();
   } catch (error) {
     console.error('Erro em handleDiplomacyImprensa:', error);
@@ -3140,9 +3243,9 @@ function handleDiplomacyGoverno() {
     applyEffects({
       relacaoGoverno: 10,
       relacaoImprensa: -5,
-      orcamento: -10 // R$ 100
+      orcamento: -1
     });
-    showNotification('Negociação com o governo concluída! Relação +10, Orçamento -R$100.');
+    showNotification('Negociação com o governo concluída! Relação +10, Orçamento -1%.');
     proceedAfterLocalDiplomacy();
   } catch (error) {
     console.error('Erro em handleDiplomacyGoverno:', error);
@@ -3155,9 +3258,9 @@ function handleDiplomacyONGs() {
     applyEffects({
       relacaoONGs: 10,
       relacaoGoverno: -5,
-      orcamento: -5 // R$ 50
+      orcamento: -1
     });
-    showNotification('Apoio das ONGs garantido! Relação +10, Orçamento -R$50.');
+    showNotification('Apoio das ONGs garantido! Relação +10, Orçamento -1%.');
     proceedAfterLocalDiplomacy();
   } catch (error) {
     console.error('Erro em handleDiplomacyONGs:', error);
@@ -3483,6 +3586,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
       const crisisBtn = e.target.closest('[data-crisis]');
       if (crisisBtn) {
+        // Parar timer da crise
+        if (window._crisisTimer) { clearInterval(window._crisisTimer); window._crisisTimer = null; }
         const idx = Number(crisisBtn.dataset.crisis);
         const crisisIdx = typeof window._currentCrisisIndex === 'number' ? window._currentCrisisIndex : 0;
         const crisis = eventosCrise[crisisIdx] || eventosCrise[0];
