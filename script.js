@@ -122,7 +122,6 @@ class AgenteASI {
     }
 
     async gerarMensagem(contexto = '') {
-        if (!this.revelado) this.influencia += 2;
         this.mensagensEnviadas++;
 
         const data = await MistralClient.send(this.id, 'manipular', contexto);
@@ -641,6 +640,7 @@ function renderizarCarreiras() {
 function escolherCarreira(careerId) {
     state.career = careerId;
     state.careerCharges = CARREIRAS[careerId].skill.cargas;
+    atualizarHUD();
     const nameEl = document.getElementById('careerName');
     if (nameEl) nameEl.textContent = state.playerName;
     const profileNameEl = document.getElementById('profileName');
@@ -1555,6 +1555,32 @@ function updateReputation() {
             console.warn(`Elemento ${metric.id} ou ${metric.bar} não encontrado`);
         }
     });
+    atualizarHUD();
+}
+
+function atualizarHUD() {
+    const hud = document.getElementById('player-hud');
+    if (!hud) return;
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('hud-name', state.playerName);
+    set('hud-apoio', state.apoioPopular);
+    set('hud-respeito', state.respeitoInstitucional);
+    set('hud-imprensa', state.relacaoImprensa);
+    set('hud-orcamento', state.orcamento);
+    set('hud-casos', `${state.casosJulgados}/${getCasosArray().length}`);
+    set('hud-sp-val', typeof Skills !== 'undefined' ? Skills.pontosDisponiveis || 0 : 0);
+    const careerInfo = document.getElementById('hud-career-info');
+    if (careerInfo) {
+        if (state.career && CARREIRAS[state.career]) {
+            careerInfo.textContent = `⚡ ${CARREIRAS[state.career].skill.nome} [${state.careerCharges}]`;
+        } else {
+            careerInfo.textContent = '';
+        }
+    }
+    // Mostrar HUD apenas durante o jogo (não na intro/end)
+    const emJogo = state.playerName && state.career;
+    const introVisivel = document.getElementById('intro-screen') && !document.getElementById('intro-screen').classList.contains('hidden');
+    hud.classList.toggle('hidden', !emJogo || introVisivel);
 }
 
 function transitionScreen(showId, hideId) {
@@ -1594,6 +1620,7 @@ function startGame() {
         return;
     }
     state.playerName = name;
+    atualizarHUD();
     const displayName = document.getElementById('displayName');
     if (displayName) displayName.textContent = state.playerName;
     const careerName = document.getElementById('careerName');
@@ -1858,8 +1885,8 @@ function renderCase() {
         caseDescription.style.cssText = '';
         document.body.classList.remove('glitch-ativo');
     }
-    // ASI Agent — whisper injection (casos 3+)
-    if (typeof AgentesASI !== 'undefined' && state.casosJulgados >= 2) {
+    // ASI Agent — whisper injection (apenas mensagem, NUNCA altera pontuação)
+    if (typeof AgentesASI !== 'undefined') {
         const agente = AgentesASI.determinarAgenteAtivo(currentCase.tags || []);
         const whisperEl = document.getElementById('agent-whisper') || (() => {
             const el = document.createElement('div');

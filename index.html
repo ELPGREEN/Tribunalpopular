@@ -195,6 +195,18 @@
       <button id="crisisBackBtn" aria-label="Voltar" style="display:none;"><i class="fas fa-arrow-left"></i> Voltar</button>
     </div>
 
+    <!-- HUD Flutuante (visível em todas as telas durante o jogo) -->
+    <div id="player-hud" class="hidden" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#0a0a1add;border-bottom:1px solid #b89c5b44;padding:4px 12px;display:flex;gap:12px;align-items:center;font-size:11px;backdrop-filter:blur(4px);flex-wrap:wrap;">
+      <span style="color:#b89c5b;font-weight:bold;font-family:'Cinzel',serif;font-size:13px;">⚖️ <span id="hud-name"></span></span>
+      <span style="color:#888;">❤️ <span id="hud-apoio" style="color:#e63946;">50</span></span>
+      <span style="color:#888;">🏛️ <span id="hud-respeito" style="color:#c8a951;">50</span></span>
+      <span style="color:#888;">🗞️ <span id="hud-imprensa" style="color:#888;">50</span></span>
+      <span style="color:#888;">💰 <span id="hud-orcamento" style="color:#2a9d8f;">10000</span></span>
+      <span style="color:#888;">📊 <span id="hud-casos" style="color:#00d4ff;">0/10</span></span>
+      <span id="hud-career-info" style="color:#8844ff;font-size:10px;"></span>
+      <span id="hud-skill-points" style="color:#2a9d8f;font-size:10px;margin-left:auto;">🧠 <span id="hud-sp-val">0</span></span>
+    </div>
+
     <!-- Tela de Singularidade (Game Over) -->
     <div id="singularity-screen" class="screen hidden">
       <h2 id="singularity-title"><i class="fas fa-skull"></i> SINGULARIDADE DETECTADA</h2>
