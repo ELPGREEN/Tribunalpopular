@@ -4,6 +4,18 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 :root {
   --primary: #1a2639;
   --secondary: #6b1c1c;
@@ -316,92 +328,382 @@ img {
     font-size: 0.8rem;
   }
 }
-.metric-increase {
-    color: green;
-    transition: color 0.5s;
+.hidden {
+    display: none !important;
+}
+.game-description {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-align: center;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+.crisis-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+}
+.disclaimer {
+    font-size: 0.75rem;
+    color: #666;
+    text-align: center;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border-top: 1px solid #333;
 }
 
-.metric-decrease {
-    color: red;
-    transition: color 0.5s;
+
+
+#achievements-container h3 {
+    font-size: 12px;
+    margin: 4px 0;
+    text-align: right;
 }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
+.case-report h4 {
+    color: #b89c5b;
+    margin-bottom: 8px;
+}
+
+.case-report p {
+    font-size: 12px;
+    margin: 4px 0;
+}
+
+/* ===== DIMENSÕES QUÂNTICAS ===== */
+.metricas-dimensionais {
+    background: #111827;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 10px 0;
+}
+.metricas-dimensionais h3 {
+    font-size: 14px;
+    color: #b89c5b;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #2d3748;
+    padding-bottom: 6px;
+}
+.metricas-dimensionais p {
+    font-size: 12px;
+    margin: 4px 0;
+    display: flex;
+    justify-content: space-between;
+}
+.dim-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #2d3748;
+    margin-bottom: 8px;
+}
+.dim-bar::-webkit-progress-value { border-radius: 4px; }
+.dim-bar::-moz-progress-bar { border-radius: 4px; }
+.dim-bar[value]:not([value="0"])::-webkit-progress-value { background: linear-gradient(90deg, #ff0040, #b89c5b, #00ff66); }
+.dim-bar[value]:not([value="0"])::-moz-progress-bar { background: linear-gradient(90deg, #ff0040, #b89c5b, #00ff66); }
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 6px 0;
+}
+
+.dimensao-card {
+    animation: fadeIn 0.6s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.dimensao-final-box {
+    margin: 12px 0;
+}
+
+/* Skills */
+#skills-screen {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+#skills-screen h2 {
+    font-family: var(--font-title);
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 16px;
+}
+#skills-points {
+    text-align: center;
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 20px;
+}
+#skills-points span {
+    font-weight: bold;
+    font-size: 22px;
+    color: #2a9d8f;
+}
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.skill-column {
+    background: #111827;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 12px;
+}
+.skill-column h4 {
+    text-align: center;
+    border-bottom: 1px solid #2d3748;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+.skill-buy-btn:hover {
+    opacity: 0.85;
+}
+@media (max-width: 600px) {
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== TRANSIÇÃO ORBITAL E CRISE TENSORIAL ===== */
+#transition-screen {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+#transition-screen h2 {
+    font-family: var(--font-title);
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+.transition-content {
+    background: #111827;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.orbital-map {
+    background: #0a0a1a;
+    border: 1px solid #2d3748;
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+    overflow-x: auto;
+}
+.orbital-ponto { color: #ff4444; font-weight: bold; }
+.orbital-centro { color: #666; }
+.orbital-vazio { color: #2d3748; }
+
+.singularity-alert, .crisis-alert {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+}
+.singularity-alert {
+    background: #2d0000;
+    border: 1px solid #ff4444;
+}
+.crisis-alert {
+    background: #1a1a00;
+    border: 1px solid #ffaa00;
+}
+
+/* Tela de Singularidade (Game Over) */
+#singularity-screen {
+    padding: 40px 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+#singularity-screen h2 {
+    font-family: var(--font-title);
+    color: #ff4444;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+#singularity-text {
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #1a0000;
+    border: 1px solid #ff4444;
+    border-radius: 8px;
+}
+#singularityRestartBtn {
+    padding: 12px 30px;
+    background: #6b1c1c;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    margin: 5px;
+    font-size: 16px;
 }
 
-button:hover {
-    background-color: #45a049;
+/* Tela de Crise Tensorial */
+#crisis-tensor-screen {
+    padding: 20px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+#crisis-tensor-screen h2 {
+    font-family: var(--font-title);
+    color: #ffaa00;
+    text-align: center;
+    margin-bottom: 16px;
+}
+#crisis-tensor-desc {
+    background: #111827;
+    border: 1px solid #2d3748;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.crisis-opt-btn:hover {
+    background: #2a2a4e !important;
+    border-color: #b89c5b !important;
 }
 
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+/* ===== v4.0 — GLITCH EFFECTS ===== */
+@keyframes glitch-text {
+    0% { transform: translate(0); filter: hue-rotate(0deg); }
+    20% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+    40% { transform: translate(2px, -1px); filter: hue-rotate(180deg); }
+    60% { transform: translate(-1px, -2px); filter: hue-rotate(270deg); }
+    80% { transform: translate(1px, 2px); filter: hue-rotate(360deg); }
+    100% { transform: translate(0); filter: hue-rotate(0deg); }
 }
 
-#diplomacy-imprensa, #diplomacy-governo, #diplomacy-ongs, #skip-diplomacy {
-    transition: background-color 0.3s;
+.glitch-ativo #case-description {
+    animation: glitch-text 0.3s infinite;
+    color: #00ffcc;
+    text-shadow: 2px 0 #ff0044, -2px 0 #00ccff;
 }
 
-#diplomacy-imprensa.error, #diplomacy-governo.error, #diplomacy-ongs.error, #skip-diplomacy.error {
-    background-color: red;
-    animation: shake 0.3s;
+.glitch-ativo #case-title {
+    color: #ff00aa;
+    text-shadow: 0 0 10px #ff00aa;
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-.metric-increase {
-    color: green;
-    transition: color 0.5s;
+@keyframes glitch-bg {
+    0% { background-color: #0a0a1a; }
+    50% { background-color: #1a0a0a; }
+    100% { background-color: #0a0a1a; }
 }
 
-.metric-decrease {
-    color: red;
-    transition: color 0.5s;
+.glitch-ativo {
+    animation: glitch-bg 2s infinite;
 }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 5px;
+/* ===== v4.0 — GEOPOLITICAL PANEL ===== */
+#geopolitical-panel {
+    margin: 8px 0;
+    padding: 6px;
+    background: #0d0d1a;
+    border: 1px solid #2d3748;
+    border-radius: 6px;
+    font-size: 12px;
 }
 
-button:hover {
-    background-color: #45a049;
+/* ===== v4.0 — SINGULARIDADE ASI ===== */
+.singularidade-asi h2 {
+    text-shadow: 0 0 20px currentColor;
+    margin-bottom: 12px;
 }
 
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+.singularidade-asi p {
+    border-left: 3px solid currentColor;
+    padding-left: 12px;
 }
 
-#diplomacy-imprensa, #diplomacy-governo, #diplomacy-ongs, #skip-diplomacy {
-    transition: background-color 0.3s;
+.singularidade-asi .fas {
+    filter: drop-shadow(0 0 8px currentColor);
 }
 
-#diplomacy-imprensa.error, #diplomacy-governo.error, #diplomacy-ongs.error, #skip-diplomacy.error {
-    background-color: red;
-    animation: shake 0.3s;
+/* ===== v4.0 — ACONTECIMENTO MODAL ===== */
+#acontecimento-modal button:hover {
+    background: #2a2a4e !important;
+    border-color: #b89c5b !important;
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+/* ===== v4.0 — SINGULARITY SCREEN OVERRIDE ===== */
+#singularity-screen {
+    background: #050510;
 }
-#session2 {
-    display: none;
+
+#singularity-screen h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5em;
+}
+
+#singularity-buttons {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* ===== v4.0 — ASI AGENT WHISPERS & BOTS ===== */
+.agent-whisper {
+    font-size: 0.85em;
+    font-style: italic;
+    opacity: 0.8;
+    padding: 6px 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.3);
+    animation: whisperFadeIn 0.6s ease-out;
+    transition: opacity 1s;
+}
+
+@keyframes whisperFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 0.8; transform: translateX(0); }
+}
+
+.bot-message {
+    font-size: 0.85em;
+    padding: 4px 10px;
+    margin: 4px 0;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.2);
+}
+
+#agent-bots {
+    margin-top: 8px;
+    animation: botAppear 0.5s ease-out;
+}
+
+@keyframes botAppear {
+    from { opacity: 0; max-height: 0; }
+    to   { opacity: 1; max-height: 200px; }
+}
+
+#agent-revelation {
+    animation: revelationGlitch 1.5s ease-out;
+}
+
+@keyframes revelationGlitch {
+    0%   { opacity: 0; filter: hue-rotate(0deg); }
+    30%  { opacity: 1; filter: hue-rotate(180deg); }
+    60%  { filter: hue-rotate(-90deg); }
+    100% { opacity: 1; filter: hue-rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .agent-whisper, #agent-bots, #agent-revelation {
+        animation: none !important;
+    }
 }

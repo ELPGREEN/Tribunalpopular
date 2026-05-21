@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tribunal Supremo Popular</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Meta tags Open Graph -->
@@ -50,6 +53,22 @@
       <button id="difficultyHard" aria-label="Dificuldade Difícil"><i class="fas fa-fire"></i> Difícil</button>
     </div>
 
+    <!-- Tela de Carreira (Fase 0) -->
+    <div id="career-screen" class="screen hidden">
+      <h2><i class="fas fa-briefcase"></i> Escolha sua Carreira, <span id="careerName"></span></h2>
+      <img src="https://placehold.co/800x200/1a1a2e/b89c5b?text=Escolha+seu+Passado" style="width:100%;border-radius:6px;">
+      <p class="game-description">Sua carreira anterior define a habilidade especial que você leva para o Supremo Tribunal.</p>
+      <div id="career-options"></div>
+    </div>
+
+    <!-- Tela de Perfil (Fase 0) -->
+    <div id="profile-screen" class="screen hidden">
+      <h2><i class="fas fa-user-tag"></i> Defina seu Perfil, <span id="profileName"></span></h2>
+      <img src="https://placehold.co/800x200/1a1a2e/00ff66?text=Calibracao+Vetorial" style="width:100%;border-radius:6px;">
+      <p class="game-description">Seu alinhamento ideológico altera as coordenadas iniciais da República de Nova Aurora.</p>
+      <div id="profile-options"></div>
+    </div>
+
     <!-- Tela do Caso -->
     <div id="case-screen" class="screen hidden">
       <img id="case-image" src="images/placeholder.jpg" alt="Imagem do caso ou evento">
@@ -58,7 +77,34 @@
       <div id="case-evidences"></div>
       <div id="investigation-options"></div>
       <div id="decision-options"></div>
+      <div style="display:flex;gap:8px;margin:8px 0;">
+        <div id="career-skill-area" style="flex:1;padding:8px;background:#0d0d1a;border:1px solid #2d3748;border-radius:6px;">
+          <button id="career-skill-btn" style="display:none;width:100%;padding:8px;background:#2a1a3a;border:1px solid #b89c5b;border-radius:4px;color:#b89c5b;cursor:pointer;"><i class="fas fa-bolt"></i> Ativar Habilidade Especial [3]</button>
+          <small id="career-skill-info" style="color:#666;display:block;text-align:center;margin-top:4px;"></small>
+        </div>
+        <div id="skill-points-display" style="flex:0 0 auto;padding:8px 12px;background:#111827;border:1px solid #2a9d8f;border-radius:6px;text-align:center;display:none;">
+          <small style="color:#888;">🧠 Pontos</small><br>
+          <strong id="skillPointsValue" style="color:#2a9d8f;font-size:18px;">0</strong>
+        </div>
+      </div>
       <button id="viewMediaButton" aria-label="Ver notícias na mídia"><i class="fas fa-newspaper"></i> Ver Mídia</button>
+      <div class="metricas-dimensionais">
+        <h3><i class="fas fa-cube"></i> Métricas Quânticas</h3>
+        <div id="geopolitical-panel"></div>
+        <p><strong><i class="fas fa-shield-alt"></i> Estabilidade:</strong> <span id="dimEstabilidade">50</span></p>
+        <progress id="dimEstabilidadeBar" max="100" value="50" class="dim-bar"></progress>
+        <p><strong><i class="fas fa-balance-scale"></i> Ética:</strong> <span id="dimEtica">50</span></p>
+        <progress id="dimEticaBar" max="100" value="50" class="dim-bar"></progress>
+        <p><strong><i class="fas fa-users"></i> Apoio:</strong> <span id="dimApoio">50</span></p>
+        <progress id="dimApoioBar" max="100" value="50" class="dim-bar"></progress>
+        <p><strong><i class="fas fa-coins"></i> Orçamento:</strong> <span id="dimOrcamento">50</span></p>
+        <progress id="dimOrcamentoBar" max="100" value="50" class="dim-bar"></progress>
+        <p><strong><i class="fas fa-globe"></i> Diplomacia:</strong> <span id="dimDiplomacia">50</span></p>
+        <progress id="dimDiplomaciaBar" max="100" value="50" class="dim-bar"></progress>
+        <p><strong><i class="fas fa-crown"></i> Legado:</strong> <span id="dimLegado">0</span></p>
+        <progress id="dimLegadoBar" max="100" value="0" class="dim-bar"></progress>
+      </div>
+      <div id="tags-display" class="tags-container"></div>
       <h3><i class="fas fa-star-half-alt"></i> Reputação</h3>
       <div class="reputation">
         <p><strong><i class="fas fa-coins"></i> Orçamento do Tribunal:</strong> <span id="orcamento">100</span></p>
@@ -105,6 +151,7 @@
     <!-- Tela Final -->
     <div id="end-screen" class="screen hidden">
       <h2><i class="fas fa-balance-scale"></i> Fim de Jogo, <span id="endName"></span></h2>
+      <div id="dimensao-final" class="dimensao-final-box"></div>
       <p id="end-description"></p>
       <p class="end-explanation">
         Sua jornada como Juiz Supremo terminou, mas o eco de suas decisões ressoará na história. Será você lembrado como um guardião da justiça ou um juiz controverso?
@@ -113,54 +160,56 @@
     </div>
 
     <!-- Notificação -->
-    <div id="notification" role="alert"></div>
-    <!-- Adicionar antes do </main> no index.html -->
-    <!-- Tela de Nível Avançado -->
-    <div id="advanced-screen" class="screen hidden">
-      <img id="advanced-image" src="images/placeholder_advanced.jpg" alt="Imagem do projeto estratégico">
-      <h2 id="advanced-title"><i class="fas fa-globe"></i> Projeto Estratégico</h2>
-      <p id="advanced-description"></p>
-      <div id="advanced-details"></div>
-      <div id="advanced-options"></div>
-      <h3><i class="fas fa-star-half-alt"></i> Recursos Estratégicos</h3>
-      <div class="reputation">
-        <p><strong><i class="fas fa-money-bill-wave"></i> Verba Nacional:</strong> <span id="verba">1000</span></p>
-        <progress id="verbaBar" max="10000" value="1000" aria-label="Verba disponível para projetos nacionais"></progress>
-        <p><strong><i class="fas fa-shield-alt"></i> Armas:</strong> <span id="armas">100</span></p>
-        <progress id="armasBar" max="500" value="100" aria-label="Nível de armamento nacional"></progress>
-        <p><strong><i class="fas fa-users"></i> Soldados:</strong> <span id="soldados">1000</span></p>
-        <progress id="soldadosBar" max="10000" value="1000" aria-label="Número de soldados disponíveis"></progress>
-        <p><strong><i class="fas fa-chart-line"></i> Crescimento Econômico:</strong> <span id="crescimento">50</span></p>
-        <progress id="crescimentoBar" max="100" value="50" aria-label="Nível de crescimento econômico"></progress>
-        <p><strong><i class="fas fa-shield"></i> Defesa Nacional:</strong> <span id="defesa">50</span></p>
-        <progress id="defesaBar" max="100" value="50" aria-label="Nível de defesa nacional"></progress>
-        <p><strong><i class="fas fa-coins"></i> Riqueza Pessoal:</strong> <span id="riqueza">0</span></p>
-        <progress id="riquezaBar" max="1000000" value="0" aria-label="Riqueza pessoal acumulada"></progress>
+    <div id="notification" class="notification" role="alert"></div>
+
+    <!-- Tela de Transição Dimensional -->
+    <div id="transition-screen" class="screen hidden">
+      <h2><i class="fas fa-cube"></i> RECALIBRANDO ESPAÇO DE FASES DIMENSIONAL</h2>
+      <div class="transition-content">
+        <div id="orbital-map-container"></div>
+        <div id="tensor-diagnosis"></div>
+        <div id="transition-singularity" class="singularity-alert hidden"></div>
+        <div id="transition-crisis" class="crisis-alert hidden"></div>
       </div>
-    </div>
-    <!-- Adicionar antes do </main> no index.html -->
-    <!-- Tela de Diplomacia Global -->
-    <div id="diplomacy-screen-global" class="screen hidden">
-      <img src="images/diplomacy_global.jpg" alt="Imagem de uma cúpula internacional com líderes globais">
-      <h2><i class="fas fa-globe"></i> Diplomacia Global, <span id="diplomacyGlobalName"></span></h2>
-      <p class="game-description">
-        Suas decisões ecoam pelo mundo. Países reagem, oferecendo alianças, apoio ou oposição. Escolha com sabedoria para liderar o país à glória ou evitar o caos global.
-      </p>
-      <h3><i class="fas fa-handshake"></i> Status Diplomático</h3>
-      <div id="diplomacy-status"></div>
-      <div id="diplomacy-actions"></div>
-      <button id="skipDiplomacyGlobal" aria-label="Prosseguir sem ações diplomáticas"><i class="fas fa-forward"></i> Prosseguir</button>
-      <p class="action-description"><small>Continue sem negociar, mantendo o status diplomático atual.</small></p>
-      <h3><i class="fas fa-star"></i> Influência Global</h3>
-      <p><strong><i class="fas fa-globe-americas"></i> Influência Global:</strong> <span id="influenciaGlobal">50</span></p>
-      <progress id="influenciaGlobalBar" max="100" value="50" aria-label="Nível de influência global"></progress>
+      <button id="transitionContinueBtn" aria-label="Continuar"><i class="fas fa-forward"></i> Continuar</button>
     </div>
 
-<!-- Adicionar antes do </body> -->
+    <!-- Tela de Crise Tensorial -->
+    <div id="crisis-tensor-screen" class="screen hidden">
+      <h2><i class="fas fa-exclamation-triangle"></i> <span id="crisis-tensor-title">CRISE DETECTADA</span></h2>
+      <p id="crisis-tensor-desc"></p>
+      <div id="crisis-tensor-options" class="crisis-options"></div>
+      <button id="crisisBackBtn" aria-label="Voltar" style="display:none;"><i class="fas fa-arrow-left"></i> Voltar</button>
+    </div>
+
+    <!-- Tela de Singularidade (Game Over) -->
+    <div id="singularity-screen" class="screen hidden">
+      <h2 id="singularity-title"><i class="fas fa-skull"></i> SINGULARIDADE DETECTADA</h2>
+      <p id="singularity-text">O Estado colapsou.</p>
+      <div id="singularity-buttons">
+        <button id="singularityRestartBtn" aria-label="Reiniciar"><i class="fas fa-redo"></i> Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- Tela de Skills -->
+    <div id="skills-screen" class="screen hidden">
+      <h2><i class="fas fa-brain"></i> Árvore de Skills Quânticas</h2>
+      <p id="skills-points">Pontos disponíveis: <span id="skillPoints">0</span></p>
+      <div id="skills-trees" class="skills-grid"></div>
+      <button id="skillsBackBtn" aria-label="Voltar ao jogo"><i class="fas fa-arrow-left"></i> Voltar</button>
+    </div>
+
+    <!-- Achievements e Save/Load -->
+    <div id="achievements-container" style="position:fixed;top:10px;right:10px;z-index:999;max-width:200px;"></div>
+    <div style="position:fixed;bottom:10px;right:10px;z-index:998;display:flex;gap:5px;">
+      <button id="saveGameBtn" style="padding:5px 10px;font-size:11px;" aria-label="Salvar jogo"><i class="fas fa-save"></i></button>
+      <button id="loadGameBtn" style="padding:5px 10px;font-size:11px;" aria-label="Carregar jogo"><i class="fas fa-upload"></i></button>
+      <button id="skillsBtn" style="padding:5px 10px;font-size:11px;" aria-label="Árvore de Skills"><i class="fas fa-brain"></i></button>
+    </div>
+    <div id="case-report" style="position:fixed;bottom:60px;right:10px;z-index:997;max-width:300px;"></div>
   
   </main>
+  <script src="engine.js"></script>
   <script src="script.js"></script>
-  <script src="script_advanced.js"></script>
-  <script src="script_diplomacy.js"></script>
 </body>
 </html>

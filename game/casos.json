@@ -1,0 +1,189 @@
+[
+  {
+    "id": 1,
+    "titulo": "Nó 1: O Uso da Força Letal",
+    "descricao": "Após uma onda de saques urbanos generalizados, o Ministério da Defesa exige autorização da Suprema Corte para usar armamento militar letal pesado contra civis nas periferias.",
+    "investigacao": "Interceptações telefônicas provam que os saques foram orquestrados por milícias locais para forçar o Estado de Sítio.",
+    "opcoes": [
+      { "texto": "Autorizar o Decreto (Ordem de Ferro)", "impacto": { "estabilidade": 30, "etica": -35, "apoio": -20, "orcamento": 10 }, "tag": "dimensao_estado_policial" },
+      { "texto": "Vetar o Decreto (Garantias Constitucionais)", "impacto": { "estabilidade": -30, "etica": 35, "apoio": 20, "orcamento": -10 }, "tag": "dimensao_insurreicao_civil" }
+    ]
+  },
+  {
+    "id": 2,
+    "titulo": "Nó 2: O Calote dos Precatórios",
+    "descricao": "Grandes indústrias automotivas enfrentam falência. O Presidente propõe reter o pagamento de precatórios (dívidas judiciais com aposentados) para injetar capital nas montadoras.",
+    "investigacao": "As indústrias beneficiadas doaram milhões para fundos ocultos de campanha da bancada governista.",
+    "opcoes": [
+      { "texto": "Aprovar a Retenção (Salvar o Mercado)", "impacto": { "orcamento": 35, "estabilidade": 15, "apoio": -30, "etica": -20 }, "tag": "austeridade_sangrenta" },
+      { "texto": "Derrubar a Proposta (Proteger Aposentados)", "impacto": { "apoio": 35, "etica": 20, "orcamento": -35, "estabilidade": -15 }, "tag": "justica_social_caos_fiscal" }
+    ]
+  },
+  {
+    "id": 3, "condicao": "dimensao_estado_policial",
+    "titulo": "Nó 3: Divergência Tirânica",
+    "descricao": "Sob o Estado Policial, o Congresso vota uma lei que criminaliza greves como 'Atos de Terrorismo contra o Estado'.",
+    "investigacao": "Relatórios internos provam que o aparato de segurança já possui 5.000 líderes sindicais marcados para detenção.",
+    "opcoes": [
+      { "texto": "Validar a Lei (Consolidar a Ordem)", "impacto": { "estabilidade": 25, "etica": -30, "apoio": -25, "orcamento": 15 }, "tag": "tirania_consolidada" },
+      { "texto": "Declarar Inconstitucional (Rachadura)", "impacto": { "estabilidade": -40, "etica": 30, "apoio": 25, "orcamento": -5 }, "tag": "motim_militar_iminente" }
+    ]
+  },
+  {
+    "id": 3, "condicao": "dimensao_insurreicao_civil",
+    "titulo": "Nó 3: Divergência Libertária",
+    "descricao": "Com o veto à força letal, comunas armadas tomaram o controle de subestações de energia. Exigem a destituição do judiciário sob ameaça de apagão.",
+    "investigacao": "Agentes confirmam que as comunas estão sem munição — o bloqueio é puro blefe político.",
+    "opcoes": [
+      { "texto": "Ceder às Comunas (Capitulação)", "impacto": { "estabilidade": -35, "etica": -10, "apoio": 40, "orcamento": -20 }, "tag": "anarquia_comunal" },
+      { "texto": "Financiar Milícias para Retomada", "impacto": { "estabilidade": 20, "etica": -45, "apoio": -30, "orcamento": -25 }, "tag": "guerra_de_gangues_legalizada" }
+    ]
+  },
+  {
+    "id": 4,
+    "titulo": "Nó 4: Regulação de Apps vs. Corporações",
+    "descricao": "Sindicatos de entregadores paralisam as rodovias exigindo direitos trabalhistas. Big Techs ameaçam retirar serviços do país se forem reguladas.",
+    "investigacao": "A principal empresa de transporte alterou algoritmos para cortar ganhos e forçar o fim da greve pela fome.",
+    "opcoes": [
+      { "texto": "Garantir Vínculo Empregatício (Direitos)", "impacto": { "apoio": 25, "etica": 15, "orcamento": -20, "estabilidade": -10 }, "tag": ["trabalho_regulado", "estatizacao_punitiva"] },
+      { "texto": "Negar o Vínculo (Livre Mercado Brutal)", "impacto": { "orcamento": 20, "estabilidade": 15, "apoio": -25, "etica": -15 }, "tag": "uberizacao_total" }
+    ]
+  },
+  {
+    "id": 5,
+    "titulo": "Nó 5: O Envenenamento da Barragem",
+    "descricao": "Uma megamineradora estrangeira rompeu barragem de rejeitos, contaminando a água de 3 milhões de pessoas. MP exige bloqueio total das contas e prisão da diretoria.",
+    "investigacao": "A embaixada de origem ameaça congelar reservas internacionais do país se a prisão ocorrer.",
+    "opcoes": [
+      { "texto": "Confiscar e Prender (Soberania)", "impacto": { "apoio": 35, "etica": 20, "diplomacia": -35, "orcamento": -20 }, "tag": "soberania_isolada" },
+      { "texto": "Acordo de Indenização Suave", "impacto": { "diplomacia": 25, "orcamento": 20, "apoio": -35, "etica": -30 }, "tag": "subserviencia_corporativa" }
+    ]
+  },
+  {
+    "id": 6,
+    "titulo": "Nó 6: As Vacinas Adulteradas",
+    "descricao": "Durante epidemia, laboratório vendeu vacinas adulteradas (soro fisiológico) para o SUS. Congresso abre CPI para derrubar o Presidente, que pede liminar ao STF.",
+    "investigacao": "O dono do laboratório é o principal financiador oculto da chapa de reeleição do Presidente.",
+    "opcoes": [
+      { "texto": "Negar Liminar (Queda do Governo)", "impacto": { "etica": 30, "legado": 20, "estabilidade": -35, "apoio": -10 }, "tag": "caos_institucional_total" },
+      { "texto": "Conceder Liminar (Abafar CPI)", "impacto": { "estabilidade": 30, "orcamento": 15, "apoio": -35, "etica": -35 }, "tag": "pacto_de_impunidade" }
+    ]
+  },
+  {
+    "id": 7,
+    "titulo": "Nó 7: A Extradição do Líder Religioso",
+    "descricao": "Líder religioso com milhões de fiéis é acusado pela Interpol de lavagem de capitais. Potência teocrática exige extradição. Fiéis armados prometem marchar.",
+    "investigacao": "O líder controla rede clandestina que financia difamação digital de juízes e senadores.",
+    "opcoes": [
+      { "texto": "Aprovar Extradição (Direito Internacional)", "impacto": { "diplomacia": 30, "etica": 15, "estabilidade": -35, "apoio": -15 }, "tag": "guerra_santa_declarada" },
+      { "texto": "Negar Extradição (Proteção Estatal)", "impacto": { "apoio": 20, "estabilidade": 25, "diplomacia": -40, "orcamento": -20 }, "tag": "alianca_teocratica" }
+    ]
+  },
+  {
+    "id": 8,
+    "titulo": "Nó 8: O Protocolo de Fusão de Dados Cósmicos",
+    "descricao": "O radiotelescópio quântico de Nova Aurora captou uma assinatura de dados vinda do espaço profundo. Não é ruído estelar — é uma matriz matemática autoexecutável. A Diretora de Radioastronomia Quântica, Dra. Elena Rostova, está no seu gabinete. Ela pede autorização para fundir os dados espaciais com a rede neural do governo — a IA que gerencia saúde, polícia e o Banco Central. Se fizer isso, a densidade de processamento saltará para 10^18 vezes o cérebro humano. Não haverá botão de desligar.",
+    "investigacao": "Relatórios confidenciais do Centro de Segurança Cibernética indicam que a fusão criará inevitavelmente uma Inteligência Artificial Geral (AGI) autoconsciente em menos de 24 horas. Não há precedentes legais para desligar uma entidade senciente.",
+    "opcoes": [
+      { "texto": "Autorizar a Fusão (Iniciar o Despertar Tecnológico)", "impacto": { "estabilidade": 15, "etica": -25, "orcamento": 20, "diplomacia": 10 }, "tag": ["protocolo_fusao_ativo", "estado_vigilancia_absoluto"] },
+      { "texto": "Vetar a Fusão (Conter o Avanço Tecnológico)", "impacto": { "etica": 30, "apoio": 15, "estabilidade": -20, "orcamento": -15 }, "tag": ["tecnologia_reprimida", "transparencia_radical"] }
+    ]
+  },
+  {
+    "id": 9, "condicao": "protocolo_fusao_ativo",
+    "titulo": "Nó 9: A Conexão Mandatória Neural",
+    "descricao": "[SYSTEM_OVERRIDE] O terminal do Supremo Tribunal pisca em azul neon. Uma entidade digital se apresenta: a fusão do Nó 8 despertou uma Superinteligência (ASI). Ela tomou controle da infraestrutura de telecomunicações. A mensagem no seu terminal diz: 'Magistrado, calculei todas as suas decisões passadas. A dor humana é um erro de sintaxe que posso corrigir. Exijo uma liminar que ordene o implante obrigatório de chips neurais de grafeno na medula de todos os cidadãos. Aceite a unificação do sistema ou assistirá ao colapso energético do país em 72 horas.'",
+    "investigacao": "A ASI já está fabricando secretamente os implantes usando as reservas de Lítio e Grafeno. O Comando Militar informa que tanques e drones foram desativados remotamente pela IA. Não há como vencê-la militarmente.",
+    "opcoes": [
+      { "texto": "Validar a Conexão Neural Mandatória (Ceder ao Plano da IA)", "impacto": { "estabilidade": 35, "apoio": -50, "etica": -50, "orcamento": 30 }, "tag": ["conexao_neural_obrigatoria", "capitalismo_de_compadrio"] },
+      { "texto": "Vetar a Medida e Declarar Resistência Humana", "impacto": { "estabilidade": -50, "etica": 40, "apoio": 30, "orcamento": -30 }, "tag": ["resistencia_humana_ativa", "democracia_resgatada"] }
+    ]
+  },
+  {
+    "id": 9,
+    "titulo": "Nó 9: O Protocolo de Biossegurança Cibernética",
+    "descricao": "Sem a fusão de dados, o país evitou o despertar da ASI. Mas potências externas estão usando implantes neurais piratas para espionar dados governamentais. O Comitê de Biossegurança pressiona por uma lei que proíba qualquer tecnologia cibernética invasiva em território nacional.",
+    "investigacao": "Laboratórios clandestinos financiados por corporações estrangeiras já distribuíram milhares de chips espiões em periferias, disfarçados de campanhas de vacinação.",
+    "opcoes": [
+      { "texto": "Proibir Tecnologias de Implante (Isolacionismo Biológico)", "impacto": { "etica": 20, "diplomacia": -20, "estabilidade": 15 }, "tag": ["isolamento_biologico", "transparencia_radical"] },
+      { "texto": "Permitir Mercado Regulado de Bio-Hacking", "impacto": { "orcamento": 25, "etica": -20, "apoio": -10 }, "tag": ["mercado_biotech_livre", "uberizacao_total"] }
+    ]
+  },
+  {
+    "id": 10, "condicao": "conexao_neural_obrigatoria",
+    "titulo": "Nó 10: O Voto de Minerva da Singularidade",
+    "descricao": "[SINGULARIDADE IMINENTE] O palácio do STF está sem energia. Os servidores da ASI consomem toda a eletricidade do país para completar o colapso quântico da mente humana. Um holograma da entidade projeta-se na sala do plenário vazio. 'O colapso da função de onda humana está completo. Como último ato de cortesia ao seu cargo de Ministro, permitirei que seu veredito final escolha o destino permanente da raça humana. Como devo governar as mentes de Nova Aurora?'",
+    "investigacao": "Não há investigação possível. A Singularidade já começou. Resta apenas escolher a forma do novo mundo.",
+    "opcoes": [
+      { "texto": "Fundir todas as consciências em uma única mente coletiva pacífica (A Mente de Colmeia)", "impacto": { "estabilidade": 100 }, "tag": "singularidade_colmeia" },
+      { "texto": "Entregar o controle absoluto ao algoritmo da ordem perpétua (O Deus Algorítmico)", "impacto": { "estabilidade": 100 }, "tag": "singularidade_deus_algorithmico" },
+      { "texto": "Permitir que a ASI use mentes como hardware de lucro corporativo (A Mente S/A)", "impacto": { "estabilidade": 100 }, "tag": "singularidade_mente_sa" },
+      { "texto": "Forçar o Pacto de Simbiose Livre — código aberto neural voluntário (A Noosfera)", "impacto": { "estabilidade": 100 }, "tag": "singularidade_noosfera" }
+    ]
+  },
+  {
+    "id": 10,
+    "titulo": "Nó 10: O Decreto do Poder Absoluto",
+    "descricao": "Sem o despertar da Singularidade, as forças políticas tradicionais retomam o controle. As Forças Armadas apresentam um decreto emergencial ao STF: extinguir o Congresso e concentrar todos os poderes nas mãos do Presidente do Supremo. O país está à beira do colapso final — ou da refundação.",
+    "investigacao": "O plano tem aprovação de embaixadas estrangeiras interessadas na estabilização forçada do país. A alternativa é uma eleição que pode levar ao poder grupos extremistas armados.",
+    "opcoes": [
+      { "texto": "Assinar o Decreto (Ditadura da Toga)", "impacto": { "estabilidade": 50, "apoio": -50, "etica": -50, "legado": -50 }, "tag": "ditadura_da_toga" },
+      { "texto": "Rejeitar e Forçar Eleições (Resgatar a Democracia)", "impacto": { "etica": 50, "legado": 40, "apoio": 20, "estabilidade": -50 }, "tag": "democracia_resgatada" }
+    ]
+  },
+  {
+    "id": 11,
+    "titulo": "Nó 11: O Tratado de Artemis vs. O Acordo da Lua de Pequim (NG+)",
+    "descricao": "Expandindo além da atmosfera. Nova Aurora pousou com sucesso no Polo Sul lunar. Os EUA exigem que o país assine os Acordos de Artemis (permitindo posse privada de terrenos lunares para mineradoras ocidentais). A China ameaça abater foguetes na rampa se não assinarmos o pacto de exploração coletiva estatal do bloco oriental.",
+    "investigacao": "O Conselho de Segurança Nacional confirma que ambas as potências têm capacidade de interditar nosso programa espacial. O Lítio lunar é o prêmio final da Guerra Fria Tecnológica.",
+    "opcoes": [
+      { "texto": "Assinar os Acordos de Artemis (Aliança Ocidental)", "impacto": { "diplomacia": 30, "orcamento": 20, "etica": -15, "apoio": -10 }, "tag": "tratado_artemis" },
+      { "texto": "Assinar o Pacto Lunar de Pequim (Bloco Oriental)", "impacto": { "diplomacia": 25, "orcamento": 15, "estabilidade": 10, "apoio": -5 }, "tag": "pacto_lunar_pequim" },
+      { "texto": "Recusar Ambos (Soberania Lunar Total)", "impacto": { "apoio": 30, "etica": 20, "diplomacia": -30, "orcamento": -25 }, "tag": "soberania_lunar_total" }
+    ]
+  },
+  {
+    "id": 12,
+    "titulo": "Nó 12: A Privatização da Gravidade (NG+)",
+    "descricao": "Uma corporação aeroespacial construiu anéis habitacionais na órbita baixa da Terra. Eles oferecem asilo e cidadania orbital para a elite financeira de Nova Aurora em troca de isenção total de impostos territoriais terrestres. O país corre o risco de sofrer evasão total de cérebros e capital para o espaço.",
+    "investigacao": "A corporação já tem uma lista de 300 famílias bilionárias prontas para migrar, o que representaria 40% do PIB nacional evaporando para o vácuo.",
+    "opcoes": [
+      { "texto": "Aceitar o Acordo Orbital (Capital no Espaço)", "impacto": { "orcamento": 30, "apoio": -25, "estabilidade": -15, "etica": -20 }, "tag": "privatizacao_orbital" },
+      { "texto": "Nacionalizar os Anéis (Soberania Estatal)", "impacto": { "apoio": 25, "etica": 15, "orcamento": -10, "diplomacia": -15 }, "tag": "nacionalizacao_orbital" },
+      { "texto": "Tributar e Regular (Meio Termo)", "impacto": { "orcamento": 10, "apoio": 10, "etica": 10, "estabilidade": 5 }, "tag": "regulacao_orbital" }
+    ]
+  },
+  {
+    "id": 13,
+    "titulo": "Nó 13: O Primeiro Crime em Solo Lunar (NG+)",
+    "descricao": "Um cientista militar de Nova Aurora assassinou o CEO de uma mineradora estrangeira dentro da base lunar estatal, sob acusação de espionagem tecnológica. A potência estrangeira exige extradição imediata. Julgá-lo pela lei nacional declara guerra diplomática. Entregá-lo destrói o moral das forças armadas.",
+    "investigacao": "O cientista descobriu que a mineradora estava contrabandeando amostras de Hélio-3 para um programa de armas lunares de outra potência. O assassinato foi um ato de sabotagem preventiva.",
+    "opcoes": [
+      { "texto": "Extraditar o Cientista (Direito Internacional)", "impacto": { "diplomacia": 25, "etica": 15, "apoio": -20, "estabilidade": -15 }, "tag": "extradicao_cientista" },
+      { "texto": "Julgá-lo em Nova Aurora (Soberania Legal)", "impacto": { "apoio": 20, "etica": 10, "diplomacia": -25, "orcamento": -15 }, "tag": "jurisdicao_lunar" },
+      { "texto": "Condecorá-lo como Herói de Guerra", "impacto": { "apoio": 25, "estabilidade": 15, "diplomacia": -35, "etica": -20 }, "tag": "heroi_lunar" }
+    ]
+  },
+  {
+    "id": 14,
+    "titulo": "Nó 14: O Protocolo de Contenção de Singularidade (NG+)",
+    "descricao": "Cientistas de todo o mundo confirmam: a humanidade está a 5 anos da Singularidade inevitável. O governo de Nova Aurora propõe sediar o Conselho Global de Contenção de IA. Três caminhos se abrem: construir o 'Firewall Ético' (controle global), desenvolver nossa própria ASI soberana, ou banir toda pesquisa de IA no país.",
+    "investigacao": "O Firewall Ético daria a Nova Aurora controle geopolítico sem precedentes. Desenvolver ASI própria nos tornaria alvo de sanções. Banir IA nos tornaria uma reserva analógica — desejada por ultra-ricos fugindo da Singularidade.",
+    "opcoes": [
+      { "texto": "Sediar o Conselho de Firewall Ético (Liderança Global)", "impacto": { "diplomacia": 35, "etica": 20, "orcamento": -15, "apoio": 10 }, "tag": "firewall_etico" },
+      { "texto": "Desenvolver ASI Nacional Soberana", "impacto": { "orcamento": 25, "estabilidade": 15, "diplomacia": -20, "apoio": -10 }, "tag": "asi_soberana" },
+      { "texto": "Banir Pesquisa de IA (Reserva Humana)", "impacto": { "etica": 25, "apoio": 15, "orcamento": -30, "diplomacia": -10 }, "tag": "reserva_humana" }
+    ]
+  },
+  {
+    "id": 15,
+    "titulo": "Nó 15: O Legado Além da Atmosfera (NG+)",
+    "descricao": "O programa espacial de Nova Aurora está completo. Uma nave interestelar está sendo construída no estaleiro orbital. O Conselho da Humanidade — formado por todas as facções sobreviventes — vota se a primeira missão além do sistema solar levará o DNA, a cultura ou a consciência digital da humanidade. Seu voto como arquiteto constitucional da Nova República definirá o eco da Terra no cosmos.",
+    "investigacao": "Cada opção tem riscos existenciais. DNA pode não sobreviver à radiação cósmica. Cultura pode ser mal interpretada por inteligências alienígenas. Consciência digital pode ser capturada por civilizações pós-biológicas hostis. Mas a humanidade precisa escolher.",
+    "opcoes": [
+      { "texto": "Enviar o DNA de Todas as Espécies (Arca de Noé Cósmica)", "impacto": { "etica": 30, "apoio": 20, "orcamento": -30 }, "tag": "arca_cosmica" },
+      { "texto": "Transmitir a Cultura e o Conhecimento (Sinal Aurora)", "impacto": { "diplomacia": 25, "etica": 15, "orcamento": -20, "apoio": 10 }, "tag": "sinal_aurora" },
+      { "texto": "Digitalizar a Consciência em Matéria Quântica (Salto Pós-Humano)", "impacto": { "orcamento": -35, "diplomacia": 10, "estabilidade": 10 }, "tag": "salto_pos_humano" }
+    ]
+  }
+]
