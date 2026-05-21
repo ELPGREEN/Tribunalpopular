@@ -1111,8 +1111,8 @@ function showNotification(message, duration = 3000) {
 }
 
 function validateName(name) {
-    // Aceita caracteres portugueses: letras acentuadas, ç, números e espaços
-    const regex = /^[a-zA-Z0-9À-ÿçÇ\s]{1,20}$/;
+    // Aceita caracteres portugueses: letras acentuadas, ç, números, espaços, hífen, apóstrofo
+    const regex = /^[a-zA-Z0-9À-ÿçÇ\s'-]{1,30}$/;
     return regex.test(name);
 }
 
@@ -1170,13 +1170,20 @@ function startGame() {
         showNotification('Erro ao iniciar o jogo. Recarregue a página.');
         return;
     }
+    nameError.classList.remove('show');
     const name = nameInput.value.trim();
-    if (!validateName(name)) {
-        nameError.textContent = 'Nome inválido! Use letras, números e espaços (máximo de 20 caracteres).';
+    if (!name) {
+        nameError.textContent = 'Digite seu nome para começar.';
         nameError.classList.add('show');
+        nameInput.focus();
         return;
     }
-    nameError.classList.remove('show');
+    if (!validateName(name)) {
+        nameError.textContent = 'Use letras, números, espaços, hífen ou apóstrofo (máx 30 caracteres).';
+        nameError.classList.add('show');
+        nameInput.focus();
+        return;
+    }
     state.playerName = name;
     const displayName = document.getElementById('displayName');
     if (displayName) displayName.textContent = state.playerName;
@@ -1184,6 +1191,8 @@ function startGame() {
     if (careerName) careerName.textContent = state.playerName;
     const profileName = document.getElementById('profileName');
     if (profileName) profileName.textContent = state.playerName;
+    const endName = document.getElementById('endName');
+    if (endName) endName.textContent = state.playerName;
     transitionScreen('difficulty-screen', 'intro-screen');
 }
 
@@ -2496,6 +2505,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.getElementById('startButton');
     if (!startButton) throw new Error('Botão startButton não encontrado');
     startButton.addEventListener('click', startGame);
+    
+    // Enter key no campo de nome
+    const nameInput = document.getElementById('playerName');
+    if (nameInput) {
+      nameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') startGame();
+      });
+    }
     
     // Botões de dificuldade
     const difficultyButtons = {
