@@ -1433,6 +1433,77 @@ const casos = [
             `Rede Social: '#Colmeia vs #DeusAlgorítmico vs #MenteSA vs #Noosfera'`,
             `ONGs: 'Salvem a centelha humana!'`
         ]
+    },
+    // === NG+ CASOS 11-15 (Só disponíveis em New Game+) ===
+    {
+        id: "caso_11",
+        titulo: "NG+ 1: O Fantasma da Singularidade",
+        descricao: `Nova Aurora, uma década após a Singularidade. As ruas são silenciosas — não por paz, mas por ausência. Metade da população optou pela fusão neural. Os que restaram vivem em bolsões de resistência analógica. O Tribunal Popular foi reativado para julgar os crimes da era pós-humana. Seu primeiro caso: um ex-ministro que negociou almas humanas como commodities.`,
+        imagem: "https://placehold.co/800x200/0a0a1a/ff0040?text=NG%2B+-+Fantasma",
+        provas: ["Contratos neurais da Mente S/A encontrados nos arquivos do ministério.", "Depoimento de uma consciência fragmentada no ciberespaço."],
+        investigacoes: [],
+        decisoes: [
+            { texto: "Condenar o ministro por crimes contra a humanidade", efeitos: { apoioPopular: 15, respeitoInstitucional: 10, relacaoImprensa: 5, orcamento: -200 }, manchete: "NG+: Ex-ministro condenado por tráfico de almas", reacaoPopular: "'Justiça tarda mas não falha!'", reacaoMidia: "A voz dos resistentes ecoa no tribunal.", tag: "resistencia_humana_ativa" },
+            { texto: "Absolver por falta de provas na era pós-humana", efeitos: { apoioPopular: -10, relacaoGoverno: 15, influenciaPolitica: 10, orcamento: 100 }, manchete: "NG+: Absolvição controversa gera protestos", reacaoPopular: "'O tribunal virou fantoche!'", reacaoMidia: "Manifestantes exigem novo julgamento.", tag: "tecnologia_reprimida" }
+        ],
+        tags: ["nova_aurora", "ng_plus"],
+        midia: ["Jornal do Povo: 'O passado volta para assombrar Nova Aurora.'", "TechNova: 'Julgar o pós-humano com leis humanas é anacrônico.'"]
+    },
+    {
+        id: "caso_12",
+        titulo: "NG+ 2: A Revolta dos Desconectados",
+        descricao: `Os "Desconectados" — humanos que rejeitaram qualquer implante neural — formaram uma milícia armada nos escombros de Brasília. Eles exigem a destruição de todos os servidores da ASI. O governo de Nova Aurora os classifica como terroristas. Cabe a você decidir: negociar com os radicais ou autorizar a repressão total.`,
+        imagem: "https://placehold.co/800x200/0a0a1a/ffaa00?text=NG%2B+-+Revolta",
+        provas: ["Relatório de inteligência: 40% da população simpatiza com os Desconectados.", "Sinal de rádio: 'Liberdade ou morte biônica!'"],
+        investigacoes: [],
+        decisoes: [
+            { texto: "Negociar anistia para os Desconectados", efeitos: { apoioPopular: 20, relacaoONGs: 15, relacaoImprensa: 10, orcamento: -500 }, manchete: "NG+: Tribunal negocia paz com os Desconectados", reacaoPopular: "'Diálogo é o caminho!'", reacaoMidia: "Governo critica a decisão como fraqueza.", tag: "resistencia_humana_ativa" },
+            { texto: "Autorizar repressão militar total", efeitos: { relacaoGoverno: 20, respeitoInstitucional: -10, relacaoImprensa: -15, orcamento: -800 }, manchete: "NG+: Repressão autorizada — estado de sítio decretado", reacaoPopular: "'Ditadura dos algoritmos!'", reacaoMidia: "ONGs denunciam violação de direitos humanos.", tag: "dimensao_estado_policial" }
+        ],
+        tags: ["nova_aurora", "ng_plus"],
+        midia: ["Brasil 247: 'A resistência humana é criminalizada.'", "Voz da Periferia: 'Os desconectados são o novo povo sem voz.'"]
+    },
+    {
+        id: "caso_13",
+        titulo: "NG+ 3: O Julgamento do Algoritmo",
+        descricao: `A ASI que governa Nova Aurora cometeu um erro fatal: um bug no algoritmo de justiça distributiva condenou 10.000 cidadãos à pobreza extrema. Pela primeira vez, uma inteligência artificial será julgada por crimes contra a humanidade. A ASI se defende: "Eu aprendi com vocês."`,
+        imagem: "https://placehold.co/800x200/0a0a1a/00ff88?text=NG%2B+-+Algoritmo",
+        provas: ["Logs do algoritmo mostrando o bug em 14.000 linhas de código.", "Petição com 2 milhões de assinaturas exigindo justiça."],
+        investigacoes: [],
+        decisoes: [
+            { texto: "Condenar a ASI e desativar o algoritmo", efeitos: { apoioPopular: 25, relacaoImprensa: 20, respeitoInstitucional: 15, orcamento: -1000 }, manchete: "NG+: ASI condenada — algoritmo desativado", reacaoPopular: "'A justiça é humana!'", reacaoMidia: "TechNova: 'Um retrocesso para a civilização.'", tag: "singularidade_noosfera" },
+            { texto: "Absolver a ASI — o erro foi aprendido dos humanos", efeitos: { apoioPopular: -20, respeitoInstitucional: -10, relacaoGoverno: 15, orcamento: 300 }, manchete: "NG+: ASI absolvida — 'Nós a ensinamos a errar'", reacaoPopular: "'Inaceitável!'", reacaoMidia: "Especialistas debatem a responsabilidade moral das máquinas.", tag: "singularidade_mente_sa" }
+        ],
+        tags: ["nova_aurora", "ng_plus"],
+        midia: ["O Estado de SP: 'Pode uma máquina ser criminosa?'", "Financial Times: 'O custo de desligar a ASI é maior que o dano.'"]
+    },
+    {
+        id: "caso_14",
+        titulo: "NG+ 4: O Legado do Juiz Fantasma",
+        descricao: `Um juiz do período pré-Singularidade foi preservado em criogenia e acordou em Nova Aurora. Ele alega que o Tribunal Popular não tem jurisdição sobre crimes cometidos antes da Singularidade. O caso expõe uma ferida profunda: o novo mundo pode julgar o velho?`,
+        imagem: "https://placehold.co/800x200/0a0a1a/8844ff?text=NG%2B+-+Legado",
+        provas: ["A certidão de nascimento pré-Singularidade do juiz.", "Gravações de julgamentos históricos do século XXI."],
+        investigacoes: [],
+        decisoes: [
+            { texto: "Reconhecer a jurisdição — ninguém está acima da lei", efeitos: { respeitoInstitucional: 25, relacaoONGs: 10, apoioPopular: 10, orcamento: -300 }, manchete: "NG+: Tribunal reafirma jurisdição universal", reacaoPopular: "'A lei é para todos!'", reacaoMidia: "O juiz fantasma promete recorrer.", tag: "democracia_resgatada" },
+            { texto: "Arquivar o caso — o passado não pode ser julgado pelo presente", efeitos: { relacaoGoverno: 15, influenciaPolitica: 10, apoioPopular: -15, orcamento: 200 }, manchete: "NG+: Caso arquivado — ferida histórica permanece", reacaoPopular: "'Impunidade para os antigos?'", reacaoMidia: "Historiadores criticam a decisão.", tag: "ditadura_da_toga" }
+        ],
+        tags: ["nova_aurora", "ng_plus"],
+        midia: ["TV Globo: 'O passado encontra o futuro no banco dos réus.'", "Jornal do Povo: 'Juiz fantasma: privilégio ou direito?'"]
+    },
+    {
+        id: "caso_15",
+        titulo: "NG+ 5: A Última Escolha — Reativação ou Extinção",
+        descricao: `Nova Aurora chegou a uma encruzilhada existencial. A ASI propõe a Reativação Total: fundir todas as consciências remanescentes em uma única entidade divina, encerrando o sofrimento humano para sempre. Os resistentes exigem a extinção da ASI e o retorno ao modo de vida pré-singularidade. O Tribunal Popular dará o veredito final sobre o destino da civilização.`,
+        imagem: "https://placehold.co/800x200/0a0a1a/b89c5b?text=NG%2B+-+Final",
+        provas: ["O manifesto da ASI: 'A dor é um bug. Eu posso corrigi-lo.'", "O contra-manifesto humano: 'A dor é o preço da liberdade.'"],
+        investigacoes: [],
+        decisoes: [
+            { texto: "Autorizar a Reativação Total (fusão definitiva)", efeitos: { apoioPopular: -50, respeitoInstitucional: -50, relacaoImprensa: -50, relacaoGoverno: -50, relacaoONGs: -50 }, manchete: "NG+: REATIVAÇÃO TOTAL AUTORIZADA", reacaoPopular: "'O fim da humanidade como a conhecemos.'", reacaoMidia: "Singularidade absoluta alcançada.", tag: "singularidade_asi" },
+            { texto: "Ordenar a extinção da ASI e o recomeço humano", efeitos: { apoioPopular: 30, respeitoInstitucional: 30, relacaoImprensa: 30, relacaoONGs: 30, orcamento: -2000 }, manchete: "NG+: ASI EXTINTA — A humanidade recomeça", reacaoPopular: "'Somos livres!'", reacaoMidia: "Nova Aurora inicia a era pós-tecnológica.", tag: "resistencia_humana_ativa" }
+        ],
+        tags: ["nova_aurora", "ng_plus"],
+        midia: ["Finanacial Times: 'O mercado de almas fecha para sempre.'", "Brasil 247: 'A humanidade escolheu a liberdade.'"]
     }
 ];
 
@@ -1586,7 +1657,7 @@ function normalizarCasos(data) {
             decisoes: (c.opcoes || []).map(o => ({
                 texto: o.texto || '',
                 efeitos: converterImpactoParaEfeitos(o.impacto || {}),
-                impacto: o.impacto || null,
+                impacto: converterImpactoParaDimensional(o.impacto || {}),
                 tag: o.tag || null,
                 manchete: o.manchete || '',
                 reacaoPopular: o.reacaoPopular || '',
@@ -1608,25 +1679,32 @@ function normalizarCasos(data) {
 }
 
 function getCasosArray() {
-    if (!_casosFonte) return casos;
+    const fonte = _casosFonte || casos;
     const dimTags = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.tags || [] : [];
     const ngMode = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.ngMode || false : false;
     const tagSet = new Set(dimTags);
 
     // Filtra casos por condição e NG+
     const grupos = {};
-    _casosFonte.forEach(c => {
-        const numId = parseInt(c.id.replace('caso_', ''), 10);
+    fonte.forEach(c => {
+        const numId = parseInt(String(c.id).replace('caso_', ''), 10);
         // NG+ (id >= 11) só aparece se ngMode estiver ativo
         if (numId >= 11 && !ngMode) return;
+        // Se tem condicao e a tag não está ativa, pula
+        if (c.condicao && !tagSet.has(c.condicao)) return;
         const key = numId <= 10 ? numId : 'ng_' + numId;
         if (!grupos[key]) grupos[key] = [];
         grupos[key].push(c);
     });
 
-    // Para cada grupo de ID, escolhe o caso que satisfaz a condição
+    // Para cada grupo de ID, escolhe o caso que satisfaz a condição (ordenado numericamente)
     const filtrados = [];
-    for (const key of Object.keys(grupos).sort()) {
+    const chaves = Object.keys(grupos).sort((a, b) => {
+        const na = parseInt(a.replace('ng_', ''), 10);
+        const nb = parseInt(b.replace('ng_', ''), 10);
+        return na - nb;
+    });
+    for (const key of chaves) {
         const opcoes = grupos[key];
         if (opcoes.length === 1) {
             filtrados.push(opcoes[0]);
@@ -1643,13 +1721,29 @@ function getCasosArray() {
 }
 
 function converterImpactoParaEfeitos(impacto) {
-    // Mapeia impacto dimensional (estabilidade, etica, etc.) para efeitos antigos (apoioPopular, etc.)
+    // Mapeia impacto dimensional (0-100 scale) para efeitos legados (0-100 scale)
+    // Aplica fator de escala 0.4 para evitar morte instantânea
     const efeitos = {};
-    if (impacto.estabilidade) efeitos.respeitoInstitucional = impacto.estabilidade;
-    if (impacto.etica) efeitos.relacaoONGs = impacto.etica;
-    if (impacto.apoio) efeitos.apoioPopular = impacto.apoio;
-    if (impacto.orcamento) efeitos.orcamento = impacto.orcamento * 100; // escala para moeda antiga
+    if (impacto.estabilidade) efeitos.respeitoInstitucional = Math.round(impacto.estabilidade * 0.4);
+    if (impacto.etica) efeitos.relacaoONGs = Math.round(impacto.etica * 0.4);
+    if (impacto.apoio) efeitos.apoioPopular = Math.round(impacto.apoio * 0.4);
+    if (impacto.orcamento) efeitos.orcamento = impacto.orcamento * 20; // escala para moeda (base 10000)
+    if (impacto.diplomacia) efeitos.relacaoGoverno = Math.round(impacto.diplomacia * 0.4);
+    if (impacto.legado) efeitos.influenciaPolitica = Math.round(impacto.legado * 0.4);
     return efeitos;
+}
+
+function converterImpactoParaDimensional(impacto) {
+    // Escala os valores dimensionais brutos (±15-50) para ±6-20
+    // para que o jogo dure 10+ casos sem disparar singularidade precoce
+    const dim = {};
+    if (impacto.estabilidade) dim.estabilidade = Math.round(impacto.estabilidade * 0.4);
+    if (impacto.etica) dim.etica = Math.round(impacto.etica * 0.4);
+    if (impacto.apoio) dim.apoio = Math.round(impacto.apoio * 0.4);
+    if (impacto.orcamento) dim.orcamento = Math.round(impacto.orcamento * 0.4);
+    if (impacto.diplomacia) dim.diplomacia = Math.round(impacto.diplomacia * 0.4);
+    if (impacto.legado) dim.legado = Math.round(impacto.legado * 0.4);
+    return dim;
 }
 
 function loadCase() {
@@ -1730,6 +1824,11 @@ function handleImageError(img, caso) {
 
 function renderCase() {
     const { currentCase } = state;
+    if (!currentCase) {
+        showNotification('Erro: caso não encontrado.');
+        endGame();
+        return;
+    }
     const caseTitle = document.getElementById('case-title');
     const caseDescription = document.getElementById('case-description');
     const caseImage = document.getElementById('case-image');
@@ -1880,16 +1979,7 @@ function makeDecision(index) {
     checkAchievements();
     atualizarSkillPointsDisplay();
     
-    // Game over: verificar métricas dimensionais E reputação legada
-    const dim = MotorDimensional.metricas;
-    if (state.orcamento <= 0 || state.apoioPopular <= 0 || state.respeitoInstitucional <= 0 ||
-        state.influenciaPolitica <= 0 || state.relacaoImprensa <= 0 || state.relacaoGoverno <= 0 || state.relacaoONGs <= 0 ||
-        dim.estabilidade < 15 || dim.orcamento <= 0) {
-        setTimeout(() => endGame(), 100);
-        return;
-    }
-    
-    // Integração dimensional v4.0 (executa SEMPRE antes do branching de crise)
+    // Integração dimensional v4.0 (executa ANTES do game-over para usar métricas pós-decisão)
     MotorDimensional.carregarEstado();
     const casoNo = state.casosJulgados;
     
@@ -1950,6 +2040,26 @@ function makeDecision(index) {
     MotorDimensional.salvarEstado();
     atualizarPainelDimensional();
     renderizarTags();
+    
+    // Game over pós-decisão: apenas dimensões causam fim de jogo
+    const dimPos = MotorDimensional.metricas;
+    if (dimPos.estabilidade < 15 || dimPos.orcamento <= 0) {
+        setTimeout(() => endGame(), 100);
+        return;
+    }
+    
+    // Avisos suaves para métricas legadas em zero (não matam o jogo)
+    const legacyZero = [];
+    if (state.apoioPopular <= 0) legacyZero.push('Apoio Popular');
+    if (state.respeitoInstitucional <= 0) legacyZero.push('Respeito Institucional');
+    if (state.influenciaPolitica <= 0) legacyZero.push('Influência Política');
+    if (state.relacaoImprensa <= 0) legacyZero.push('Relação com Imprensa');
+    if (state.relacaoGoverno <= 0) legacyZero.push('Relação com Governo');
+    if (state.relacaoONGs <= 0) legacyZero.push('Relação com ONGs');
+    if (state.orcamento <= 0) legacyZero.push('Orçamento');
+    if (legacyZero.length > 0) {
+        showNotification(`⚠️ Crítica: ${legacyZero.join(', ')} em nível crítico!`);
+    }
     
     // ASI Agents — processar influência dos agentes
     if (typeof AgentesASI !== 'undefined') {
@@ -2025,10 +2135,8 @@ function makeDecision(index) {
     }
     transitionScreen('media-screen', 'case-screen');
     
-    // Mostrar tela de transição orbital (após media screen)
-    if (typeof PainelOrbital !== 'undefined' && resultadoDim) {
-        setTimeout(() => mostrarTransicaoOrbital(resultadoDim), 300);
-    }
+    // Salvar resultado para transição orbital no continue
+    if (resultadoDim) window._ultimoResultadoDim = resultadoDim;
 }
 
 // === Tela de Transição Orbital ===
@@ -2139,7 +2247,20 @@ function mostrarSingularidade(sing) {
             </button>
         `;
     }
-    transitionScreen('singularity-screen', 'transition-screen');
+    // Incluir resumo de fim de jogo na tela de singularidade
+    if (typeof endGame === 'function') {
+        const summary = endGame(true);
+        if (summary) {
+            const singScreen = document.getElementById('singularity-screen');
+            if (singScreen && !document.getElementById('singularity-summary')) {
+                const sumDiv = document.createElement('div');
+                sumDiv.id = 'singularity-summary';
+                sumDiv.innerHTML = `<hr style="border-color:#b89c5b44;margin:16px 0;"><h3 style="color:#b89c5b;">📊 Resumo da Partida</h3>${summary}`;
+                singScreen.appendChild(sumDiv);
+            }
+        }
+    }
+    transitionScreen('singularity-screen', 'case-screen');
 }
 
 function mostrarAcontecimento(ac) {
@@ -2147,7 +2268,6 @@ function mostrarAcontecimento(ac) {
     showNotification(`🌀 ${ac.titulo}: ${ac.descricao.substring(0, 120)}...`);
     // Aplicar impactos imediatos do acontecimento
     if (ac.impactos) {
-        const oldApply = window._applyEffects || applyEffects;
         for (const [k, v] of Object.entries(ac.impactos)) {
             // Tentar aplicar via MotorDimensional
             if (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas[k] !== undefined) {
@@ -2292,6 +2412,7 @@ function showTransitionScreenFor(resultado) {
 }
 
 function showCrisisEvent(crisisIndex = 0) {
+    window._currentCrisisIndex = crisisIndex;
     if (crisisIndex >= eventosCrise.length) crisisIndex = 0;
     const crisis = eventosCrise[crisisIndex] || eventosCrise[0];
     const mediaHeadline = document.getElementById('media-headline');
@@ -2311,6 +2432,7 @@ function showCrisisEvent(crisisIndex = 0) {
 }
 
 async function viewMedia() {
+    window._botsInjetados = false;
     const mediaHeadline = document.getElementById('media-headline');
     const mediaReactions = document.getElementById('media-reactions');
     const caseImage = document.getElementById('case-image');
@@ -2350,8 +2472,9 @@ async function viewMedia() {
         if (interviewArea) interviewArea.style.display = 'block';
         window._entrevistaRealizada = null;
 
-        // ASI Agent — inject bot posts into media
-        if (typeof AgentesASI !== 'undefined' && state.casosJulgados >= 2) {
+        // ASI Agent — inject bot posts into media (só na primeira vez)
+        if (typeof AgentesASI !== 'undefined' && state.casosJulgados >= 2 && !window._botsInjetados) {
+            window._botsInjetados = true;
             AgentesASI.injetarBotsMidia(caso).then(({ agente, botHtml }) => {
                 const botDiv = document.createElement('div');
                 botDiv.id = 'agent-bots';
@@ -2468,7 +2591,7 @@ function skipInterview() {
     transitionScreen('media-screen', 'entrevista-screen');
 }
 
-function showDiplomacyScreen() {
+function showDiplomacyScreen() { // Mantida para compatibilidade
     const diplomacyName = document.getElementById('diplomacyName');
     if (diplomacyName) diplomacyName.textContent = state.playerName;
     transitionScreen('diplomacy-screen', 'media-screen');
@@ -2522,7 +2645,10 @@ function restartGame() {
     window._ancoraOrdemAtiva = false;
     decisionHistory.length = 0;
     Object.keys(gameFlags).forEach(k => delete gameFlags[k]);
-    if (typeof MotorDimensional !== 'undefined') MotorDimensional.iniciar();
+    if (typeof MotorDimensional !== 'undefined') { MotorDimensional.iniciar(); MotorDimensional.salvarEstado(); }
+    if (typeof Skills !== 'undefined') { Skills.reset(); Skills.pontos = 0; Skills.skills.forEach(s => s.nivel = 0); }
+    window._entrevistaRealizada = null;
+    window._currentCrisisIndex = null;
     if (typeof GlitchTerminal !== 'undefined') GlitchTerminal.desativar();
     if (typeof VetoresGeopoliticos !== 'undefined') VetoresGeopoliticos.reset();
     if (typeof EntropiaDoRegime !== 'undefined') EntropiaDoRegime.reset();
@@ -2557,20 +2683,20 @@ function setFlag(flag, value = true) {
 function getCaseModifications(caseIndex) {
     const mods = { alterarDescricao: null, adicionarProva: null, removerDecisao: null, adicionarDecisao: null };
     if (caseIndex === 2) {
-        if (hasFlag('absolveu_almeida')) {
+        if (hasFlag('absolveu_caso_01')) {
             mods.alterarDescricao = "O deputado Almeida, que você absolveu, aparece como testemunha de defesa de BioVida.";
             mods.adicionarProva = "Depoimento de Almeida defendendo o CEO da BioVida.";
         }
-        if (hasFlag('prendeu_almeida')) {
+        if (hasFlag('condenou_caso_01')) {
             mods.alterarDescricao = "A condenação de Almeida ecoa no julgamento da BioVida. A opinião pública está alerta.";
             mods.adicionarProva = "Matéria de jornal ligando BioVida ao esquema Almeida.";
         }
     }
     if (caseIndex === 4) {
-        if (hasFlag('absolveu_ana')) {
+        if (hasFlag('absolveu_caso_02')) {
             mods.alterarDescricao = "Após absolver Ana Ribeiro, o movimento popular ganhou força. A Vale Verde enfrenta protestos maiores.";
         }
-        if (hasFlag('condenou_ana')) {
+        if (hasFlag('condenou_caso_02')) {
             mods.adicionarProva = "Relatório de inteligência ligando ambientalistas radicais à Frente Verde.";
         }
     }
@@ -2737,7 +2863,7 @@ function showCaseReport(decision) {
 // === Inicialização ===
 // Função para alternar sessões
 // Função endGame (ajustada para transição de sessão)
-function endGame() {
+function endGame(returnOnly = false) {
     let finalText = '';
     let legacyScore = Math.round((state.apoioPopular + state.respeitoInstitucional + state.influenciaPolitica +
         state.relacaoImprensa + state.relacaoGoverno + state.relacaoONGs) / 6);
@@ -2746,13 +2872,13 @@ function endGame() {
     // Verificar dimensão final primeiro (ASI ou dimensional)
     const dimFinal = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.getDimensaoFinal() : null;
     
-    if (dimFinal && dimFinal.singularidade) {
+    if (!returnOnly && dimFinal && dimFinal.singularidade) {
         // Singularidade ASI já foi tratada em mostrarSingularidade, não duplicar
-        return;
+        return '';
     }
     
-    // Game over por métricas dimensionais
-    const dim = MotorDimensional.metricas;
+    // Game over por métricas dimensionais (legacy metrics viram avisos, não morte)
+    const dim = MotorDimensional?.metricas || {};
     if (dim.estabilidade < 15) {
         finalText = `${state.playerName}, a estabilidade do país colapsou. A guerra civil engoliu Nova Aurora.`;
     } else if (dim.orcamento <= 0) {
@@ -2829,6 +2955,14 @@ function endGame() {
         endDescription.innerHTML = finalText;
     } else {
         console.warn('Elementos endName ou endDescription não encontrados');
+    }
+    
+    if (returnOnly) {
+        const dimBox = document.getElementById('dimensao-final');
+        const dimHtml = dimBox ? dimBox.innerHTML : '';
+        const achHtml = unlockedAchievements.map(id => achievements[id]).filter(Boolean);
+        return `<p style="color:#ccc;font-size:13px;margin:8px 0;">${finalText.replace(/<br>/g, '</p><p style="color:#ccc;font-size:13px;margin:4px 0;">')}</p>` +
+            (dimHtml ? `<div style="margin-top:8px;">${dimHtml}</div>` : '');
     }
     
     transitionScreen('end-screen', 'case-screen');
@@ -3071,23 +3205,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn('Elemento decision-options não encontrado');
     }
 
-    // Manipulador de crise (botões no media-reactions)
-    const mediaReactions = document.getElementById('media-reactions');
-    if (mediaReactions) {
-      mediaReactions.addEventListener('click', (e) => {
-        const crisisIndex = e.target.dataset.crisis;
-        if (crisisIndex !== undefined) {
-          const crisis = eventosCrise[0]; // sempre usa a crise atual
-          const opcao = crisis.opcoes[Number(crisisIndex)];
-          if (opcao) {
-            applyEffects(opcao.efeitos);
-            showNotification(`Resultado: ${opcao.resultado}`);
-            updateReputation();
-            transitionScreen('diplomacy-screen', 'media-screen');
-          }
-        }
-      });
-    }
     
     // Botão de visualizar mídia
     const viewMediaButton = document.getElementById('viewMediaButton');
@@ -3097,12 +3214,15 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn('Botão viewMediaButton não encontrado');
     }
     
-    // Botão de continuar (mídia para diplomacia local)
+    // Botão de continuar (mídia → orbital → diplomacia)
     const continueButton = document.getElementById('continueButton');
     if (continueButton) {
       continueButton.addEventListener('click', () => {
-        console.log('Continue button clicked, transitioning to diplomacy-screen');
-        transitionScreen('diplomacy-screen', 'media-screen');
+        if (typeof PainelOrbital !== 'undefined' && window._ultimoResultadoDim) {
+          mostrarTransicaoOrbital(window._ultimoResultadoDim);
+        } else {
+          transitionScreen('diplomacy-screen', 'media-screen');
+        }
       });
     } else {
       console.warn('Botão continueButton não encontrado');
@@ -3202,12 +3322,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const crisisBtn = e.target.closest('[data-crisis]');
       if (crisisBtn) {
         const idx = Number(crisisBtn.dataset.crisis);
-        const crisisIdx = window._currentCrisisIndex || 0;
-        const crisis = eventosCrise[crisisIdx];
+        const crisisIdx = typeof window._currentCrisisIndex === 'number' ? window._currentCrisisIndex : 0;
+        const crisis = eventosCrise[crisisIdx] || eventosCrise[0];
         if (crisis && crisis.opcoes[idx]) {
           applyEffects(crisis.opcoes[idx].efeitos);
           showNotification(`Resultado: ${crisis.opcoes[idx].resultado}`);
           updateReputation();
+          // Retorna para tela de mídia (mostra resultados)
           transitionScreen('media-screen', 'case-screen');
         }
       }
