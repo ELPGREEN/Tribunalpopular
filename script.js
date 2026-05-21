@@ -1248,6 +1248,7 @@ function normalizarCasos(data) {
             decisoes: (c.opcoes || []).map(o => ({
                 texto: o.texto || '',
                 efeitos: converterImpactoParaEfeitos(o.impacto || {}),
+                impacto: o.impacto || null,
                 tag: o.tag || null,
                 manchete: o.manchete || '',
                 reacaoPopular: o.reacaoPopular || '',
@@ -1551,7 +1552,14 @@ function makeDecision(index) {
     }
     if (tagsCombinadas.length === 0) tagsCombinadas = [tagEncontrada || 'decisao_' + casoNo];
     
-    const impactoDim = {
+    const impactoDim = decision.impacto ? {
+        estabilidade: decision.impacto.estabilidade || 0,
+        etica: decision.impacto.etica || 0,
+        apoio: decision.impacto.apoio || 0,
+        orcamento: decision.impacto.orcamento || 0,
+        legado: 0,
+        diplomacia: decision.impacto.diplomacia || 0
+    } : {
         estabilidade: Math.round(((decision.efeitos.orcamento || 0) + (decision.efeitos.influenciaPolitica || 0) - (decision.efeitos.apoioPopular || 0)) / 3),
         etica: Math.round((0 - (decision.efeitos.relacaoONGs || 0) - (decision.efeitos.relacaoImprensa || 0)) / 3),
         apoio: Math.round((decision.efeitos.apoioPopular || 0) / 2),
