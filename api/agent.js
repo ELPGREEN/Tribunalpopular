@@ -1,6 +1,6 @@
 // POST /api/agent — Proxy para Mistral AI (Agentes ASI do Tribunal)
-// Lê MISTRAL_API_KEY da env (Vercel) ou usa fallback hardcoded para dev
-const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || 'f26Iul1PkHNvkoLYkNQfkX5cSmw4RvLX';
+// Lê MISTRAL_API_KEY da env (Vercel) — sem fallback hardcoded
+const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY;
 const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
 const MODEL = 'mistral-small-latest';
 

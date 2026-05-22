@@ -62,12 +62,18 @@ def decodificar_dimensao(tags, metricas):
     t = set(tags)
     for did, dim in DIMENSOES.items():
         if all(tag in t for tag in dim['tags']):
-            if did == 1 and metricas.get('estabilidade', 0) > 70:
-                return dim
-            if did == 10 and metricas.get('legado', 0) > 60:
-                return dim
-            if did == 13 and metricas.get('etica', 0) > 65 and metricas.get('diplomacia', 0) > 55:
-                return dim
+            if did == 1:
+                if metricas.get('estabilidade', 0) > 70:
+                    return dim
+                continue
+            if did == 10:
+                if metricas.get('legado', 0) > 60:
+                    return dim
+                continue
+            if did == 13:
+                if metricas.get('etica', 0) > 65 and metricas.get('diplomacia', 0) > 55:
+                    return dim
+                continue
             return dim
     if metricas.get('estabilidade', 0) < 20:
         return DIMENSOES[2]

@@ -277,7 +277,7 @@ const TensorCrise = {
 // === 4. SISTEMA DE CRISES DINÂMICAS ===
 const CrisesDinamicas = {
     avaliar(metricas, tags, casoAtual) {
-        if (casoAtual === 3 || casoAtual === 7 || casoAtual === 9) {
+        if (casoAtual === 4 || casoAtual === 8 || casoAtual === 10) {
             if (metricas.orcamento <= 20) {
                 return {
                     titulo: 'FALÊNCIA SOBERANA',
@@ -314,7 +314,7 @@ const CrisesDinamicas = {
 
     verificarSingularidades(metricas) {
         if (metricas.orcamento <= 0) return { tipo: 'falencia', texto: 'Orçamento zerou. O Estado decretou falência soberana. Fim da simulação.' };
-        if (metricas.estabilidade < 15) return { tipo: 'guerra_civil', texto: 'Estabilidade abaixo de 15%. Insurreição armada generalizada. O país colapsou em guerra civil.' };
+        if (metricas.estabilidade < 10) return { tipo: 'guerra_civil', texto: 'Estabilidade abaixo de 10%. Insurreição armada generalizada. O país colapsou em guerra civil.' };
         return null;
     }
 };
@@ -399,7 +399,7 @@ const AchievementsQuanticos = {
         { id: 'imortalidade_juridica', nome: 'Imortalidade Jurídica', desc: 'Democracia + Ética 65 + Diplo 55', check: (m, t) => t.includes('democracia_resgatada') && m.etica > 65 && m.diplomacia > 55, icone: 'crown' },
         { id: 'barao_helio3', nome: 'Barão de Hélio-3', desc: 'Dimensão corporativa', check: (m, t) => t.includes('subserviencia_corporativa') && m.orcamento > 65, icone: 'rocket' }
     ],
-    desbloqueadas: JSON.parse(localStorage.getItem('tribunal_achievements_v3') || '[]'),
+    desbloqueadas: (() => { try { var _a=localStorage.getItem('tribunal_achievements_v3');return JSON.parse(_a||'[]'); } catch(e){ return []; } })(),
     verificar(metricas, tags) {
         const novas = [];
         for (const ach of this.lista) {
@@ -519,7 +519,7 @@ const MotorDimensional = {
                     descricao: cen.descricao,
                     newGamePlus: cen.id === 4,
                     singularidade: true,
-                    cenário: cen
+                    cenario: cen
                 };
             }
         }
@@ -539,7 +539,7 @@ const MotorDimensional = {
             if (raw) {
                 const d = JSON.parse(raw);
                 this.metricas = d.metricas || this.metricas;
-                this.tags = d.tags || []; this.casoAtual = d.casoAtual || 1;
+                this.tags = (d.tags || []).filter(t => t !== 'singularidade_asi'); this.casoAtual = d.casoAtual || 1;
                 this.contadorCrises = d.contadorCrises || 0;
                 this.ngMode = d.ngMode || false;
                 NG_MULTIPLIER = this.ngMode ? 1.4 : 1.0;
@@ -620,6 +620,7 @@ const VetoresGeopoliticos = {
     aliancaOcidental: 50,  // EUA/UE
     pactoSeda: 50,         // China/Rússia
     sindicalismoSul: 50,   // Sul Global
+    _retaliated: {},
 
     aplicarImpacto(tagDecisao) {
         const mapa = {
@@ -650,23 +651,25 @@ const VetoresGeopoliticos = {
     },
 
     verificarRetaliacao(tags, casoAtual) {
-        // Retaliação se um vetor cai abaixo de 20
         const retal = [];
-        if (this.aliancaOcidental < 20) {
+        if (this.aliancaOcidental < 20 && !this._retaliated.ao) {
+            this._retaliated.ao = true;
             retal.push({
                 bloco: 'ALIANÇA OCIDENTAL',
                 punicao: 'Sanções bancárias. Orçamento -20. Diplomacia -15.',
                 impacto: { orcamento: -20, diplomacia: -15 }
             });
         }
-        if (this.pactoSeda < 20) {
+        if (this.pactoSeda < 20 && !this._retaliated.ps) {
+            this._retaliated.ps = true;
             retal.push({
                 bloco: 'PACTO DA SEDA',
                 punicao: 'Corte de semicondutores. Estabilidade -15. Orçamento -10.',
                 impacto: { estabilidade: -15, orcamento: -10 }
             });
         }
-        if (this.sindicalismoSul < 20) {
+        if (this.sindicalismoSul < 20 && !this._retaliated.ss) {
+            this._retaliated.ss = true;
             retal.push({
                 bloco: 'SINDICALISMO SOBERANO',
                 punicao: 'Bloqueio de rodovias. Apoio -20. Orçamento -10.',
@@ -680,6 +683,7 @@ const VetoresGeopoliticos = {
         this.aliancaOcidental = 50;
         this.pactoSeda = 50;
         this.sindicalismoSul = 50;
+        this._retaliated = {};
     }
 };
 
@@ -827,10 +831,10 @@ const SingularidadeASI = {
         }
         // Fallback: se tem conexao mas nenhum cenário específico
         if (t.has('conexao_neural_obrigatoria')) {
-            return this.cenarios[1]; // Deus Algorítmico como padrão opressivo
+            return this.cenarios.find(c => c.id === 2) || this.cenarios[0];
         }
         if (t.has('resistencia_humana_ativa')) {
-            return this.cenarios[3]; // Simbiose (sem condição extra)
+            return this.cenarios.find(c => c.id === 4) || this.cenarios[0];
         }
         return null;
     }
@@ -857,8 +861,11 @@ const GlitchTerminal = {
     aplicar(texto) {
         if (!this.ativo) return texto;
         const chars = ['@', '#', '$', '%', '&', '*', '0', '1', '█', '░', '▒', '▓'];
-        return texto.split('').map(c => {
+        return texto.split('').map((c, i, arr) => {
             if (Math.random() < this.taxaCorrupcao && c !== '\n' && c !== ' ') {
+                const prev = arr[i - 1] || '';
+                const next = arr[i + 1] || '';
+                if ((prev === '<' && c !== '>') || (next === '>' && c !== '<') || c === '<' || c === '>') return c;
                 return chars[Math.floor(Math.random() * chars.length)];
             }
             return c;

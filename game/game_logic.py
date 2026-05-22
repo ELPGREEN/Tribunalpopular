@@ -7,7 +7,8 @@ state = {
     'respeitoInstitucional': 50, 'influenciaPolitica': 50,
     'relacaoImprensa': 50, 'relacaoGoverno': 50, 'relacaoONGs': 50,
     'casosJulgados': 0, 'currentCase': None, 'investigationsDone': 0,
-    'maxInvestigations': 2, 'orcamento': 10000, 'custoManutencao': 1000
+    'maxInvestigations': 2, 'orcamento': 100, 'custoManutencao': 10,
+    'career': None, 'profile': None, 'careerCharges': 0
 }
 
 eventos_aleatorios = [
@@ -81,8 +82,8 @@ eventos_crise = [
         'id': 'crise_cibernetica', 'imagem': 'assets/images/crise_cibernetica.jpg',
         'texto': "**Ataque Cibernético ao STF!**\n\nHackers invadem os sistemas do Supremo, vazando documentos sigilosos e decisões confidenciais. A segurança nacional está comprometida.",
         'opcoes': [
-            {'texto': 'Ordenar investigação federal total', 'efeitos': {'respeitoInstitucional': 15, 'influenciaPolitica': -5, 'orcamento': -5000}, 'resultado': 'Investigação descobre células hackers, mas custa caro aos cofres.'},
-            {'texto': 'Contratar empresa privada de segurança', 'efeitos': {'respeitoInstitucional': -10, 'orcamento': -2000}, 'resultado': 'Ameaça contida na metade do custo, mas privacidade é questionada.'},
+            {'texto': 'Ordenar investigação federal total', 'efeitos': {'respeitoInstitucional': 15, 'influenciaPolitica': -5, 'orcamento': -50}, 'resultado': 'Investigação descobre células hackers, mas custa caro aos cofres.'},
+            {'texto': 'Contratar empresa privada de segurança', 'efeitos': {'respeitoInstitucional': -10, 'orcamento': -20}, 'resultado': 'Ameaça contida na metade do custo, mas privacidade é questionada.'},
             {'texto': 'Minimizar o ataque publicamente', 'efeitos': {'apoioPopular': -10, 'relacaoImprensa': -15}, 'resultado': 'População desconfia, imprensa acusa de acobertamento.'}
         ]
     }
@@ -268,7 +269,7 @@ def apply_effects(effects: Dict[str, int]) -> Dict[str, int]:
     changes = {}
     for key, value in effects.items():
         if key == 'orcamento':
-            state['orcamento'] = max(0, state['orcamento'] + value)
+            state['orcamento'] = max(0, min(100, state['orcamento'] + value))
         elif key in ('apoioPopular', 'respeitoInstitucional', 'influenciaPolitica',
                      'relacaoImprensa', 'relacaoGoverno', 'relacaoONGs'):
             state[key] = max(0, min(100, state[key] + value))
@@ -284,12 +285,14 @@ def start_game(player_name: str) -> Dict[str, str]:
         return {'status': 'error', 'message': 'Nome inválido! Use letras, números e espaços (máx. 20 caracteres).'}
     for k in list(state.keys()):
         if k in ('playerName', 'dificuldade'): continue
-        if k == 'orcamento': state[k] = 10000
-        elif k == 'custoManutencao': state[k] = 1000
+        if k == 'orcamento': state[k] = 100
+        elif k == 'custoManutencao': state[k] = 10
         elif k == 'maxInvestigations': state[k] = 2
         elif k == 'casosJulgados': state[k] = 0
         elif k == 'investigationsDone': state[k] = 0
         elif k == 'currentCase': state[k] = None
+        elif k in ('career', 'profile'): state[k] = None
+        elif k == 'careerCharges': state[k] = 0
         else: state[k] = 50
     state['playerName'] = player_name
     return {'status': 'success', 'message': f'Bem-vindo, {player_name}, ao Tribunal Supremo Popular!'}
@@ -299,11 +302,11 @@ def set_difficulty(level: str) -> Dict[str, str]:
         return {'status': 'error', 'message': 'Dificuldade inválida.'}
     state['dificuldade'] = level
     if level == 'fácil':
-        state['orcamento'] = 5000; state['custoManutencao'] = 500; state['maxInvestigations'] = 3
+        state['orcamento'] = 50; state['custoManutencao'] = 5; state['maxInvestigations'] = 3
     elif level == 'médio':
-        state['orcamento'] = 10000; state['custoManutencao'] = 1000; state['maxInvestigations'] = 2
+        state['orcamento'] = 100; state['custoManutencao'] = 10; state['maxInvestigations'] = 2
     else:
-        state['orcamento'] = 15000; state['custoManutencao'] = 1500; state['maxInvestigations'] = 1
+        state['orcamento'] = 150; state['custoManutencao'] = 15; state['maxInvestigations'] = 1
     load_case()
     return {'status': 'success', 'message': f'Dificuldade: {level}'}
 
@@ -329,10 +332,10 @@ def investigate(index: int) -> Dict[str, any]:
         return {'status': 'error', 'message': 'Limite de investigações atingido.'}
     if index < 0 or index >= len(state['currentCase']['investigacoes']):
         return {'status': 'error', 'message': 'Investigação inválida.'}
-    if state['orcamento'] < 2000:
+    if state['orcamento'] < 20:
         return {'status': 'error', 'message': 'Orçamento insuficiente!'}
     inv = state['currentCase']['investigacoes'][index]
-    state['orcamento'] -= 2000
+    state['orcamento'] -= 20
     state['investigationsDone'] += 1
     changes = apply_effects(inv['custo'])
     state['currentCase']['provas'].append(inv['novaProva'])
@@ -340,7 +343,10 @@ def investigate(index: int) -> Dict[str, any]:
 
 def handle_crisis_choice(index: int) -> Dict[str, any]:
     if not eventos_crise: return {'status': 'error', 'message': 'Nenhuma crise ativa.'}
-    crisis = eventos_crise[0]
+    crisis_idx = state.get('activeCrisis', 0)
+    if crisis_idx < 0 or crisis_idx >= len(eventos_crise):
+        crisis_idx = 0
+    crisis = eventos_crise[crisis_idx]
     if index < 0 or index >= len(crisis['opcoes']):
         return {'status': 'error', 'message': 'Escolha inválida.'}
     opcao = crisis['opcoes'][index]
@@ -350,12 +356,12 @@ def handle_crisis_choice(index: int) -> Dict[str, any]:
 def handle_difficulty_diplomacy(choice: str) -> Dict[str, any]:
     changes = {}
     if choice == 'imprensa':
-        custos = {'fácil': -500, 'médio': -1000, 'difícil': -1500}
+        custos = {'fácil': -5, 'médio': -10, 'difícil': -15}
         changes = apply_effects({'relacaoImprensa': 15, 'orcamento': custos[state['dificuldade']]})
     elif choice == 'governo':
-        changes = apply_effects({'relacaoGoverno': 10, 'relacaoImprensa': -5, 'orcamento': -10})
+        changes = apply_effects({'relacaoGoverno': 10, 'relacaoImprensa': -5, 'orcamento': -1})
     elif choice == 'ongs':
-        changes = apply_effects({'relacaoONGs': 10, 'relacaoGoverno': -5, 'orcamento': -5})
+        changes = apply_effects({'relacaoONGs': 10, 'relacaoGoverno': -5, 'orcamento': -1})
     elif choice == 'skip':
         load_case()
         return {'status': 'success', 'message': 'Diplomacia pulada.', 'nextScreen': 'case'}
@@ -372,7 +378,7 @@ def make_decision(index: int) -> Dict[str, any]:
     decision = valid[index]
     changes = apply_effects(decision['efeitos'])
     state['casosJulgados'] += 1
-    state['orcamento'] -= state['custoManutencao']
+    state['orcamento'] = max(0, state['orcamento'] - state['custoManutencao'])
 
     if (state['orcamento'] <= 0 or state['apoioPopular'] <= 0 or
         state['respeitoInstitucional'] <= 0 or state['influenciaPolitica'] <= 0 or
@@ -397,8 +403,10 @@ def make_decision(index: int) -> Dict[str, any]:
         'nextScreen': 'diplomacy'
     }
     if is_crisis_case:
-        result['crisis'] = eventos_crise[0 if state['casosJulgados'] == 3 else
-                                          1 if state['casosJulgados'] == 7 else 2] if len(eventos_crise) > 2 else eventos_crise[0]
+        crisis_idx = 0 if state['casosJulgados'] == 3 else 1 if state['casosJulgados'] == 7 else 2
+        crisis_idx = min(crisis_idx, len(eventos_crise) - 1)
+        state['activeCrisis'] = crisis_idx
+        result['crisis'] = eventos_crise[crisis_idx]
     return result
 
 def end_game() -> Dict[str, str]:

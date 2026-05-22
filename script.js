@@ -667,8 +667,10 @@ function renderizarPerfis() {
 function escolherPerfil(profileId) {
     state.profile = profileId;
     const cal = PERFIS[profileId].calibracao;
-    // Calibrar motor dimensional
-    MotorDimensional.carregarEstado();
+    // Calibrar motor dimensional (novo jogo: resetar para evitar tags velhas do localStorage)
+    const ngAtivo = MotorDimensional.ngMode;
+    MotorDimensional.iniciar();
+    if (ngAtivo) MotorDimensional.ativarNG();
     Object.assign(MotorDimensional.metricas, cal);
     MotorDimensional.metricas.legado = FlowAlgebra.calcularLegado(MotorDimensional.metricas);
     MotorDimensional.salvarEstado();
@@ -1332,7 +1334,7 @@ const casos = [
                 tag: "fusao_supervisionada"
             }
         ],
-        tags: ["protocolo_fusao", "singularidade_asi"],
+        tags: ["protocolo_fusao"],
         midia: [
             `Jornal do Povo: 'O radiotelescópio trouxe um sinal dos deuses!'`,
             `TechNova: 'A fusão é nosso legado evolutivo como civilização.'`,
@@ -1391,7 +1393,7 @@ const casos = [
                 tag: "adiamento_conexao"
             }
         ],
-        tags: ["conexao_neural", "singularidade_asi"],
+        tags: ["conexao_neural"],
         midia: [
             `Jornal do Povo: 'A IA falou — e exige nossos cérebros!'`,
             `TechNova: 'A conexão neural é o próximo passo da evolução.'`,
@@ -1457,7 +1459,7 @@ const casos = [
                 tag: "singularidade_noosfera"
             }
         ],
-        tags: ["voto_minerva", "singularidade_asi"],
+        tags: ["voto_minerva"],
         midia: [
             `Jornal do Povo: 'O fim da humanidade como a conhecemos — ou o começo de algo maior.'`,
             `TechNova: 'A Singularidade é inevitável. Abrace o futuro.'`,
@@ -1534,7 +1536,7 @@ const casos = [
             { texto: "Ordenar a extinção da ASI e o recomeço humano", efeitos: { apoioPopular: 30, respeitoInstitucional: 30, relacaoImprensa: 30, relacaoONGs: 30, orcamento: -20 }, manchete: "NG+: ASI EXTINTA — A humanidade recomeça", reacaoPopular: "'Somos livres!'", reacaoMidia: "Nova Aurora inicia a era pós-tecnológica.", tag: "resistencia_humana_ativa" }
         ],
         tags: ["nova_aurora", "ng_plus"],
-        midia: ["Finanacial Times: 'O mercado de almas fecha para sempre.'", "Brasil 247: 'A humanidade escolheu a liberdade.'"]
+        midia: ["Financial Times: 'O mercado de almas fecha para sempre.'", "Brasil 247: 'A humanidade escolheu a liberdade.'"]
     }
 ];
 
@@ -1858,10 +1860,14 @@ function atualizarHUD() {
             careerInfo.onclick = null;
         }
     }
-    // Mostrar HUD apenas durante o jogo (não na intro/end)
     const emJogo = state.playerName && state.career;
-    const introVisivel = document.getElementById('intro-screen') && !document.getElementById('intro-screen').classList.contains('hidden');
-    hud.classList.toggle('hidden', !emJogo || introVisivel);
+    const endScreen = document.getElementById('end-screen');
+    const endVisivel = endScreen && !endScreen.classList.contains('hidden');
+    const introScreen = document.getElementById('intro-screen');
+    const introVisivel = introScreen && !introScreen.classList.contains('hidden');
+    const singScreen = document.getElementById('singularity-screen');
+    const singVisivel = singScreen && !singScreen.classList.contains('hidden');
+    hud.classList.toggle('hidden', !emJogo || introVisivel || endVisivel || singVisivel);
 }
 
 function transitionScreen(showId, hideId) {
@@ -1931,8 +1937,9 @@ function setDifficulty(level) {
     
     // New Game+ detection
     MotorDimensional.carregarEstado();
-    if (MotorDimensional.ngMode) {
-        showNotification('⚡ New Game+ ATIVO — Multiplicador de Gravidade 1.4×');
+    const ngMsg = localStorage.getItem('tribunal_ng_ready');
+    if (MotorDimensional.ngMode || ngMsg === 'true') {
+        showNotification('⚡ New Game+ disponível — Multiplicador de Gravidade 1.4×. Complete todos os 10 casos para acessar o pós-singularidade!');
     }
     
     transitionScreen('career-screen', 'difficulty-screen');
@@ -1994,18 +2001,17 @@ function getCasosArray() {
 
     // Filtra casos por condição e NG+
     const grupos = {};
+    const idsComCondicao = new Set();
     fonte.forEach(c => {
         const numId = parseInt(String(c.id).replace('caso_', ''), 10);
-        // NG+ (id >= 11) só aparece se ngMode estiver ativo
         if (numId >= 11 && !ngMode) return;
-        // Se tem condicao e a tag não está ativa, pula
-        if (c.condicao && !tagSet.has(c.condicao)) return;
         const key = numId <= 10 ? numId : 'ng_' + numId;
         if (!grupos[key]) grupos[key] = [];
         grupos[key].push(c);
+        if (c.condicao) idsComCondicao.add(key);
     });
 
-    // Para cada grupo de ID, escolhe o caso que satisfaz a condição (ordenado numericamente)
+    // Para cada grupo de ID, escolhe o caso que satisfaz a condição
     const filtrados = [];
     const chaves = Object.keys(grupos).sort((a, b) => {
         const na = parseInt(a.replace('ng_', ''), 10);
@@ -2015,14 +2021,20 @@ function getCasosArray() {
     for (const key of chaves) {
         const opcoes = grupos[key];
         if (opcoes.length === 1) {
-            filtrados.push(opcoes[0]);
+            if (!opcoes[0].condicao || tagSet.has(opcoes[0].condicao)) {
+                filtrados.push(opcoes[0]);
+            }
         } else {
-            // Múltiplas versões do mesmo ID — escolhe por condição
             const match = opcoes.find(c => {
-                if (!c.condicao) return true; // fallback sem condição
+                if (!c.condicao) return true;
                 return tagSet.has(c.condicao);
             });
-            filtrados.push(match || opcoes[0]);
+            if (match) {
+                filtrados.push(match);
+            } else if (idsComCondicao.has(key)) {
+                const semCondicao = opcoes.filter(c => !c.condicao);
+                filtrados.push(semCondicao[0] || opcoes[0]);
+            }
         }
     }
     return filtrados;
@@ -2035,15 +2047,13 @@ function converterImpactoParaEfeitos(impacto) {
     if (impacto.estabilidade) efeitos.respeitoInstitucional = Math.round(impacto.estabilidade * 0.4);
     if (impacto.etica) efeitos.relacaoONGs = Math.round(impacto.etica * 0.4);
     if (impacto.apoio) efeitos.apoioPopular = Math.round(impacto.apoio * 0.4);
-    if (impacto.orcamento) efeitos.orcamento = Math.round(impacto.orcamento * 0.2); // escala 0-100
+    if (impacto.orcamento) efeitos.orcamento = Math.round(impacto.orcamento * 0.4);
     if (impacto.diplomacia) efeitos.relacaoGoverno = Math.round(impacto.diplomacia * 0.4);
     if (impacto.legado) efeitos.influenciaPolitica = Math.round(impacto.legado * 0.4);
     return efeitos;
 }
 
 function converterImpactoParaDimensional(impacto) {
-    // Escala os valores dimensionais brutos (±15-50) para ±6-20
-    // para que o jogo dure 10+ casos sem disparar singularidade precoce
     const dim = {};
     if (impacto.estabilidade) dim.estabilidade = Math.round(impacto.estabilidade * 0.4);
     if (impacto.etica) dim.etica = Math.round(impacto.etica * 0.4);
@@ -2052,6 +2062,25 @@ function converterImpactoParaDimensional(impacto) {
     if (impacto.diplomacia) dim.diplomacia = Math.round(impacto.diplomacia * 0.4);
     if (impacto.legado) dim.legado = Math.round(impacto.legado * 0.4);
     return dim;
+}
+
+const MAPA_EFEITOS_PARA_IMPACTO = {
+    apoioPopular: 'apoio',
+    respeitoInstitucional: 'estabilidade',
+    influenciaPolitica: 'diplomacia',
+    relacaoImprensa: 'etica',
+    relacaoGoverno: 'diplomacia',
+    relacaoONGs: 'etica',
+    orcamento: 'orcamento',
+};
+
+function mapearEfeitosParaImpacto(efeitos) {
+    const impacto = {};
+    for (const [k, v] of Object.entries(efeitos)) {
+        const dimKey = MAPA_EFEITOS_PARA_IMPACTO[k];
+        if (dimKey) impacto[dimKey] = (impacto[dimKey] || 0) + v;
+    }
+    return impacto;
 }
 
 function loadCase() {
@@ -2081,22 +2110,23 @@ function loadCase() {
 
 // === Fallback de Imagens — SVG Placeholder Temático ===
 function gerarSVGParaCasos(titulo, tags = [], id = '') {
-    const corBase = tags.includes('singularidade_asi') ? '#ff0044' :
-                    tags.includes('conexao_neural') ? '#00ff88' :
-                    tags.includes('protocolo_fusao') ? '#8844ff' :
-                    tags.includes('crime') ? '#ff6600' :
-                    tags.includes('corrupcao') ? '#cc4400' : '#1a5276';
-    const corSec = tags.includes('singularidade_asi') ? '#440011' :
-                   tags.includes('crime') ? '#332200' : '#0a1628';
-    const icone = tags.includes('singularidade_asi') ? '◆' :
-                  tags.includes('conexao_neural') ? '⊞' :
-                  tags.includes('fusao') ? '◇' :
-                  tags.includes('futebol') ? '⚽' :
-                  tags.includes('agua') ? '💧' :
-                  tags.includes('hacker') ? '💻' :
-                  tags.includes('vacina') ? '💉' :
-                  tags.includes('protesto') ? '✊' :
-                  tags.includes('corrupcao') ? '💰' : '⚖️';
+    const t = s => tags.some(tag => tag.includes(s));
+    const corBase = t('singularidade_asi') ? '#ff0044' :
+                    t('conexao_neural') ? '#00ff88' :
+                    t('protocolo_fusao') ? '#8844ff' :
+                    t('crime') ? '#ff6600' :
+                    t('corrupcao') ? '#cc4400' : '#1a5276';
+    const corSec = t('singularidade_asi') ? '#440011' :
+                   t('crime') ? '#332200' : '#0a1628';
+    const icone = t('singularidade_asi') ? '◆' :
+                  t('conexao_neural') ? '⊞' :
+                  t('fusao') ? '◇' :
+                  t('futebol') ? '⚽' :
+                  t('agua') ? '💧' :
+                  t('hacker') ? '💻' :
+                  t('vacina') ? '💉' :
+                  t('protesto') ? '✊' :
+                  t('corrupcao') ? '💰' : '⚖️';
     const tituloCurto = titulo.length > 50 ? titulo.substring(0, 47) + '...' : titulo;
 
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
@@ -2131,6 +2161,7 @@ function gerarSVGParaCasos(titulo, tags = [], id = '') {
 }
 
 function getImagemSrc(caso) {
+    if (!caso) return '';
     const src = caso.imagem || '';
     if (!src) return gerarSVGParaCasos(caso.titulo, caso.tags || [], caso.id);
     // Offline-first: placehold.co vira SVG inline, sem network request
@@ -2177,7 +2208,8 @@ function renderCase() {
         // Add glitch class to body
         document.body.classList.add('glitch-ativo');
         // Caso 9+ — override description with ASI text
-        if (currentCase.tag && (currentCase.tag.includes('conexao') || currentCase.tag.includes('singularidade'))) {
+        const ctag = currentCase.tag || currentCase.tags;
+        if (ctag && (Array.isArray(ctag) ? ctag.some(t => t.includes('conexao') || t.includes('singularidade')) : ctag.includes('conexao') || ctag.includes('singularidade'))) {
             caseDescription.innerHTML = `[SYSTEM_OVERRIDE]<br><br>${GlitchTerminal.aplicar(currentCase.descricao)}`;
         }
     } else {
@@ -2190,7 +2222,8 @@ function renderCase() {
         const agente = AgentesASI.determinarAgenteAtivo(currentCase.tags || []);
         agente.gerarMensagem(currentCase.titulo).then(msg => {
             // Efeito sonoro — beep único
-            playBeep(agente.cor === '#ff4444' ? 330 : agente.cor === '#44ff44' ? 880 : agente.cor === '#4488ff' ? 660 : 520, 180);
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        playBeep(agente.cor === '#ff4444' ? 330 : agente.cor === '#44ff44' ? 880 : agente.cor === '#4488ff' ? 660 : 520, 180);
             // Toast push notification
             const toast = document.createElement('div');
             toast.style.cssText = `
@@ -2313,7 +2346,9 @@ function usarSkillCarreira() {
 
 function makeDecision(index) {
     playDecisionSound();
-    const decision = state.currentCase.decisoes.filter(d => !d.requiresInvestigation || state.investigationsDone > 0)[index];
+    const available = state.currentCase.decisoes.filter(d => !d.requiresInvestigation || state.investigationsDone > 0);
+    const decision = available[index];
+    if (!decision) { showNotification('Nenhuma decisão disponível.'); return; }
     window._ultimaDecisao = decision;
     window._ultimoCaso = state.currentCase;
     trackDecision(state.currentCase.id, decision.texto);
@@ -2376,7 +2411,7 @@ function makeDecision(index) {
         tagsCombinadas = tagsCombinadas.concat(state.currentCase.tags);
     }
     if (tagEncontrada) {
-        tagsCombinadas.push(tagEncontrada);
+        tagsCombinadas = tagsCombinadas.concat(Array.isArray(tagEncontrada) ? tagEncontrada : [tagEncontrada]);
     }
     if (tagsCombinadas.length === 0) tagsCombinadas = [tagEncontrada || 'decisao_' + casoNo];
     
@@ -2387,14 +2422,7 @@ function makeDecision(index) {
         orcamento: decision.impacto.orcamento || 0,
         legado: 0,
         diplomacia: decision.impacto.diplomacia || 0
-    } : {
-        estabilidade: Math.round(((decision.efeitos.orcamento || 0) + (decision.efeitos.influenciaPolitica || 0) - (decision.efeitos.apoioPopular || 0)) / 3),
-        etica: Math.round((0 - (decision.efeitos.relacaoONGs || 0) - (decision.efeitos.relacaoImprensa || 0)) / 3),
-        apoio: Math.round((decision.efeitos.apoioPopular || 0) / 2),
-        orcamento: Math.round((decision.efeitos.orcamento || 0)),
-        legado: 0,
-        diplomacia: Math.round((decision.efeitos.relacaoGoverno || 0 + decision.efeitos.influenciaPolitica || 0) / 4)
-    };
+    } : converterImpactoParaDimensional(mapearEfeitosParaImpacto(decision.efeitos || {}));
     const resultadoDim = MotorDimensional.processarDecisao({ impacto: impactoDim, tag: tagsCombinadas });
     MotorDimensional.salvarEstado();
     atualizarPainelDimensional();
@@ -2403,7 +2431,7 @@ function makeDecision(index) {
     
     // Game over pós-decisão: apenas dimensões causam fim de jogo
     const dimPos = MotorDimensional.metricas;
-    if (dimPos.estabilidade < 15 || dimPos.orcamento <= 0) {
+    if (dimPos.estabilidade < 10 || dimPos.orcamento <= 0) {
         setTimeout(() => endGame(), 100);
         return;
     }
@@ -2462,10 +2490,10 @@ function makeDecision(index) {
         return;
     }
     
-    // Crises do roteiro original (casos 3, 7, 9)
-    if (state.casosJulgados === 3 || state.casosJulgados === 7 || state.casosJulgados === 9) {
-        const crisisIndex = state.casosJulgados === 3 ? 0 : state.casosJulgados === 7 ? 1 : 2;
-        showCrisisEvent(crisisIndex);
+    // Crises do roteiro original (casos 3, 5, 7, 9)
+    if (state.casosJulgados === 3 || state.casosJulgados === 5 || state.casosJulgados === 7 || state.casosJulgados === 9) {
+        const crisisMap = { 3: 0, 5: 3, 7: 1, 9: 2 };
+        showCrisisEvent(crisisMap[state.casosJulgados] ?? 0);
         return;
     }
     
@@ -2477,25 +2505,31 @@ function makeDecision(index) {
             const event = possibleEvents[Math.floor(Math.random() * possibleEvents.length)];
             eventMessage = `<p><strong>Evento Inesperado:</strong> ${event.texto}</p>`;
             applyEffects(event.efeitos);
-            document.getElementById('case-image').src = event.imagem;
+            // Aplicar impacto dimensional equivalente
+            const mapaDim = { apoioPopular: 'apoio', respeitoInstitucional: 'estabilidade', relacaoONGs: 'etica', relacaoImprensa: 'diplomacia', influenciaPolitica: 'legado', relacaoGoverno: 'diplomacia', orcamento: 'orcamento' };
+            if (typeof MotorDimensional !== 'undefined') {
+                for (const [k, v] of Object.entries(event.efeitos)) {
+                    const dimKey = mapaDim[k];
+                    if (dimKey && MotorDimensional.metricas[dimKey] !== undefined) {
+                        const delta = Math.round(v * 0.4);
+                        MotorDimensional.metricas = FlowAlgebra.aplicarImpacto(MotorDimensional.metricas, { [dimKey]: delta });
+                    }
+                }
+                MotorDimensional.metricas.legado = FlowAlgebra.calcularLegado(MotorDimensional.metricas);
+                MotorDimensional.salvarEstado();
+            }
+            const caseImg = document.getElementById('case-image');
+            if (caseImg) caseImg.src = event.imagem;
         }
     }
     
-    const mediaHeadline = document.getElementById('media-headline');
-    const mediaReactions = document.getElementById('media-reactions');
-    if (mediaHeadline && mediaReactions) {
-        mediaHeadline.textContent = decision.manchete;
-        mediaReactions.innerHTML = `
-            ${eventMessage}
-            <p><strong>Reação Popular:</strong> ${decision.reacaoPopular}</p>
-            <p><strong>Reação da Mídia:</strong> ${decision.reacaoMidia}</p>
-        `;
-        document.getElementById('case-image').src = state.currentCase.imagem;
-    }
     transitionScreen('media-screen', 'case-screen');
     
     // Salvar resultado para transição orbital no continue
     if (resultadoDim) window._ultimoResultadoDim = resultadoDim;
+    
+    // Auto-show rich media content
+    setTimeout(() => viewMedia(), 100);
 }
 
 // === Tela de Transição Orbital ===
@@ -2599,13 +2633,10 @@ function mostrarSingularidade(sing) {
         }).catch(() => {});
     }
 
-    const btns = document.getElementById('singularity-buttons') || document.getElementById('singularityRestartBtn');
-    if (btns) {
-        btns.innerHTML = `
-            <button onclick="window.location.reload()" style="margin:8px;padding:10px 24px;background:#6b1c1c;color:#fff;border:none;border-radius:6px;cursor:pointer;">
-                <i class="fas fa-redo"></i> Reiniciar Simulação
-            </button>
-        `;
+    const singBtn = document.getElementById('singularityRestartBtn');
+    if (singBtn) {
+        singBtn.style.cssText = 'margin:8px;padding:10px 24px;background:#6b1c1c;color:#fff;border:none;border-radius:6px;cursor:pointer;';
+        singBtn.innerHTML = '<i class="fas fa-redo"></i> Reiniciar Simulação';
     }
     // Incluir resumo de fim de jogo na tela de singularidade
     if (typeof endGame === 'function') {
@@ -2725,7 +2756,8 @@ function aplicarCriseTensor(idx) {
     const opcao = crise.opcoes[idx];
     
     MotorDimensional.carregarEstado();
-    const resultado = MotorDimensional.processarDecisao({ impacto: opcao.impacto, tag: 'crise_' + crise.titulo.toLowerCase().replace(/\s/g, '_') });
+    MotorDimensional.metricas = FlowAlgebra.aplicarImpacto(MotorDimensional.metricas, opcao.impacto);
+    MotorDimensional.metricas.legado = FlowAlgebra.calcularLegado(MotorDimensional.metricas);
     MotorDimensional.salvarEstado();
     atualizarPainelDimensional();
     renderizarTags();
@@ -2735,12 +2767,17 @@ function aplicarCriseTensor(idx) {
     window._pendingCrisis = null;
     
     // Check for singularity after crisis
-    if (resultado.singularidade) {
-        mostrarSingularidade(resultado.singularidade);
+    const sing = CrisesDinamicas.verificarSingularidades(MotorDimensional.metricas);
+    if (sing) {
+        mostrarSingularidade(sing);
         return;
     }
     
-    showTransitionScreenFor(resultado);
+    // Go directly to next case (transition already shown before crisis)
+    transitionScreen('case-screen', 'transition-screen');
+    loadCase();
+    atualizarPainelDimensional();
+    renderizarTags();
 }
 
 function showTransitionScreenFor(resultado) {
@@ -2803,14 +2840,11 @@ function showCrisisEvent(crisisIndex = 0) {
                     clearInterval(window._crisisTimer);
                     window._crisisTimer = null;
                     // Game over por inação
-                    const dim = MotorDimensional?.metricas || {};
-                    Object.assign(dim, {
-                        estabilidade: Math.max(0, (dim.estabilidade || 50) - 25),
-                        etica: Math.max(0, (dim.etica || 50) - 20),
-                        apoio: Math.max(0, (dim.apoio || 50) - 30),
-                        orcamento: Math.max(0, (dim.orcamento || 50) - 15),
-                        diplomacia: Math.max(0, (dim.diplomacia || 50) - 20)
-                    });
+                    if (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas) {
+                        MotorDimensional.metricas = FlowAlgebra.aplicarImpacto(MotorDimensional.metricas, {
+                            estabilidade: -25, etica: -20, apoio: -30, orcamento: -15, diplomacia: -20
+                        });
+                    }
                     showNotification('⏱ TEMPO ESGOTADO! A crise destruiu sua credibilidade.');
                     endGame();
                 }
@@ -2821,7 +2855,6 @@ function showCrisisEvent(crisisIndex = 0) {
 }
 
 async function viewMedia() {
-    window._botsInjetados = false;
     const mediaHeadline = document.getElementById('media-headline');
     const mediaReactions = document.getElementById('media-reactions');
     const caseImage = document.getElementById('case-image');
@@ -3004,8 +3037,12 @@ function diplomacyAction(faction) {
 }
 
 function skipDiplomacy() {
-    transitionScreen('case-screen', 'diplomacy-screen');
-    loadCase();
+    if (window._ultimoResultadoDim) {
+        mostrarTransicaoOrbital(window._ultimoResultadoDim);
+    } else {
+        transitionScreen('case-screen', 'diplomacy-screen');
+        loadCase();
+    }
 }
 
 function restartGame() {
@@ -3039,6 +3076,11 @@ function restartGame() {
     if (typeof Skills !== 'undefined') { Skills.reset(); }
     window._entrevistaRealizada = null;
     window._currentCrisisIndex = null;
+    window._ultimoResultadoDim = null;
+    window._ultimaDecisao = null;
+    window._ultimoCaso = null;
+    window._pendingCrisis = null;
+    window._botsInjetados = false;
     if (typeof GlitchTerminal !== 'undefined') GlitchTerminal.desativar();
     if (typeof VetoresGeopoliticos !== 'undefined') VetoresGeopoliticos.reset();
     if (typeof EntropiaDoRegime !== 'undefined') EntropiaDoRegime.reset();
@@ -3153,7 +3195,7 @@ function loadGame() {
         Object.assign(gameFlags, data.flags || {});
         if (data.dimensional && MotorDimensional) {
             MotorDimensional.metricas = data.dimensional.metricas || MotorDimensional.metricas;
-            MotorDimensional.tags = data.dimensional.tags || [];
+            MotorDimensional.tags = (data.dimensional.tags || []).filter(t => t !== 'singularidade_asi');
             MotorDimensional.casoAtual = data.dimensional.casoAtual || 1;
             MotorDimensional.contadorCrises = data.dimensional.contadorCrises || 0;
             atualizarPainelDimensional();
@@ -3242,6 +3284,7 @@ const LEGACY_TO_DIM = {
     relacaoONGs: 'etica',
     orcamento: 'orcamento'
 };
+const DIM_LABELS = { estabilidade: 'Estabilidade', etica: 'Ética', apoio: 'Apoio', orcamento: 'Orçamento', diplomacia: 'Diplomacia', legado: 'Legado' };
 function showCaseReport(decision) {
     const reportDiv = document.getElementById('case-report');
     if (!reportDiv) return;
@@ -3267,20 +3310,16 @@ function showCaseReport(decision) {
 // Função para alternar sessões
 // Função endGame (ajustada para transição de sessão)
 function endGame(returnOnly = false) {
-    playGameOverSound();
+    if (!returnOnly) playGameOverSound();
     let finalText = '';
     let casesCompleted = state.casosJulgados;
     
     // Verificar dimensão final primeiro (ASI ou dimensional)
-    const dimFinal = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.getDimensaoFinal() : null;
-    
-    if (!returnOnly && dimFinal && dimFinal.singularidade) {
-        return '';
-    }
+    let dimFinal = (typeof MotorDimensional !== 'undefined') ? MotorDimensional.getDimensaoFinal() : null;
     
     // Game over APENAS por métricas dimensionais
     const dim = MotorDimensional?.metricas || {};
-    if (dim.estabilidade < 15) {
+    if (dim.estabilidade < 10) {
         finalText = `${state.playerName}, a estabilidade do país colapsou. A guerra civil engoliu Nova Aurora.`;
     } else if (dim.orcamento <= 0) {
         finalText = `${state.playerName}, o Estado faliu. Sem orçamento, Nova Aurora decretou falência soberana.`;
@@ -3322,7 +3361,7 @@ function endGame(returnOnly = false) {
     // Dimensão Final Quântica
     if (typeof MotorDimensional !== 'undefined') {
         MotorDimensional.carregarEstado();
-        const dimFinal = MotorDimensional.getDimensaoFinal();
+        dimFinal = MotorDimensional.getDimensaoFinal() || dimFinal;
         const dimBox = document.getElementById('dimensao-final');
         if (dimBox) {
             const ngIcon = dimFinal.newGamePlus ? '<br><small>&#9733; New Game+ Desbloqueado</small>' : '';
@@ -3341,6 +3380,9 @@ function endGame(returnOnly = false) {
             localStorage.setItem('tribunal_ng_ready', 'true');
             MotorDimensional.ativarNG();
             MotorDimensional.salvarEstado();
+            finalText += '<br><br><div style="text-align:center;padding:10px;background:#1a3a1a;border:2px solid #2a9d8f;border-radius:8px;">' +
+                '&#9733; <strong style="color:#2a9d8f;">NEW GAME+ DESBLOQUEADO!</strong><br>' +
+                '<span style="font-size:12px;color:#888;">Reinicie o jogo para jogar com 6 casos adicionais de pós-singularidade.</span></div>';
         }
         
         // Verificar achievements quânticos
@@ -3376,14 +3418,23 @@ function endGame(returnOnly = false) {
 
 
 // Funções de Diplomacia (Sessão 1)
+function aplicarEfeitosDimensao(efeitos) {
+    if (typeof MotorDimensional === 'undefined') return;
+    MotorDimensional.carregarEstado();
+    const impacto = converterImpactoParaDimensional(mapearEfeitosParaImpacto(efeitos));
+    MotorDimensional.metricas = FlowAlgebra.aplicarImpacto(MotorDimensional.metricas, impacto);
+    MotorDimensional.metricas.legado = FlowAlgebra.calcularLegado(MotorDimensional.metricas);
+    MotorDimensional.salvarEstado();
+    atualizarPainelDimensional();
+}
+
 function handleDiplomacyImprensa() {
   try {
-    const custos = { fácil: -5, médio: -10, difícil: -15 };
+    const custos = { easy: -5, medium: -10, hard: -15 };
     const custo = custos[state.dificuldade] ?? -10;
-    applyEffects({
-      relacaoImprensa: 15,
-      orcamento: custo
-    });
+    const efeitos = { relacaoImprensa: 15, orcamento: custo };
+    applyEffects(efeitos);
+    aplicarEfeitosDimensao(efeitos);
     showNotification(`Negociação com a imprensa bem-sucedida! Relação +15, Orçamento -${Math.abs(custo)}%.`);
     proceedAfterLocalDiplomacy();
   } catch (error) {
@@ -3394,11 +3445,9 @@ function handleDiplomacyImprensa() {
 
 function handleDiplomacyGoverno() {
   try {
-    applyEffects({
-      relacaoGoverno: 10,
-      relacaoImprensa: -5,
-      orcamento: -1
-    });
+    const efeitos = { relacaoGoverno: 10, relacaoImprensa: -5, orcamento: -1 };
+    applyEffects(efeitos);
+    aplicarEfeitosDimensao(efeitos);
     showNotification('Negociação com o governo concluída! Relação +10, Orçamento -1%.');
     proceedAfterLocalDiplomacy();
   } catch (error) {
@@ -3409,11 +3458,9 @@ function handleDiplomacyGoverno() {
 
 function handleDiplomacyONGs() {
   try {
-    applyEffects({
-      relacaoONGs: 10,
-      relacaoGoverno: -5,
-      orcamento: -1
-    });
+    const efeitos = { relacaoONGs: 10, relacaoGoverno: -5, orcamento: -1 };
+    applyEffects(efeitos);
+    aplicarEfeitosDimensao(efeitos);
     showNotification('Apoio das ONGs garantido! Relação +10, Orçamento -1%.');
     proceedAfterLocalDiplomacy();
   } catch (error) {
@@ -3423,57 +3470,70 @@ function handleDiplomacyONGs() {
 }
 
 function proceedAfterLocalDiplomacy() {
-  transitionScreen('case-screen', 'diplomacy-screen');
-  loadCase(); // Carrega o próximo caso
+  if (window._ultimoResultadoDim) {
+    mostrarTransicaoOrbital(window._ultimoResultadoDim);
+  } else {
+    transitionScreen('case-screen', 'diplomacy-screen');
+    loadCase();
+  }
 }
 
 // Função auxiliar para aplicar efeitos (assumida como existente, mas incluída para clareza)
 function applyEffects(effects) {
-  // Escudo Fiscal ativo?
   const escudoAtivo = window._escudoFiscalAtivo;
   if (escudoAtivo) window._escudoFiscalAtivo = false;
 
-  // Âncora de Ordem ativa?
   const ancoraAtiva = window._ancoraOrdemAtiva;
   if (ancoraAtiva) window._ancoraOrdemAtiva = false;
+
+  const MAPA_KEYS = {
+    orcamento: 'orcamento',
+    apoioPopular: 'apoioPopular',
+    respeitoInstitucional: 'respeitoInstitucional',
+    influenciaPolitica: 'influenciaPolitica',
+    relacaoImprensa: 'relacaoImprensa',
+    relacaoGoverno: 'relacaoGoverno',
+    relacaoONGs: 'relacaoONGs',
+  };
 
   for (const [key, value] of Object.entries(effects)) {
     let valorFinal = value;
     
-    // Escudo Fiscal: reduz 50% de perda de orçamento
     if (escudoAtivo && key === 'orcamento' && value < 0) {
       valorFinal = Math.round(value * 0.5);
       showNotification('🛡️ Escudo Fiscal: perda de orçamento reduzida pela metade!');
     }
     
-    // Âncora de Ordem: congela perda de EST ou ETI
-    if (ancoraAtiva && (key === 'estabilidade' || key === 'etica') && value < 0) {
+    const dimKeyCheck = LEGACY_TO_DIM[key] || key;
+    if (ancoraAtiva && (dimKeyCheck === 'estabilidade' || dimKeyCheck === 'etica') && value < 0) {
       valorFinal = 0;
-      showNotification(`⛓️ Âncora de Ordem: perda de ${key} congelada!`);
+      showNotification(`⛓️ Âncora de Ordem: perda de ${dimKeyCheck} congelada!`);
     }
     
-    const metricElement = document.getElementById(key);
-    if (metricElement) {
-      if (valorFinal > 0) {
-        metricElement.classList.add('metric-increase');
-        setTimeout(() => metricElement.classList.remove('metric-increase'), 1000);
-      } else if (valorFinal < 0) {
-        metricElement.classList.add('metric-decrease');
-        setTimeout(() => metricElement.classList.remove('metric-decrease'), 1000);
+    const stateKey = MAPA_KEYS[key];
+    if (stateKey && state[stateKey] !== undefined) {
+      const atual = state[stateKey];
+      const novo = stateKey === 'orcamento'
+        ? Math.max(0, atual + valorFinal)
+        : Math.max(0, Math.min(100, atual + valorFinal));
+      state[stateKey] = novo;
+      
+      // Atualizar elemento DOM dimensional correspondente
+      const dimKey = LEGACY_TO_DIM[key] || key;
+      const dimId = 'dim' + dimKey.charAt(0).toUpperCase() + dimKey.slice(1);
+      const dimEl = document.getElementById(dimId);
+      if (dimEl) {
+        if (valorFinal > 0) {
+          dimEl.classList.add('metric-increase');
+          setTimeout(() => dimEl.classList.remove('metric-increase'), 1000);
+        } else if (valorFinal < 0) {
+          dimEl.classList.add('metric-decrease');
+          setTimeout(() => dimEl.classList.remove('metric-decrease'), 1000);
+        }
+        dimEl.textContent = novo;
       }
-      metricElement.textContent = Math.max(0, Number(metricElement.textContent) + valorFinal);
-    }
-    if (key === 'orcamento') state.orcamento = Math.max(0, state.orcamento + valorFinal);
-    if (key === 'apoioPopular') state.apoioPopular = Math.max(0, Math.min(100, state.apoioPopular + valorFinal));
-    if (key === 'respeitoInstitucional') state.respeitoInstitucional = Math.max(0, Math.min(100, state.respeitoInstitucional + valorFinal));
-    if (key === 'influenciaPolitica') state.influenciaPolitica = Math.max(0, Math.min(100, state.influenciaPolitica + valorFinal));
-    if (key === 'relacaoImprensa') state.relacaoImprensa = Math.max(0, Math.min(100, state.relacaoImprensa + valorFinal));
-    if (key === 'relacaoGoverno') state.relacaoGoverno = Math.max(0, Math.min(100, state.relacaoGoverno + valorFinal));
-    if (key === 'relacaoONGs') state.relacaoONGs = Math.max(0, Math.min(100, state.relacaoONGs + valorFinal));
-    
-    const progressBar = document.getElementById(`${key}Bar`);
-    if (progressBar) {
-      progressBar.value = state[key] || Number(metricElement.textContent);
+      const dimBar = document.getElementById(dimId + 'Bar');
+      if (dimBar) dimBar.value = novo;
     }
   }
 }
@@ -3637,11 +3697,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const continueButton = document.getElementById('continueButton');
     if (continueButton) {
       continueButton.addEventListener('click', () => {
-        if (typeof PainelOrbital !== 'undefined' && window._ultimoResultadoDim) {
-          mostrarTransicaoOrbital(window._ultimoResultadoDim);
-        } else {
-          transitionScreen('diplomacy-screen', 'media-screen');
-        }
+        transitionScreen('diplomacy-screen', 'media-screen');
       });
     } else {
       console.warn('Botão continueButton não encontrado');
@@ -3720,6 +3776,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const transitionBtn = document.getElementById('transitionContinueBtn');
     if (transitionBtn) {
       transitionBtn.addEventListener('click', () => {
+        if (window._crisisTimer) { clearInterval(window._crisisTimer); window._crisisTimer = null; }
         if (window._pendingCrisis) {
           resolverCriseTensor(window._pendingCrisis);
         } else {
@@ -3752,6 +3809,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (crisis && crisis.opcoes[idx]) {
           applyEffects(crisis.opcoes[idx].efeitos);
           showNotification(`Resultado: ${crisis.opcoes[idx].resultado}`);
+          window._currentCrisisIndex = null;
           updateReputation();
           // Retorna para tela de mídia (mostra resultados)
           transitionScreen('media-screen', 'case-screen');
