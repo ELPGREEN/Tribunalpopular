@@ -40,7 +40,6 @@ const MistralClient = {
             const data = await res.json();
             return data;
         } catch (e) {
-            console.warn(`⚠️ Mistral API falhou para ${agentId}/${action}:`, e.message);
             return { reply: null, fallback: true };
         }
     }

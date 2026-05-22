@@ -107,6 +107,15 @@ Retorne APENAS um array JSON válido, exato, sem markdown:
       userMessage = `Contexto: ${context || 'N/A'} Responda como ${agente.nome} de forma breve em português.`;
   }
 
+  // Se não tem chave da API, pula direto para fallback (sem HTTP error)
+  if (!MISTRAL_API_KEY) {
+    return res.status(200).json({
+      agent: agentId, agentName: agente.nome,
+      reply: null, fallback: true,
+      error: 'MISTRAL_API_KEY não configurada'
+    });
+  }
+
   try {
     const response = await fetch(MISTRAL_API_URL, {
       method: 'POST',
@@ -128,7 +137,11 @@ Retorne APENAS um array JSON válido, exato, sem markdown:
     if (!response.ok) {
       const errText = await response.text();
       console.error('Mistral API error:', response.status, errText);
-      return res.status(502).json({ error: 'Mistral API falhou', details: errText });
+      return res.status(200).json({
+        agent: agentId, agentName: agente.nome,
+        reply: null, fallback: true,
+        error: `Mistral API: ${response.status}`
+      });
     }
 
     const data = await response.json();
