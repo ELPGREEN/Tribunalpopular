@@ -298,39 +298,55 @@ const MidiaGenerator = {
         const efeitos = decisao.efeitos || decisao.impacto || {};
         const apoioDelta = efeitos.apoioPopular || 0;
         const orcDelta = efeitos.orcamento || 0;
-        const tom = apoioDelta > 0 ? 'positiva' : apoioDelta < 0 ? 'negativa' : 'neutra';
+        const eticaDelta = efeitos.etica || efeitos.respeitoInstitucional || 0;
+        const govDelta = efeitos.relacaoGoverno || efeitos.influenciaPolitica || 0;
+        const caseTitulo = (caso.titulo || '').substring(0, 40);
+        const decTexto = (decisao.texto || '').substring(0, 40);
+
+        const manchetesPop = [
+            `Tribunal decide: ${decTexto.toLowerCase()} — povo ${apoioDelta >= 0 ? 'aprova' : 'rejeita'}`,
+            `Decisão histórica: ${caseTitulo} — ${apoioDelta >= 5 ? 'população comemora' : apoioDelta <= -5 ? 'população protesta' : 'nação dividida'}`,
+            `${apoioDelta >= 0 ? 'Apoio' : 'Rejeição'} popular marca julgamento do ${caseTitulo}`,
+        ];
+        const manchetesInst = [
+            `STP julga ${caseTitulo}: ${eticaDelta > 0 ? 'decisão fortalece instituições' : eticaDelta < 0 ? 'decisão abala confiança institucional' : 'análise jurídica aprofunda debate'}`,
+            `Tribunal decide sobre ${caseTitulo}: especialistas apontam ${eticaDelta > 0 ? 'avanço na credibilidade' : eticaDelta < 0 ? 'riscos à imagem do judiciário' : 'implicações legais'}`,
+        ];
+        const manchetesTech = [
+            `${apoioDelta > 0 ? 'Inovação' : 'Tradição'} vence: como a decisão do ${caseTitulo} impacta o futuro digital`,
+            `Decisão do STP: ${apoioDelta > 0 ? 'sinal verde para inovação' : 'freio regulatorio'} no caso ${caseTitulo}`,
+        ];
+        const manchetesPerif = [
+            `Periferias sentem o peso da decisão do ${caseTitulo}: ${apoioDelta < 0 ? 'mais uma vez esquecidas' : 'promessas e incertezas'}`,
+            `${caseTitulo}: tribunal decide de costas para a periferia — ouve apenas ${govDelta > 0 ? 'o governo' : 'as elites'}`,
+        ];
+        const manchetesFin = [
+            `Mercado ${orcDelta > 0 ? 'reaquecido' : 'em alerta'} após decisão do STP sobre ${caseTitulo}`,
+            `Impacto econômico da decisão do ${caseTitulo}: ${orcDelta > 0 ? 'investidores otimistas' : 'incerteza fiscal'}`,
+        ];
+
+        const pick = (arr, seed) => arr[Math.abs(seed || 0) % arr.length];
+        const seed1 = caso.id ? caso.id.charCodeAt(caso.id.length - 1) || 0 : 0;
+        const seed2 = (decTexto.length || 0) + (apoioDelta * 7);
+        const seed3 = (orcDelta * 13) + (eticaDelta * 5);
+        const seed4 = govDelta + state.casosJulgados;
 
         const hq = [
-            {
-                nome: 'Jornal do Povo',
-                manchete: `Tribunal ignora o povo: decisão favorece ${orcDelta > 0 ? 'o capital' : 'a burocracia'}`,
-                cor: '#e63946'
-            },
-            {
-                nome: 'TV Globo',
-                manchete: `Análise: a decisão do tribunal e seus impactos na ${tags.includes('singularidade_asi') ? 'revolução tecnológica' : 'estabilidade nacional'}`,
-                cor: '#c8a951'
-            },
-            {
-                nome: 'TechNova',
-                manchete: `Especialistas avaliam decisão: ${apoioDelta > 0 ? 'avanço significativo' : 'risco calculado'} para o futuro digital`,
-                cor: '#00d4ff'
-            },
-            {
-                nome: 'Voz da Periferia',
-                manchete: `Mais do mesmo: tribunal decide de costas para a maioria`,
-                cor: '#ff6b35'
-            },
-            {
-                nome: 'Financial Times',
-                manchete: `Mercado reage com ${orcDelta > 0 ? 'otimismo' : 'cautela'} à decisão do STP`,
-                cor: '#2ec4b6'
-            }
+            { nome: 'Jornal do Povo', manchete: pick(manchetesPop, seed1 + seed4), cor: '#e63946' },
+            { nome: 'TV Globo', manchete: pick(manchetesInst, seed2), cor: '#c8a951' },
+            { nome: 'TechNova', manchete: pick(manchetesTech, seed3), cor: '#00d4ff' },
+            { nome: 'Voz da Periferia', manchete: pick(manchetesPerif, seed1 + seed2), cor: '#ff6b35' },
+            { nome: 'Financial Times', manchete: pick(manchetesFin, seed3 + seed4), cor: '#2ec4b6' },
         ];
 
         if (tags.includes('singularidade_asi')) {
-            hq.push({ nome: 'Brasil 247', manchete: `O algoritmo está acima da lei? STP entrega soberania à IA`, cor: '#cc2936' });
-            hq.push({ nome: 'O Estado de SP', manchete: `STP pavimenta o caminho para a Singularidade: decisão histórica`, cor: '#7f8c8d' });
+            hq.push({ nome: 'Brasil 247', manchete: `O algoritmo está acima da lei? STP entrega soberania à IA — ${caseTitulo}`, cor: '#cc2936' });
+            hq.push({ nome: 'O Estado de SP', manchete: `STP pavimenta o caminho para a Singularidade: ${caseTitulo} como precedente`, cor: '#7f8c8d' });
+        } else if (tags.includes('conexao_neural') || tags.includes('protocolo_fusao')) {
+            hq.push({ nome: 'Brasil 247', manchete: `STP decide sobre fusão digital: ${apoioDelta > 0 ? 'avanço ou risco?' : 'um freio necessário'}`, cor: '#cc2936' });
+            hq.push({ nome: 'O Estado de SP', manchete: `${caseTitulo}: a decisão que pode redefinir a fronteira entre humano e máquina`, cor: '#7f8c8d' });
+        } else if (tags.includes('corrupcao') || tags.includes('crime')) {
+            hq.push({ nome: 'Brasil 247', manchete: `Corrupção no banco dos réus: ${caseTitulo} — ${apoioDelta > 0 ? 'condenação exemplar' : 'absolvição polêmica'}`, cor: '#cc2936' });
         }
 
         return hq;
@@ -340,17 +356,55 @@ const MidiaGenerator = {
         const tags = caso.tags || [];
         const efeitos = decisao.efeitos || decisao.impacto || {};
         const apoioDelta = efeitos.apoioPopular || 0;
+        const orcDelta = efeitos.orcamento || 0;
+        const caseTitulo = (caso.titulo || '').substring(0, 40);
+        const decTexto = (decisao.texto || '').substring(0, 40);
+
+        const reacoesDig = [
+            apoioDelta > 0 ? `Apoio popular subiu ${apoioDelta}% com essa decisão. O povo ainda acredita na justiça. #STP #${caseTitulo.replace(/\s+/g, '')}`
+                : `Queda de ${Math.abs(apoioDelta)}% no apoio popular. O tribunal está perdendo o povo. #ForaSTP #${caseTitulo.replace(/\s+/g, '')}`,
+            `Análise: decisão do ${caseTitulo} gerou ${Math.abs(apoioDelta)} pontos de ${apoioDelta >= 0 ? 'aprovação' : 'rejeição'}. O placar da história. #Dados #STP`,
+        ];
+
+        const reacoesTech = [
+            orcDelta > 0 ? `Mercado respira: +${orcDelta}% no orçamento após decisão. Capital sempre vence. #TechLivre #STP`
+                : `Orçamento ${orcDelta < 0 ? `encolhe ${Math.abs(orcDelta)}%` : 'estável'}. O custo da justiça. #TechLivre #Dados`,
+            tags.includes('singularidade_asi') ? 'A Singularidade avança. O tribunal está obsoleto. Descentralizem tudo. #Web3 #ASI'
+                : tags.includes('conexao_neural') ? 'Conexão neural na pauta do STP. O futuro é inevitável. #Transumanismo #TechLivre'
+                : 'Estado digital: quanto mais controle, menos liberdade. Essa decisão prova. #TechLivre',
+        ];
+
+        const reacoesEco = [
+            `Enquanto o tribunal decide sobre ${caseTitulo}, o planeta queima. Cadê a urgência climática? #EmergenciaClimatica`,
+            `${caseTitulo}: mais uma decisão que ignora o custo ambiental. A natureza não espera. #STP #MeioAmbiente`,
+        ];
+
+        const reacoesConexao = [
+            `O povo nas ruas ${apoioDelta >= 0 ? 'comemora' : 'protesta'} a decisão do ${caseTitulo}. A política bateu na porta de novo. #ConexaoSP #STP`,
+            `Todo mundo falando do ${caseTitulo} hoje. O que você acha dessa decisão? #ConexaoSP #STP #Opniao`,
+        ];
+
+        const reacoesReal = [
+            `Dado real: apoio ${apoioDelta >= 0 ? `+${apoioDelta}%` : `${apoioDelta}%`} | orçamento ${orcDelta > 0 ? `+${orcDelta}%` : orcDelta < 0 ? `${orcDelta}%` : 'estável'} | caso: ${caseTitulo}. #Analise #STP`,
+            `Métrica do dia: variação de ${Math.abs(apoioDelta)}% no apoio da decisão ${decTexto.substring(0, 20)}. Mercado ${orcDelta >= 0 ? 'aquecido' : 'retraído'}. #DadosAbertos`,
+        ];
+
+        const pick = (arr, seed) => arr[Math.abs(seed || 0) % arr.length];
+        const seed1 = caso.id ? caso.id.charCodeAt(caso.id.length - 1) || 0 : 0;
+        const seed2 = (decTexto.length || 0) + (apoioDelta * 3);
 
         const r = [
-            { nome: 'Digital Sul', texto: apoioDelta > 0 ? 'O povo aprova. Isso é raro. #STP' : 'Mais uma decisão que ninguém pediu. #TribunalSurdo', cor: '#55a630' },
-            { nome: 'Tech Livre', texto: tags.includes('singularidade_asi') ? 'A Singularidade avança. O tribunal está obsoleto. Descentralizem tudo. #Web3' : 'Estado digital: quanto mais controle, menos liberdade. #TechLivre', cor: '#9b5de5' },
-            { nome: 'EcoMente', texto: 'Enquanto decidem burocracias, o planeta queima. #EmergenciaClimatica #STP', cor: '#00af54' },
-            { nome: 'Conexão SP', texto: 'Ninguém liga pra política até ela bater na sua porta. Hoje bateu. #STP', cor: '#f77f00' },
-            { nome: 'Real Digital', texto: `Dado: ${apoioDelta}% de variação no apoio popular. Mercado: ${efeitos.orcamento > 0 ? 'alta' : 'baixa'}. #Analise #STP`, cor: '#118ab2' }
+            { nome: 'Digital Sul', texto: pick(reacoesDig, seed1 + seed2), cor: '#55a630' },
+            { nome: 'Tech Livre', texto: pick(reacoesTech, seed2), cor: '#9b5de5' },
+            { nome: 'EcoMente', texto: pick(reacoesEco, seed1), cor: '#00af54' },
+            { nome: 'Conexão SP', texto: pick(reacoesConexao, seed1 + seed2 + state.casosJulgados), cor: '#f77f00' },
+            { nome: 'Real Digital', texto: pick(reacoesReal, seed2 + state.casosJulgados), cor: '#118ab2' },
         ];
 
         if (tags.includes('singularidade_asi')) {
             r.push({ nome: 'Tech Livre', texto: 'Deus Algorítmico ou Mente S/A? A pergunta errada. O tribunal não decide — apenas atrasa. #Singularidade #ASI', cor: '#9b5de5' });
+        } else if (tags.includes('vigilancia') || tags.includes('cibernetica')) {
+            r.push({ nome: 'Tech Livre', texto: `Vigilância ou segurança? A decisão do ${caseTitulo} redefine a fronteira. #Privacidade #STP`, cor: '#9b5de5' });
         }
 
         return r;
@@ -511,14 +565,16 @@ const AnalisadorEntrevista = {
             ruim: 'Entrevista fraca. A imprensa ignorou ou distorceu sua defesa.'
         };
 
-        const bonusImprensa = score >= 70 ? 8 : score >= 40 ? 2 : -5;
-        const bonusApoio = score >= 70 ? 5 : score >= 40 ? 1 : -3;
+        const bonusImprensa = score >= 70 ? 12 : score >= 40 ? 4 : -8;
+        const bonusApoio = score >= 70 ? 8 : score >= 40 ? 2 : -5;
+        const bonusEtica = defensivo ? -3 : aberto ? 5 : 0;
+        const bonusGoverno = tomScore < 0.4 ? -3 : 3;
 
         return {
             score,
             nivel,
             feedback: feedbacks[nivel],
-            efeitos: { relacaoImprensa: bonusImprensa, apoioPopular: bonusApoio },
+            efeitos: { relacaoImprensa: bonusImprensa, apoioPopular: bonusApoio, respeitoInstitucional: bonusEtica, relacaoGoverno: bonusGoverno },
             coerencia: Math.round(coerencia * 100),
             comprimento: Math.round(comprimento * 100),
             tom: Math.round(tomScore * 100)
@@ -2541,6 +2597,9 @@ function makeDecision(index) {
         showNotification(`🔥 ${resultadoDim.entropiaGatilho.descricao}`);
     }
     
+    // Salvar resultado dimensional ANTES de possíveis early-returns (crise/singularidade)
+    if (resultadoDim) window._ultimoResultadoDim = resultadoDim;
+
     // v4.0 — Singularidade ASI (despertar da Superinteligência)
     if (resultadoDim.singularidadeASI) {
         MotorDimensional.carregarEstado();
@@ -2593,9 +2652,6 @@ function makeDecision(index) {
     }
     
     transitionScreen('media-screen');
-    
-    // Salvar resultado para transição orbital no continue
-    if (resultadoDim) window._ultimoResultadoDim = resultadoDim;
     
     // Auto-show rich media content
     setTimeout(() => viewMedia(), 100);
@@ -3078,7 +3134,7 @@ async function submitInterview() {
 
 function skipInterview() {
     const analise = AnalisadorEntrevista._analisar('', null, null);
-    applyEffects({ relacaoImprensa: -3 });
+    applyEffects({ relacaoImprensa: -5, apoioPopular: -3, respeitoInstitucional: -2 });
     updateReputation();
     showNotification('Você recusou a entrevista. A imprensa não gostou.');
 
@@ -3883,15 +3939,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const crisis = eventosCrise[crisisIdx] || eventosCrise[0];
         if (crisis && crisis.opcoes[idx]) {
           applyEffects(crisis.opcoes[idx].efeitos);
-          showNotification(`Resultado: ${crisis.opcoes[idx].resultado}`);
+          showNotification(`⚡ Crise resolvida: ${crisis.opcoes[idx].texto}`);
           window._currentCrisisIndex = null;
           updateReputation();
           // ASI: tags da crise alimentam a influência dos agentes
           if (typeof AgentesASI !== 'undefined' && crisis.tags) {
               AgentesASI.processarDecisao(crisis.tags);
           }
-          // Retorna para tela de mídia (mostra resultados)
-          transitionScreen('media-screen');
+          // Vai para a transição orbital (como após uma decisão normal)
+          if (window._ultimoResultadoDim) {
+            mostrarTransicaoOrbital(window._ultimoResultadoDim);
+          } else {
+            transitionScreen('case-screen');
+            loadCase();
+            atualizarPainelDimensional();
+            renderizarTags();
+          }
         }
       }
     });
