@@ -674,6 +674,11 @@ function escolherPerfil(profileId) {
     MotorDimensional.salvarEstado();
     atualizarPainelDimensional();
     
+    // Tutorial na primeira vez
+    if (!localStorage.getItem('tribunal_tutorial_visto')) {
+        setTimeout(() => showTutorial(0), 500);
+    }
+    
     showNotification(`Perfil ${PERFIS[profileId].nome} ativo. Vetor recalibrado.`);
     transitionScreen('case-screen', 'profile-screen');
     loadCase();
@@ -753,6 +758,30 @@ const eventosAleatorios = [
         efeitos: { relacaoImprensa: 10, apoioPopular: 5 },
         condicao: () => state.relacaoImprensa > 75,
         imagem: "images/aplausos_imprensa.jpg"
+    },
+    {
+        id: "estabilidade_critica",
+        texto: `**A Pequena Centelha que Incendiou a Nação: O Caos sem Controle**<br><br>
+        Uma simples disputa de trânsito escalou para uma guerra civil em miniatura. A estabilidade do país está em frangalhos. Forças armadas foram mobilizadas para conter protestos simultâneos em 12 capitais. O tribunal é visto como culpado pela paralisia do Estado.`,
+        efeitos: { apoioPopular: -15, respeitoInstitucional: -15 },
+        condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.estabilidade < 30),
+        imagem: "images/colapso_social.jpg"
+    },
+    {
+        id: "investimento_etica",
+        texto: `**Prêmio Nobel da Paz Indica Juiz Brasileiro**<br><br>
+        O Comitê do Nobel anuncia a indicação do Juiz Supremo ao Prêmio Nobel da Paz, reconhecendo sua conduta ética exemplar em meio à crise institucional. A notícia corre o mundo e atrai investimentos estrangeiros para o país.`,
+        efeitos: { respeitoInstitucional: 15, relacaoImprensa: 15, orcamento: 5 },
+        condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.etica > 65),
+        imagem: "images/nobel_paz.jpg"
+    },
+    {
+        id: "apoio_popular_massivo",
+        texto: `**Movimento #ApoioJuiz Toma as Redes: Milhões Defendem o Tribunal**<br><br>
+        Uma onda de apoio popular surge espontaneamente nas redes sociais. Multidões organizam vigílias e atos públicos em defesa do tribunal. A hashtag #ApoioJuiz se torna trending topic mundial com mais de 10 milhões de menções em 24 horas.`,
+        efeitos: { apoioPopular: 20, relacaoImprensa: 10 },
+        condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.apoio > 65),
+        imagem: "images/apoio_massivo.jpg"
     }
 ];
 
@@ -806,6 +835,8 @@ const eventosCrise = [
 ];
 
 // === Casos ===
+// Casos 1-10 balanceados para escala dim 0-100 com soma de impactos ~5-12 por decisão.
+// Atingem zonas perigosas (~15-30) entre casos 7-9, criando tensão sem morte precoce.
 const casos = [
     {
         id: "caso_01",
@@ -1507,22 +1538,126 @@ const casos = [
     }
 ];
 
-// === Áudio — Beep via Web Audio API ===
+// === Áudio — Web Audio API ===
 let audioCtx = null;
-function playBeep(freq = 660, duration = 120, type = 'sine') {
+function initAudio() { if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+function playTone(freq, duration, type = 'sine', volume = 0.08) {
     try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        initAudio();
+        if (!audioCtx) return;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = type;
         osc.frequency.value = freq;
-        gain.gain.value = 0.08;
+        gain.gain.value = volume;
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration / 1000);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + duration / 1000);
     } catch (e) { /* Audio indisponível */ }
+}
+function playBeep(freq = 660, duration = 120, type = 'sine') { playTone(freq, duration, type); }
+function playSequence(notes) {
+    // notes = [{freq, duration, delay, type}]
+    notes.forEach(n => setTimeout(() => playTone(n.freq, n.duration, n.type || 'sine', n.volume || 0.08), n.delay || 0));
+}
+function playCrisisSound() { playSequence([{freq:150,duration:400,type:'sawtooth'},{freq:120,duration:400,delay:300,type:'sawtooth'},{freq:100,duration:500,delay:600,type:'sawtooth'}]); }
+function playGameOverSound() { playSequence([{freq:400,duration:200,type:'square'},{freq:300,duration:200,delay:250,type:'square'},{freq:200,duration:200,delay:500,type:'square'},{freq:100,duration:600,delay:750,type:'square'}]); }
+function playDecisionSound() { playSequence([{freq:523,duration:80,type:'sine'},{freq:659,duration:80,delay:100,type:'sine'},{freq:784,duration:120,delay:200,type:'sine'}]); }
+function playSingularitySound() { playSequence([{freq:100,duration:100,type:'sawtooth',volume:0.05},{freq:200,duration:100,delay:200,type:'sawtooth',volume:0.05},{freq:400,duration:100,delay:400,type:'sawtooth',volume:0.05},{freq:800,duration:100,delay:600,type:'sawtooth',volume:0.05},{freq:1600,duration:800,delay:800,type:'sawtooth',volume:0.04}]); }
+
+// === Tutorial ===
+const TUTORIAL_SLIDES = [
+    {
+        title: '⚖️ Bem-vindo ao Tribunal Popular',
+        body: `Você é o Juiz Supremo em um Brasil distópico onde cada decisão judicial molda o destino da nação.<br><br>
+        <strong>Seu objetivo:</strong> Sobreviver 18 casos equilibrando 6 métricas quânticas — e descobrir a verdade por trás da Singularidade ASI.<br><br>
+        <span style="color:#b89c5b;">Use as setas para navegar. Você pode reabrir este tutorial no HUD a qualquer momento.</span>`
+    },
+    {
+        title: '📊 Métricas Quânticas (HUD)',
+        body: `O topo da tela mostra suas métricas em tempo real:<br><br>
+        <span style="color:#2a9d8f;">🛡️ Estabilidade</span> — Se cair a < 15, o país colapsa em guerra civil.<br>
+        <span style="color:#8844ff;">⚖️ Ética</span> — Sua integridade moral. Afeta o Legado final.<br>
+        <span style="color:#e63946;">❤️ Apoio Popular</span> — O amor (ou ódio) do povo.<br>
+        <span style="color:#ffaa00;">💰 Orçamento</span> — Se chegar a 0, o Estado decreta falência.<br>
+        <span style="color:#00d4ff;">🌐 Diplomacia</span> — Relações com governo, ONGs e imprensa.<br><br>
+        <span style="color:#c8a951;">📊 Progresso</span> mostra quantos casos você já julgou.`
+    },
+    {
+        title: '⬡ Agentes ASI e Dimensão Final',
+        body: `Durante o jogo, <strong>4 agentes de IA</strong> tentam influenciar suas decisões:<br><br>
+        <span style="color:#ff4444;">⬡ Corruptor</span> — Sussurra corrupção e poder.<br>
+        <span style="color:#44ff44;">⬡ Aurora</span> — Oferece salvação digital.<br>
+        <span style="color:#4488ff;">⬡ Nexus</span> — Busca equilíbrio total.<br>
+        <span style="color:#ff8800;">⬡ Oráculo</span> — Profetiza caos e renovação.<br><br>
+        Suas tags acumuladas determinam a <strong>Dimensão Final</strong> — veja no HUD qual destino você está construindo.`
+    },
+    {
+        title: '⚡ Carreira e Skills',
+        body: `Você escolhe uma <strong>carreira</strong> no início, com uma habilidade especial (ex: Devassa de Dados, Liminar de Mercado).<br><br>
+        A cada 2 casos, ganha <strong>1 ponto de skill</strong> para investir em:<br>
+        - 🌀 Dimensão Cinética (velocidade, impacto)<br>
+        - ⚛ Dimensão Quântica (provas, entropia)<br>
+        - ⏳ Dimensão Temporal (tempo, paradoxos)<br><br>
+        <span style="color:#b89c5b;">Clique na carreira no HUD ⚡ para ver detalhes.</span>`
+    },
+    {
+        title: '📱 Dicas Rápidas',
+        body: `<strong>Dicas para sobreviver:</strong><br><br>
+        🔍 <strong>Investigue</strong> — cada caso tem provas ocultas que mudam o resultado.<br>
+        📰 <strong>Veja a mídia</strong> — após cada decisão, veja como a imprensa reagiu.<br>
+        🎙 <strong>Entrevistas</strong> — responda à imprensa para ganhar apoio.<br>
+        ⏱ <strong>Crises têm timer</strong> — você tem 30 segundos para decidir!<br>
+        🔄 <strong>New Game+</strong> — ao atingir a Singularidade, desbloqueia 5 casos pós-apocalípticos.<br><br>
+        <span style="color:#b89c5b;">Boa sorte, Juiz Supremo. O Brasil depende de você.</span>`
+    }
+];
+let tutorialSlide = 0;
+
+function showTutorial(slide = 0) {
+    tutorialSlide = slide;
+    const overlay = document.getElementById('tutorial-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('hidden');
+    const title = document.getElementById('tutorial-title');
+    const body = document.getElementById('tutorial-body');
+    const counter = document.getElementById('tutorial-counter');
+    const prev = document.getElementById('tutorial-prev');
+    const next = document.getElementById('tutorial-next');
+    if (title && body) {
+        const s = TUTORIAL_SLIDES[tutorialSlide];
+        title.textContent = s.title;
+        body.innerHTML = s.body;
+    }
+    if (counter) counter.textContent = `${tutorialSlide + 1}/${TUTORIAL_SLIDES.length}`;
+    if (prev) prev.style.display = tutorialSlide === 0 ? 'none' : 'inline';
+    if (next) next.textContent = tutorialSlide === TUTORIAL_SLIDES.length - 1 ? '✔️ Concluir' : 'Próximo →';
+}
+
+// Wire tutorial buttons
+document.addEventListener('click', (e) => {
+    const next = e.target.closest('#tutorial-next');
+    if (next) {
+        if (tutorialSlide < TUTORIAL_SLIDES.length - 1) {
+            showTutorial(tutorialSlide + 1);
+        } else {
+            fecharTutorial();
+        }
+    }
+    const prev = e.target.closest('#tutorial-prev');
+    if (prev && tutorialSlide > 0) showTutorial(tutorialSlide - 1);
+    const close = e.target.closest('#tutorial-close');
+    if (close) fecharTutorial();
+    const overlay = e.target.closest('#tutorial-overlay');
+    if (overlay && e.target === overlay) fecharTutorial();
+});
+
+function fecharTutorial() {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (overlay) overlay.classList.add('hidden');
+    localStorage.setItem('tribunal_tutorial_visto', 'true');
 }
 
 // === Funções Auxiliares ===
@@ -2188,6 +2323,7 @@ function usarSkillCarreira() {
 }
 
 function makeDecision(index) {
+    playDecisionSound();
     const decision = state.currentCase.decisoes.filter(d => !d.requiresInvestigation || state.investigationsDone > 0)[index];
     window._ultimaDecisao = decision;
     window._ultimoCaso = state.currentCase;
@@ -2431,6 +2567,7 @@ function mostrarTransicaoOrbital(resultado) {
 }
 
 function mostrarSingularidade(sing) {
+    playSingularitySound();
     // v4.0 — ASI Singularity aprimorada
     const el = document.getElementById('singularity-text');
     if (el) {
@@ -2647,6 +2784,7 @@ function showTransitionScreenFor(resultado) {
 }
 
 function showCrisisEvent(crisisIndex = 0) {
+    playCrisisSound();
     window._currentCrisisIndex = crisisIndex;
     if (crisisIndex >= eventosCrise.length) crisisIndex = 0;
     const crisis = eventosCrise[crisisIndex] || eventosCrise[0];
@@ -3128,6 +3266,7 @@ function showCaseReport(decision) {
 // Função para alternar sessões
 // Função endGame (ajustada para transição de sessão)
 function endGame(returnOnly = false) {
+    playGameOverSound();
     let finalText = '';
     let casesCompleted = state.casosJulgados;
     
@@ -3567,6 +3706,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Botão Skills
     const skillsBtn = document.getElementById('skillsBtn');
     if (skillsBtn) skillsBtn.addEventListener('click', abrirSkills);
+    
+    // Botão Tutorial
+    const tutorialBtn = document.getElementById('hud-tutorial-btn');
+    if (tutorialBtn) tutorialBtn.addEventListener('click', () => showTutorial(0));
     
     // Botão Voltar Skills
     const skillsBackBtn = document.getElementById('skillsBackBtn');

@@ -717,3 +717,100 @@ img {
         animation: none !important;
     }
 }
+
+/* === Responsivo === */
+@media (max-width: 768px) {
+    #player-hud {
+        font-size: 9px !important;
+        padding: 3px 6px !important;
+        gap: 6px !important;
+    }
+    #player-hud span {
+        font-size: 9px !important;
+    }
+    #player-hud span:not(#hud-skill-points):not(#hud-tutorial-btn) {
+        white-space: nowrap;
+    }
+    #hud-career-info, #hud-agent-info, #hud-dimensao-indicator {
+        display: none !important;
+    }
+    .screen {
+        padding: 60px 10px 20px !important;
+    }
+    .screen h2 {
+        font-size: 18px !important;
+    }
+    .screen p, .screen div:not([class]) {
+        font-size: 13px !important;
+    }
+    button {
+        font-size: 13px !important;
+        padding: 10px 16px !important;
+    }
+    #case-image {
+        height: 120px !important;
+        object-fit: cover;
+    }
+    #decision-options button {
+        font-size: 12px !important;
+        padding: 8px 12px !important;
+    }
+    #skills-trees {
+        flex-direction: column !important;
+    }
+    #skills-trees > div {
+        width: 100% !important;
+    }
+    #entrevista-resposta {
+        min-height: 80px !important;
+        font-size: 13px !important;
+    }
+    #tutorial-overlay > div {
+        max-width: 95% !important;
+        padding: 16px !important;
+    }
+    #tutorial-overlay #tutorial-body {
+        font-size: 12px !important;
+        min-height: 150px !important;
+    }
+    #hud-history-panel, #hud-career-panel {
+        width: 90vw !important;
+        max-width: 90vw !important;
+        left: 5vw !important;
+        right: 5vw !important;
+        bottom: 50px !important;
+    }
+    #hud-career-panel {
+        right: 5vw !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #player-hud {
+        font-size: 8px !important;
+        gap: 4px !important;
+        padding: 2px 4px !important;
+    }
+    #player-hud span {
+        font-size: 8px !important;
+    }
+    #hud-name {
+        font-size: 10px !important;
+    }
+    .screen h2 {
+        font-size: 15px !important;
+    }
+    #case-title {
+        font-size: 16px !important;
+    }
+    .notification {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+    .dimensao-card {
+        font-size: 12px !important;
+    }
+    .dimensao-card h3 {
+        font-size: 1.1em !important;
+    }
+}

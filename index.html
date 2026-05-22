@@ -162,6 +162,24 @@
     <!-- Notificação -->
     <div id="notification" class="notification" role="alert"></div>
 
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="hidden" style="position:fixed;inset:0;z-index:99999;background:#000000ee;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+      <div style="max-width:600px;width:90%;background:#0d0d1a;border:1px solid #b89c5b66;border-radius:12px;padding:24px;position:relative;">
+        <button id="tutorial-close" style="position:absolute;top:8px;right:12px;background:none;border:none;color:#666;font-size:22px;cursor:pointer;">&times;</button>
+        <div id="tutorial-content">
+          <h3 id="tutorial-title" style="color:#b89c5b;font-family:'Cinzel',serif;margin-bottom:12px;">⚖️ Bem-vindo ao Tribunal Popular</h3>
+          <div id="tutorial-body" style="color:#ccc;font-size:13px;line-height:1.6;min-height:200px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid #2d3748;">
+          <span id="tutorial-counter" style="color:#666;font-size:11px;"></span>
+          <div style="display:flex;gap:8px;">
+            <button id="tutorial-prev" style="background:#2d3748;color:#ccc;border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:12px;display:none;">&larr; Anterior</button>
+            <button id="tutorial-next" style="background:#b89c5b;color:#0a0a1a;border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:12px;">Próximo &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Tela de Transição Dimensional -->
     <div id="transition-screen" class="screen hidden">
       <h2><i class="fas fa-cube"></i> RECALIBRANDO ESPAÇO DE FASES DIMENSIONAL</h2>
@@ -195,6 +213,7 @@
       <span id="hud-agent-info" style="font-size:10px;display:none;"></span>
       <span id="hud-dimensao-indicator" style="font-size:10px;display:none;"></span>
       <span id="hud-skill-points" style="color:#2a9d8f;font-size:10px;margin-left:auto;">🧠 <span id="hud-sp-val">0</span></span>
+      <button id="hud-tutorial-btn" style="background:none;border:none;color:#666;cursor:pointer;font-size:10px;padding:0;margin:0;" title="Ajuda / Tutorial">❓</button>
     </div>
 
     <!-- Tela de Singularidade (Game Over) -->
