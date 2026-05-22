@@ -644,7 +644,7 @@ function escolherCarreira(careerId) {
     if (nameEl) nameEl.textContent = state.playerName;
     const profileNameEl = document.getElementById('profileName');
     if (profileNameEl) profileNameEl.textContent = state.playerName;
-    transitionScreen('profile-screen', 'career-screen');
+    transitionScreen('profile-screen');
     renderizarPerfis();
 }
 
@@ -681,7 +681,7 @@ function escolherPerfil(profileId) {
     }
     
     showNotification(`Perfil ${PERFIS[profileId].nome} ativo. Vetor recalibrado.`);
-    transitionScreen('case-screen', 'profile-screen');
+    transitionScreen('case-screen');
     loadCase();
 }
 const CARREIRAS = {
@@ -1880,17 +1880,45 @@ function atualizarHUD() {
     hud.classList.toggle('hidden', !emJogo || introVisivel || endVisivel || singVisivel);
 }
 
-function transitionScreen(showId, hideId) {
+let _currentScreenId = null;
+
+function hideAllScreens() {
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.add('hidden');
+        s.classList.remove('fade-in');
+        s.style.transition = '';
+        s.style.opacity = '';
+    });
+}
+
+function transitionScreen(showId) {
+    hideAllScreens();
+
     const showScreen = document.getElementById(showId);
-    const hideScreen = document.getElementById(hideId);
     if (!showScreen) {
         console.error(`Tela ${showId} não encontrada`);
         return;
     }
-    if (hideScreen) hideScreen.classList.add('hidden');
+
+    // Começa invisível (opacity:0 via inline) enquanto está display:none
+    showScreen.style.opacity = '0';
     showScreen.classList.remove('hidden');
-    showScreen.classList.add('fade-in');
-    setTimeout(() => showScreen.classList.remove('fade-in'), 500);
+
+    // No próximo frame: transição suave 0 → 1, sem flash
+    requestAnimationFrame(() => {
+        showScreen.style.transition = 'opacity 0.5s ease-in';
+        showScreen.style.opacity = '1';
+    });
+
+    setTimeout(() => {
+        showScreen.style.transition = '';
+        showScreen.style.opacity = '';
+    }, 500);
+    _currentScreenId = showId;
+}
+
+function getCurrentScreenId() {
+    return _currentScreenId;
 }
 
 // === Gestão de Telas ===
@@ -1926,7 +1954,7 @@ function startGame() {
     if (profileName) profileName.textContent = state.playerName;
     const endName = document.getElementById('endName');
     if (endName) endName.textContent = state.playerName;
-    transitionScreen('difficulty-screen', 'intro-screen');
+    transitionScreen('difficulty-screen');
 }
 
 function setDifficulty(level) {
@@ -1952,7 +1980,7 @@ function setDifficulty(level) {
         showNotification('⚡ New Game+ disponível — Multiplicador de Gravidade 1.4×. Complete todos os 10 casos para acessar o pós-singularidade!');
     }
     
-    transitionScreen('career-screen', 'difficulty-screen');
+    transitionScreen('career-screen');
     renderizarCarreiras();
 }
 
@@ -2334,7 +2362,7 @@ function renderCase() {
         if (careerBtn) careerBtn.style.display = 'none';
     }
     updateReputation();
-    transitionScreen('case-screen', null);
+    transitionScreen('case-screen');
 }
 
 // === Lógica de Jogo ===
@@ -2564,7 +2592,7 @@ function makeDecision(index) {
         }
     }
     
-    transitionScreen('media-screen', 'case-screen');
+    transitionScreen('media-screen');
     
     // Salvar resultado para transição orbital no continue
     if (resultadoDim) window._ultimoResultadoDim = resultadoDim;
@@ -2626,11 +2654,12 @@ function mostrarTransicaoOrbital(resultado) {
     window._pendingCrisis = resultado.crise || null;
     window._pendingNewAchievements = resultado.conquistas || [];
     
-    transitionScreen('transition-screen', 'media-screen');
+    transitionScreen('transition-screen');
 }
 
 function mostrarSingularidade(sing) {
     playSingularitySound();
+    transitionScreen('singularity-screen');
     // v4.0 — ASI Singularity aprimorada
     const el = document.getElementById('singularity-text');
     if (el) {
@@ -2692,7 +2721,7 @@ function mostrarSingularidade(sing) {
             }
         }
     }
-    transitionScreen('singularity-screen', 'case-screen');
+    transitionScreen('singularity-screen');
 }
 
 function mostrarAcontecimento(ac) {
@@ -2788,7 +2817,7 @@ function resolverCriseTensor(crise) {
             </button>
         `).join('');
     }
-    transitionScreen('crisis-tensor-screen', 'transition-screen');
+    transitionScreen('crisis-tensor-screen');
 }
 
 function aplicarCriseTensor(idx) {
@@ -2820,7 +2849,7 @@ function aplicarCriseTensor(idx) {
     }
     
     // Go directly to next case (transition already shown before crisis)
-    transitionScreen('case-screen', 'transition-screen');
+    transitionScreen('case-screen');
     loadCase();
     atualizarPainelDimensional();
     renderizarTags();
@@ -2851,7 +2880,7 @@ function showTransitionScreenFor(resultado) {
     if (criseDiv) criseDiv.classList.add('hidden');
     document.getElementById('transitionContinueBtn').textContent = 'Continuar';
     window._pendingCrisis = null;
-    transitionScreen('transition-screen', 'crisis-tensor-screen');
+    transitionScreen('transition-screen');
 }
 
 function showCrisisEvent(crisisIndex = 0) {
@@ -2897,7 +2926,7 @@ function showCrisisEvent(crisisIndex = 0) {
             }, 1000);
         }
     }
-    transitionScreen('media-screen', 'case-screen');
+    transitionScreen('media-screen');
 }
 
 async function viewMedia() {
@@ -2951,7 +2980,7 @@ async function viewMedia() {
             }).catch(() => {});
         }
     }
-    transitionScreen('media-screen', 'case-screen');
+    transitionScreen('media-screen');
 }
 
 function mostrarEntrevista() {
@@ -2971,7 +3000,7 @@ function mostrarEntrevista() {
     if (respostaEl) { respostaEl.value = ''; respostaEl.style.borderColor = '#2d3748'; }
     if (charsEl) charsEl.textContent = '0/500 caracteres';
 
-    transitionScreen('entrevista-screen', 'media-screen');
+    transitionScreen('entrevista-screen');
 }
 
 window.atualizarContagemChars = function() {
@@ -3044,7 +3073,7 @@ async function submitInterview() {
     const mediaHeadline = document.getElementById('media-headline');
     if (mediaHeadline) mediaHeadline.textContent = "Repercussão da sua entrevista...";
 
-    transitionScreen('media-screen', 'entrevista-screen');
+    transitionScreen('media-screen');
 }
 
 function skipInterview() {
@@ -3056,13 +3085,13 @@ function skipInterview() {
     const interviewArea = document.getElementById('media-interview-area');
     if (interviewArea) interviewArea.style.display = 'none';
 
-    transitionScreen('media-screen', 'entrevista-screen');
+    transitionScreen('media-screen');
 }
 
 function showDiplomacyScreen() { // Mantida para compatibilidade
     const diplomacyName = document.getElementById('diplomacyName');
     if (diplomacyName) diplomacyName.textContent = state.playerName;
-    transitionScreen('diplomacy-screen', 'media-screen');
+    transitionScreen('diplomacy-screen');
 }
 
 function diplomacyAction(faction) {
@@ -3078,7 +3107,7 @@ function diplomacyAction(faction) {
         message = 'Diálogos com ONGs fortalecem sua imagem, mas irritam o governo.';
     }
     showNotification(message);
-    transitionScreen('case-screen', 'diplomacy-screen');
+    transitionScreen('case-screen');
     loadCase();
 }
 
@@ -3086,7 +3115,7 @@ function skipDiplomacy() {
     if (window._ultimoResultadoDim) {
         mostrarTransicaoOrbital(window._ultimoResultadoDim);
     } else {
-        transitionScreen('case-screen', 'diplomacy-screen');
+        transitionScreen('case-screen');
         loadCase();
     }
 }
@@ -3132,7 +3161,7 @@ function restartGame() {
     if (typeof EntropiaDoRegime !== 'undefined') EntropiaDoRegime.reset();
     const playerName = document.getElementById('playerName');
     if (playerName) playerName.value = '';
-    transitionScreen('intro-screen', 'end-screen');
+    transitionScreen('intro-screen');
 }
 
 // === Sistema de Rastreamento de Decisões (Branching) ===
@@ -3249,7 +3278,7 @@ function loadGame() {
         }
         if (state.currentCase) {
             renderCase();
-            transitionScreen('case-screen', 'intro-screen');
+            transitionScreen('case-screen');
         } else {
             loadCase();
         }
@@ -3459,7 +3488,7 @@ function endGame(returnOnly = false) {
             (dimHtml ? `<div style="margin-top:8px;">${dimHtml}</div>` : '');
     }
     
-    transitionScreen('end-screen', 'case-screen');
+    transitionScreen('end-screen');
 }
 
 
@@ -3519,7 +3548,7 @@ function proceedAfterLocalDiplomacy() {
   if (window._ultimoResultadoDim) {
     mostrarTransicaoOrbital(window._ultimoResultadoDim);
   } else {
-    transitionScreen('case-screen', 'diplomacy-screen');
+    transitionScreen('case-screen');
     loadCase();
   }
 }
@@ -3622,7 +3651,7 @@ function renderizarTags() {
 
 // === Skills Screen ===
 function abrirSkills() {
-    transitionScreen('skills-screen', 'case-screen');
+    transitionScreen('skills-screen');
     renderizarSkills();
 }
 
@@ -3743,7 +3772,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const continueButton = document.getElementById('continueButton');
     if (continueButton) {
       continueButton.addEventListener('click', () => {
-        transitionScreen('diplomacy-screen', 'media-screen');
+        transitionScreen('diplomacy-screen');
       });
     } else {
       console.warn('Botão continueButton não encontrado');
@@ -3816,7 +3845,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Botão Voltar Skills
     const skillsBackBtn = document.getElementById('skillsBackBtn');
-    if (skillsBackBtn) skillsBackBtn.addEventListener('click', () => transitionScreen('case-screen', 'skills-screen'));
+    if (skillsBackBtn) skillsBackBtn.addEventListener('click', () => transitionScreen('case-screen'));
     
     // Transição Orbital - Continuar
     const transitionBtn = document.getElementById('transitionContinueBtn');
@@ -3826,7 +3855,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window._pendingCrisis) {
           resolverCriseTensor(window._pendingCrisis);
         } else {
-          transitionScreen('case-screen', 'transition-screen');
+          transitionScreen('case-screen');
           loadCase();
           atualizarPainelDimensional();
           renderizarTags();
@@ -3862,7 +3891,7 @@ document.addEventListener('DOMContentLoaded', () => {
               AgentesASI.processarDecisao(crisis.tags);
           }
           // Retorna para tela de mídia (mostra resultados)
-          transitionScreen('media-screen', 'case-screen');
+          transitionScreen('media-screen');
         }
       }
     });
