@@ -2133,6 +2133,13 @@ function gerarSVGParaCasos(titulo, tags = [], id = '') {
 function getImagemSrc(caso) {
     const src = caso.imagem || '';
     if (!src) return gerarSVGParaCasos(caso.titulo, caso.tags || [], caso.id);
+    // Offline-first: placehold.co vira SVG inline, sem network request
+    if (src.includes('placehold.co')) {
+        const raw = (src.match(/text=([^&]+)/) || [])[1] || '';
+        // placehold.co usa + como espaço e %2B como literal +
+        const text = decodeURIComponent(raw.replace(/\+/g, ' ')) || caso.titulo || '';
+        return gerarSVGParaCasos(text, caso.tags || [], caso.id);
+    }
     return src;
 }
 
@@ -2402,16 +2409,15 @@ function makeDecision(index) {
     }
     
     // Avisos suaves para métricas legadas em zero (não matam o jogo)
-    const legacyZero = [];
-    if (state.apoioPopular <= 0) legacyZero.push('Apoio Popular');
-    if (state.respeitoInstitucional <= 0) legacyZero.push('Respeito Institucional');
-    if (state.influenciaPolitica <= 0) legacyZero.push('Influência Política');
-    if (state.relacaoImprensa <= 0) legacyZero.push('Relação com Imprensa');
-    if (state.relacaoGoverno <= 0) legacyZero.push('Relação com Governo');
-    if (state.relacaoONGs <= 0) legacyZero.push('Relação com ONGs');
-    if (state.orcamento <= 0) legacyZero.push('Orçamento');
-    if (legacyZero.length > 0) {
-        showNotification(`⚠️ Crítica: ${legacyZero.join(', ')} em nível crítico!`);
+    const dim = MotorDimensional?.metricas || {};
+    const dimWarnings = [];
+    if (dim.estabilidade < 20) dimWarnings.push('Estabilidade');
+    if (dim.etica < 20) dimWarnings.push('Ética');
+    if (dim.apoio < 20) dimWarnings.push('Apoio Popular');
+    if (dim.orcamento < 20) dimWarnings.push('Orçamento');
+    if (dim.diplomacia < 20) dimWarnings.push('Diplomacia');
+    if (dimWarnings.length > 0) {
+        showNotification(`⚠️ Alerta Dimensional: ${dimWarnings.join(', ')} em nível crítico!`);
     }
     
     // ASI Agents — processar influência dos agentes
