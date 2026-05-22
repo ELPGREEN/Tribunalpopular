@@ -557,7 +557,37 @@ const PainelOrbital = {
         const cx = Math.round((50 / 100) * (gridX - 1));
         const cy = Math.round((50 / 100) * (gridY - 1));
 
-        let html = '<div class="orbital-map"><pre style="font-family:monospace;font-size:14px;line-height:1.2;">';
+        // Fase route: timeline das fases do jogo
+        const totalCases = typeof _casosFonte !== 'undefined' && _casosFonte ? _casosFonte.length : 15;
+        const currentCase = typeof state !== 'undefined' && state ? (state.casosJulgados || 0) + 1 : 1;
+        const fases = [
+            { nome: 'Fase 0', desc: 'Carreira', icone: '🎭', completa: currentCase > 1 },
+            { nome: `Caso ${currentCase}`, desc: 'Julgamento', icone: '⚖️', completa: false, ativa: true },
+        ];
+        // Future phases
+        for (let i = currentCase + 1; i <= Math.min(currentCase + 3, totalCases); i++) {
+            fases.push({ nome: `Caso ${i}`, desc: 'Futuro', icone: '◌', completa: false });
+        }
+        if (currentCase + 3 < totalCases) fases.push({ nome: '...', desc: '', icone: '⋯', completa: false });
+        fases.push({ nome: 'Final', desc: 'Desfecho', icone: '🏛️', completa: false });
+
+        let html = '<div class="orbital-phase-route" style="margin-bottom:12px;padding:8px;background:#0a0a1a;border-radius:6px;border:1px solid #2d3748;">';
+        html += '<div style="display:flex;align-items:center;gap:4px;justify-content:center;flex-wrap:wrap;">';
+        fases.forEach((f, i) => {
+            const cor = f.ativa ? '#b89c5b' : f.completa ? '#2a9d8f' : '#444';
+            const bg = f.ativa ? '#1a1a2e' : f.completa ? '#0a1a0a' : '#0a0a1a';
+            html += `<div style="display:flex;align-items:center;gap:2px;">
+                <div style="padding:4px 8px;border-radius:4px;background:${bg};border:1px solid ${cor};text-align:center;">
+                    <div style="font-size:14px;">${f.icone}</div>
+                    <div style="font-size:9px;color:${cor};font-weight:${f.ativa?'bold':'normal'};">${f.nome}</div>
+                </div>`;
+            if (i < fases.length - 1) html += `<span style="color:#333;font-size:10px;">→</span>`;
+            html += `</div>`;
+        });
+        html += '</div></div>';
+
+        // Orbital grid (classic)
+        html += '<div class="orbital-map"><pre style="font-family:monospace;font-size:14px;line-height:1.2;">';
         html += '      ▲ ESTABILIDADE (ORDEM)\n';
         for (let y = gridY - 1; y >= 0; y--) {
             html += '  │ ';

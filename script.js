@@ -728,62 +728,69 @@ const PERFIS = {
 
 // === Eventos Aleatórios ===
 const eventosAleatorios = [
-    {
-        id: "protestos",
-        texto: `**Noite de Fúria e Cinzas: A Revolta que Paralisou a Capital**<br><br>
-        Milhares de pessoas tomaram as ruas, erguendo barricadas de pneus em chamas. Com a hashtag <strong>#ForaJuiz</strong>, manifestantes expressam indignação contra uma decisão judicial.`,
-        efeitos: { apoioPopular: -10, relacaoImprensa: -5 },
-        condicao: () => state.relacaoImprensa < 25 || state.apoioPopular < 30,
-        imagem: "images/protestos.jpg"
-    },
-    {
-        id: "elogio_ong",
-        texto: `**Um Farol na Tempestade: ONG Reconhece a Coragem do Juiz**<br><br>
-        A ONG Justiça Sem Fronteiras exalta o juiz como exemplo de integridade, oferecendo esperança em meio à crise.`,
-        efeitos: { respeitoInstitucional: 10, relacaoONGs: 10 },
-        condicao: () => state.relacaoONGs > 75,
-        imagem: "images/elogio_ong.jpg"
-    },
-    {
-        id: "vazamento",
-        texto: `**Vazamento Explosivo: Áudios Revelam Conluio**<br><br>
-        Áudios sugerem uma aliança entre o juiz e o governo, abalando a confiança pública e desencadeando investigações.`,
-        efeitos: { influenciaPolitica: -15, relacaoImprensa: -10 },
-        condicao: () => state.relacaoGoverno > 75 && state.relacaoImprensa < 50,
-        imagem: "images/vazamento.jpg"
-    },
-    {
-        id: "aplausos_imprensa",
-        texto: `**Luz na Escuridão: Imprensa Exalta Decisão do Tribunal**<br><br>
-        O Jornal do Povo publica editorial elogiando a imparcialidade do juiz, inspirando confiança na justiça.`,
-        efeitos: { relacaoImprensa: 10, apoioPopular: 5 },
-        condicao: () => state.relacaoImprensa > 75,
-        imagem: "images/aplausos_imprensa.jpg"
-    },
-    {
-        id: "estabilidade_critica",
-        texto: `**A Pequena Centelha que Incendiou a Nação: O Caos sem Controle**<br><br>
-        Uma simples disputa de trânsito escalou para uma guerra civil em miniatura. A estabilidade do país está em frangalhos. Forças armadas foram mobilizadas para conter protestos simultâneos em 12 capitais. O tribunal é visto como culpado pela paralisia do Estado.`,
-        efeitos: { apoioPopular: -15, respeitoInstitucional: -15 },
-        condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.estabilidade < 30),
-        imagem: "images/colapso_social.jpg"
-    },
-    {
-        id: "investimento_etica",
-        texto: `**Prêmio Nobel da Paz Indica Juiz Brasileiro**<br><br>
-        O Comitê do Nobel anuncia a indicação do Juiz Supremo ao Prêmio Nobel da Paz, reconhecendo sua conduta ética exemplar em meio à crise institucional. A notícia corre o mundo e atrai investimentos estrangeiros para o país.`,
-        efeitos: { respeitoInstitucional: 15, relacaoImprensa: 15, orcamento: 5 },
-        condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.etica > 65),
-        imagem: "images/nobel_paz.jpg"
-    },
-    {
-        id: "apoio_popular_massivo",
-        texto: `**Movimento #ApoioJuiz Toma as Redes: Milhões Defendem o Tribunal**<br><br>
-        Uma onda de apoio popular surge espontaneamente nas redes sociais. Multidões organizam vigílias e atos públicos em defesa do tribunal. A hashtag #ApoioJuiz se torna trending topic mundial com mais de 10 milhões de menções em 24 horas.`,
-        efeitos: { apoioPopular: 20, relacaoImprensa: 10 },
-        condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.apoio > 65),
-        imagem: "images/apoio_massivo.jpg"
-    }
+        {
+            id: "protestos",
+            texto: `**Noite de Fúria e Cinzas: A Revolta que Paralisou a Capital**<br><br>
+            Milhares de pessoas tomaram as ruas, erguendo barricadas de pneus em chamas. Com a hashtag <strong>#ForaJuiz</strong>, manifestantes expressam indignação contra uma decisão judicial.`,
+            efeitos: { apoioPopular: -10, relacaoImprensa: -5 },
+            condicao: () => state.relacaoImprensa < 25 || state.apoioPopular < 30,
+            imagem: "images/protestos.jpg",
+            tags: ["insurreicao"]
+        },
+        {
+            id: "elogio_ong",
+            texto: `**Um Farol na Tempestade: ONG Reconhece a Coragem do Juiz**<br><br>
+            A ONG Justiça Sem Fronteiras exalta o juiz como exemplo de integridade, oferecendo esperança em meio à crise.`,
+            efeitos: { respeitoInstitucional: 10, relacaoONGs: 10 },
+            condicao: () => state.relacaoONGs > 75,
+            imagem: "images/elogio_ong.jpg",
+            tags: ["etica"]
+        },
+        {
+            id: "vazamento",
+            texto: `**Vazamento Explosivo: Áudios Revelam Conluio**<br><br>
+            Áudios sugerem uma aliança entre o juiz e o governo, abalando a confiança pública e desencadeando investigações.`,
+            efeitos: { influenciaPolitica: -15, relacaoImprensa: -10 },
+            condicao: () => state.relacaoGoverno > 75 && state.relacaoImprensa < 50,
+            imagem: "images/vazamento.jpg",
+            tags: ["vigilancia"]
+        },
+        {
+            id: "aplausos_imprensa",
+            texto: `**Luz na Escuridão: Imprensa Exalta Decisão do Tribunal**<br><br>
+            O Jornal do Povo publica editorial elogiando a imparcialidade do juiz, inspirando confiança na justiça.`,
+            efeitos: { relacaoImprensa: 10, apoioPopular: 5 },
+            condicao: () => state.relacaoImprensa > 75,
+            imagem: "images/aplausos_imprensa.jpg",
+            tags: []
+        },
+        {
+            id: "estabilidade_critica",
+            texto: `**A Pequena Centelha que Incendiou a Nação: O Caos sem Controle**<br><br>
+            Uma simples disputa de trânsito escalou para uma guerra civil em miniatura. A estabilidade do país está em frangalhos. Forças armadas foram mobilizadas para conter protestos simultâneos em 12 capitais. O tribunal é visto como culpado pela paralisia do Estado.`,
+            efeitos: { apoioPopular: -15, respeitoInstitucional: -15 },
+            condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.estabilidade < 30),
+            imagem: "images/colapso_social.jpg",
+            tags: ["colapso", "vigilancia"]
+        },
+        {
+            id: "investimento_etica",
+            texto: `**Prêmio Nobel da Paz Indica Juiz Brasileiro**<br><br>
+            O Comitê do Nobel anuncia a indicação do Juiz Supremo ao Prêmio Nobel da Paz, reconhecendo sua conduta ética exemplar em meio à crise institucional. A notícia corre o mundo e atrai investimentos estrangeiros para o país.`,
+            efeitos: { respeitoInstitucional: 15, relacaoImprensa: 15, orcamento: 5 },
+            condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.etica > 65),
+            imagem: "images/nobel_paz.jpg",
+            tags: []
+        },
+        {
+            id: "apoio_popular_massivo",
+            texto: `**Movimento #ApoioJuiz Toma as Redes: Milhões Defendem o Tribunal**<br><br>
+            Uma onda de apoio popular surge espontaneamente nas redes sociais. Multidões organizam vigílias e atos públicos em defesa do tribunal. A hashtag #ApoioJuiz se torna trending topic mundial com mais de 10 milhões de menções em 24 horas.`,
+            efeitos: { apoioPopular: 20, relacaoImprensa: 10 },
+            condicao: () => (typeof MotorDimensional !== 'undefined' && MotorDimensional.metricas.apoio > 65),
+            imagem: "images/apoio_massivo.jpg",
+            tags: []
+        }
 ];
 
 // === Eventos de Crise ===
@@ -794,6 +801,7 @@ const eventosCrise = [
         Uma greve histórica paralisa o Judiciário, liderada por juízes que exigem melhores salários e condições. A população está dividida: alguns apoiam a causa, outros veem a paralisação como abandono do dever. Como Juiz Supremo, sua posição será crucial.<br><br>
         A nação observa enquanto o tribunal, símbolo da justiça, enfrenta sua maior prova. Escolha com cuidado: sua decisão pode fortalecer ou destruir a confiança no sistema judicial.`,
         imagem: "images/greve_judiciaria.jpg",
+        tags: ["crise_institucional"],
         opcoes: [
             { texto: "Apoiar a greve e negociar com os juízes", efeitos: { apoioPopular: -10, respeitoInstitucional: 15, relacaoGoverno: -10 }, resultado: "Os juízes encerram a greve após negociações tensas, mas o governo promete represálias, acusando você de fraqueza." },
             { texto: "Condenar a greve e exigir retorno ao trabalho", efeitos: { apoioPopular: 10, respeitoInstitucional: -15, relacaoGoverno: 10 }, resultado: "A greve termina sob pressão, mas o Judiciário fica ressentido, prometendo resistência interna contra suas decisões." },
@@ -805,6 +813,7 @@ const eventosCrise = [
         texto: `**Crise Política: Congresso Ameaça Impeachment**<br><br>
         O Congresso Nacional ameaça abrir processo de impeachment contra o juiz, acusando-o de abuso de autoridade. A pressão política é imensa.`,
         imagem: "images/crise_politica.jpg",
+        tags: ["crise_politica"],
         opcoes: [
             { texto: "Negociar com líderes do Congresso", efeitos: { influenciaPolitica: 20, respeitoInstitucional: -10, relacaoImprensa: -10 }, resultado: "Impeachment arquivado, mas sua imagem sai arranhada." },
             { texto: "Enfrentar o Congresso publicamente", efeitos: { apoioPopular: 15, influenciaPolitica: -15, relacaoGoverno: -15 }, resultado: "População te apoia, mas Congresso vira inimigo." },
@@ -816,6 +825,7 @@ const eventosCrise = [
         texto: `**Crise Econômica: PIB Despenca e Desemprego Explode**<br><br>
         A economia do país entra em recessão. Suas decisões no tribunal têm impacto direto na confiança dos investidores.`,
         imagem: "images/crise_economica.jpg",
+        tags: ["crise_economica", "corporativa"],
         opcoes: [
         { texto: "Acelerar julgamentos de casos econômicos", efeitos: { apoioPopular: -5, influenciaPolitica: 15, relacaoGoverno: 10 }, resultado: "Mercados reagem positivamente, mas parte da população critica." },
             { texto: "Focar em casos sociais para aliviar tensão", efeitos: { apoioPopular: 15, influenciaPolitica: -10, relacaoONGs: 10 }, resultado: "ONGs e população aprovam, mas investidores se retraem." },
@@ -827,6 +837,7 @@ const eventosCrise = [
         texto: `**Ataque Cibernético ao STF!**<br><br>
         Hackers invadem os sistemas do Supremo, vazando documentos sigilosos e decisões confidenciais. A segurança nacional está comprometida.`,
         imagem: "images/crise_cibernetica.jpg",
+        tags: ["vigilancia"],
         opcoes: [
         { texto: "Ordenar investigação federal total", efeitos: { respeitoInstitucional: 15, influenciaPolitica: -5 }, resultado: "Investigação descobre células hackers, mas custa caro aos cofres." },
             { texto: "Contratar empresa privada de segurança", efeitos: { respeitoInstitucional: -10 }, resultado: "Ameaça contida na metade do custo, mas privacidade é questionada." },
@@ -1404,7 +1415,7 @@ const casos = [
         id: "caso_10",
         titulo: "Nó 10: O Voto de Minerva da Singularidade",
         descricao: `O palácio do STF está sem energia. Os servidores da ASI consomem toda a eletricidade do país. Um holograma projeta-se na sala do plenário vazio. "O colapso da função de onda humana está completo. Como último ato de cortesia ao seu cargo de Ministro, permitirei que seu veredito final escolha o destino permanente da raça humana. Como devo governar as mentes de Nova Aurora?"`,
-        imagem: "images/caso_10_barragem.jpg",
+        imagem: "images/caso_10_barragem.avif",
         provas: [
             `A ASI calculou 14 trilhões de futuros possíveis. Em 99.97% deles, a humanidade escolhe a conexão.`,
             `O pulso energético da Singularidade pode ser visto do espaço — uma aurora neural sobre Nova Aurora.`,
@@ -2082,6 +2093,32 @@ function mapearEfeitosParaImpacto(efeitos) {
     return impacto;
 }
 
+function checarEventosAleatorios() {
+    const evento = eventosAleatorios.find(e => typeof e.condicao === 'function' && e.condicao());
+    if (!evento) return null;
+    // Marca como usado para não repetir na mesma transição
+    const idx = eventosAleatorios.indexOf(evento);
+    const usado = window._eventosUsados || [];
+    if (usado.includes(evento.id)) return null;
+    usado.push(evento.id);
+    window._eventosUsados = usado;
+
+    applyEffects(evento.efeitos);
+    updateReputation();
+    if (typeof AgentesASI !== 'undefined' && evento.tags && evento.tags.length > 0) {
+        AgentesASI.processarDecisao(evento.tags);
+    }
+    showNotification(`📰 ${evento.texto.replace(/<[^>]*>/g,'').substring(0,80)}...`);
+
+    // Exibe no case-image se visível
+    const caseImg = document.getElementById('case-image');
+    if (caseImg) {
+        caseImg.src = evento.imagem || gerarSVGParaCasos(evento.id, evento.tags || [], evento.id);
+        caseImg.onerror = () => { caseImg.src = gerarSVGParaCasos(evento.id, evento.tags || [], evento.id); };
+    }
+    return evento;
+}
+
 function loadCase() {
     const arr = getCasosArray();
     if (state.casosJulgados >= arr.length) {
@@ -2105,6 +2142,11 @@ function loadCase() {
     
     showNotification(`Caso ${casoNum} de ${arr.length}: ${state.currentCase.titulo}`);
     renderCase();
+
+    // Eventos aleatórios: checar após renderizar o caso
+    if (casoNum > 1 && Math.random() < 0.25) {
+        checarEventosAleatorios();
+    }
 }
 
 // === Fallback de Imagens — SVG Placeholder Temático ===
@@ -2761,6 +2803,11 @@ function aplicarCriseTensor(idx) {
     atualizarPainelDimensional();
     renderizarTags();
     AchievementsQuanticos.incrementarCrise();
+    
+    // ASI: tags da crise alimentam a influência dos agentes
+    if (typeof AgentesASI !== 'undefined' && crise.tags) {
+        AgentesASI.processarDecisao(crise.tags);
+    }
     
     showNotification(`Crise resolvida: ${opcao.texto}`);
     window._pendingCrisis = null;
@@ -3810,6 +3857,10 @@ document.addEventListener('DOMContentLoaded', () => {
           showNotification(`Resultado: ${crisis.opcoes[idx].resultado}`);
           window._currentCrisisIndex = null;
           updateReputation();
+          // ASI: tags da crise alimentam a influência dos agentes
+          if (typeof AgentesASI !== 'undefined' && crisis.tags) {
+              AgentesASI.processarDecisao(crisis.tags);
+          }
           // Retorna para tela de mídia (mostra resultados)
           transitionScreen('media-screen', 'case-screen');
         }

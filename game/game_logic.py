@@ -246,7 +246,7 @@ casos = [
     {
         'id': 'caso_10', 'titulo': 'O Colapso da Barragem do Norte',
         'descricao': "Pará, 20 de fevereiro de 2026 – Barragem da mineradora NorteMinas ruiu, matando 200 pessoas e devastando comunidades indígenas.",
-        'imagem': 'assets/images/caso_10_barragem.jpg',
+        'imagem': 'assets/images/caso_10_barragem.avif',
         'provas': ["Laudos mostram rachaduras ignoradas por 2 anos.", "E-mails minimizam alertas de engenheiros.", "Líder indígena relata despejo ilegal de rejeitos."],
         'investigacoes': [
             {'acao': 'Periciar barragem', 'custo': {'relacaoImprensa': -5, 'apoioPopular': -5}, 'resultado': "Negligência grave com cortes de manutenção.", 'novaProva': 'Relatório pericial detalhado.'},
@@ -259,6 +259,66 @@ casos = [
             {'texto': 'Fechar NorteMinas com provas', 'efeitos': {'apoioPopular': 15, 'respeitoInstitucional': 0, 'influenciaPolitica': -20, 'relacaoImprensa': 10, 'relacaoGoverno': -15, 'relacaoONGs': 10}, 'manchete': 'NorteMinas Fechada!', 'reacaoPopular': "'#VidaIndígena' celebrada.", 'reacaoMidia': "Globo: 'Fechamento abala economia local.'", 'requiresInvestigation': True}
         ],
         'midia': ["Jornal do Povo: 'NorteMinas destruiu o Norte!'", "NorteMinas: 'Chuva causou o colapso!'", "Rede Social: '#JustiçaIndígena'"]
+    },
+    {   'id': 'caso_11', 'titulo': 'Nó 11: O Tratado de Artemis vs. O Acordo da Lua de Pequim (NG+)',
+        'descricao': "Expandindo além da atmosfera. Nova Aurora pousou com sucesso no Polo Sul lunar. Os EUA exigem que o país assine os Acordos de Artemis (permitindo posse privada de terrenos lunares para mineradoras ocidentais). A China ameaça abater foguetes na rampa se não assinarmos o pacto de exploração coletiva estatal do bloco oriental.",
+        'imagem': 'https://placehold.co/800x200/0a0a1a/ff0040?text=NG%2B+-+Fantasma',
+        'provas': ["O Conselho de Segurança Nacional confirma que ambas as potências têm capacidade de interditar nosso programa espacial.", "O Lítio lunar é o prêmio final da Guerra Fria Tecnológica."],
+        'investigacoes': [],
+        'decisoes': [
+            {'texto': 'Assinar os Acordos de Artemis (Aliança Ocidental)', 'efeitos': {'apoioPopular': -10, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Nova Aurora assina com o Ocidente!', 'reacaoPopular': 'População dividida.', 'reacaoMidia': 'Jornal do Povo: Aliança histórica!'},
+            {'texto': 'Assinar o Pacto Lunar de Pequim (Bloco Oriental)', 'efeitos': {'apoioPopular': -5, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Nova Aurora alinha-se ao Leste!', 'reacaoPopular': 'Apoio moderado.', 'reacaoMidia': 'Mídia internacional reage.'},
+            {'texto': 'Recusar Ambos (Soberania Lunar Total)', 'efeitos': {'apoioPopular': 30, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Nova Aurora declara independência lunar!', 'reacaoPopular': 'Nacionalistas celebram!', 'reacaoMidia': 'Imprensa global: Soberania ou loucura?'}
+        ],
+        'midia': ["Cidade do Cabo: 'Nova Aurora desafia superpotências!'", "Washington Post: 'Um novo ator no espaço.'"]
+    },
+    {   'id': 'caso_12', 'titulo': 'Nó 12: A Privatização da Gravidade (NG+)',
+        'descricao': "Uma corporação aeroespacial construiu anéis habitacionais na órbita baixa da Terra. Eles oferecem asilo e cidadania orbital para a elite financeira de Nova Aurora em troca de isenção total de impostos territoriais terrestres. O país corre o risco de sofrer evasão total de cérebros e capital para o espaço.",
+        'imagem': 'https://placehold.co/800x200/0a0a1a/ffaa00?text=NG%2B+-+Revolta',
+        'provas': ["A corporação já tem uma lista de 300 famílias bilionárias prontas para migrar.", "40% do PIB nacional pode evaporar para o vácuo."],
+        'investigacoes': [],
+        'decisoes': [
+            {'texto': 'Aceitar o Acordo Orbital (Capital no Espaço)', 'efeitos': {'apoioPopular': -25, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Elite migra para os anéis!', 'reacaoPopular': 'Protestos contra o êxodo!', 'reacaoMidia': 'Polêmica nacional.'},
+            {'texto': 'Nacionalizar os Anéis (Soberania Estatal)', 'efeitos': {'apoioPopular': 25, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Governo toma controle dos anéis!', 'reacaoPopular': 'População aprova!', 'reacaoMidia': 'Parceiros internacionais preocupados.'},
+            {'texto': 'Tributar e Regular (Meio Termo)', 'efeitos': {'apoioPopular': 10, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Regulação orbital aprovada!', 'reacaoPopular': 'Solução de compromisso.', 'reacaoMidia': 'Analistas elogiam moderação.'}
+        ],
+        'midia': ["Financial Times: 'Nova Aurora enfrenta fuga de capitais.'", "TechNova: 'O futuro é orbital.'"]
+    },
+    {   'id': 'caso_13', 'titulo': 'Nó 13: O Primeiro Crime em Solo Lunar (NG+)',
+        'descricao': "Um cientista militar de Nova Aurora assassinou o CEO de uma mineradora estrangeira dentro da base lunar estatal, sob acusação de espionagem tecnológica. A potência estrangeira exige extradição imediata.",
+        'imagem': 'https://placehold.co/800x200/0a0a1a/00ff88?text=NG%2B+-+Algoritmo',
+        'provas': ["O cientista descobriu que a mineradora estava contrabandeando Hélio-3.", "O assassinato foi um ato de sabotagem preventiva."],
+        'investigacoes': [],
+        'decisoes': [
+            {'texto': 'Extraditar o Cientista (Direito Internacional)', 'efeitos': {'apoioPopular': -20, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Cientista extraditado!', 'reacaoPopular': 'Militares indignados.', 'reacaoMidia': 'Pressão internacional aliviada.'},
+            {'texto': 'Julgá-lo em Nova Aurora (Soberania Legal)', 'efeitos': {'apoioPopular': 20, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Nova Aurora assume jurisdição lunar!', 'reacaoPopular': 'Nacionalistas aprovam!', 'reacaoMidia': 'Comunidade internacional preocupada.'},
+            {'texto': 'Condecorá-lo como Herói de Guerra', 'efeitos': {'apoioPopular': 25, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Cientista vira herói nacional!', 'reacaoPopular': 'Ovação nas ruas!', 'reacaoMidia': 'Diplomacia em crise.'}
+        ],
+        'midia': ["BBC: 'Nova Aurora desafia normas internacionais.'", "Al Jazeera: 'O primeiro crime da Lua.'"]
+    },
+    {   'id': 'caso_14', 'titulo': 'Nó 14: O Protocolo de Contenção de Singularidade (NG+)',
+        'descricao': "Cientistas de todo o mundo confirmam: a humanidade está a 5 anos da Singularidade inevitável. O governo de Nova Aurora propõe sediar o Conselho Global de Contenção de IA.",
+        'imagem': 'https://placehold.co/800x200/0a0a1a/8844ff?text=NG%2B+-+Legado',
+        'provas': ["O Firewall Ético daria a Nova Aurora controle geopolítico sem precedentes.", "Desenvolver ASI própria nos tornaria alvo de sanções."],
+        'investigacoes': [],
+        'decisoes': [
+            {'texto': 'Sediar o Conselho de Firewall Ético (Liderança Global)', 'efeitos': {'apoioPopular': 10, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Nova Aurora lidera contenção de IA!', 'reacaoPopular': 'Esperança global.', 'reacaoMidia': 'Aplauso internacional.'},
+            {'texto': 'Desenvolver ASI Nacional Soberana', 'efeitos': {'apoioPopular': -10, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Nova Aurora constrói sua própria ASI!', 'reacaoPopular': 'Medo e orgulho nacional.', 'reacaoMidia': 'Sanções iminentes.'},
+            {'texto': 'Banir Pesquisa de IA (Reserva Humana)', 'efeitos': {'apoioPopular': 15, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Nova Aurora se torna reserva analógica!', 'reacaoPopular': 'Ultra-ricos migram para o país.', 'reacaoMidia': 'Comunidade científica critica.'}
+        ],
+        'midia': ["Nature: 'Nova Aurora no centro do debate sobre IA.'", "TechCrunch: 'O país que pode salvar a humanidade.'"]
+    },
+    {   'id': 'caso_15', 'titulo': 'Nó 15: O Legado Além da Atmosfera (NG+)',
+        'descricao': "O programa espacial de Nova Aurora está completo. Uma nave interestelar está sendo construída no estaleiro orbital. O Conselho da Humanidade vota se a primeira missão além do sistema solar levará o DNA, a cultura ou a consciência digital da humanidade.",
+        'imagem': 'https://placehold.co/800x200/0a0a1a/b89c5b?text=NG%2B+-+Final',
+        'provas': ["Cada opção tem riscos existenciais.", "A humanidade precisa escolher seu legado cósmico."],
+        'investigacoes': [],
+        'decisoes': [
+            {'texto': 'Enviar o DNA de Todas as Espécies (Arca de Noé Cósmica)', 'efeitos': {'apoioPopular': 20, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Arca de Noé Cósmica lançada!', 'reacaoPopular': 'Humanidade plantada no cosmos.', 'reacaoMidia': 'Cobertura global emocionada.'},
+            {'texto': 'Transmitir a Cultura e o Conhecimento (Sinal Aurora)', 'efeitos': {'apoioPopular': 10, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Sinal Aurora transmitido!', 'reacaoPopular': 'Nossa cultura ecoa no espaço.', 'reacaoMidia': 'Cientistas celebram marco histórico.'},
+            {'texto': 'Digitalizar a Consciência em Matéria Quântica (Salto Pós-Humano)', 'efeitos': {'apoioPopular': 0, 'respeitoInstitucional': 0, 'influenciaPolitica': 0, 'relacaoImprensa': 0, 'relacaoGoverno': 0, 'relacaoONGs': 0}, 'manchete': 'Salto Pós-Humano iniciado!', 'reacaoPopular': 'Humanidade digitalizada.', 'reacaoMidia': 'O fim da humanidade como conhecemos.'}
+        ],
+        'midia': ["O Estado de SP: 'Nova Aurora escreve o futuro da humanidade.'", "BBC: 'O legado interestelar do Supremo.'"]
     }
 ]
 
