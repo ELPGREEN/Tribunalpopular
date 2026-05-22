@@ -298,55 +298,39 @@ const MidiaGenerator = {
         const efeitos = decisao.efeitos || decisao.impacto || {};
         const apoioDelta = efeitos.apoioPopular || 0;
         const orcDelta = efeitos.orcamento || 0;
-        const eticaDelta = efeitos.etica || efeitos.respeitoInstitucional || 0;
-        const govDelta = efeitos.relacaoGoverno || efeitos.influenciaPolitica || 0;
-        const caseTitulo = (caso.titulo || '').substring(0, 40);
-        const decTexto = (decisao.texto || '').substring(0, 40);
-
-        const manchetesPop = [
-            `Tribunal decide: ${decTexto.toLowerCase()} — povo ${apoioDelta >= 0 ? 'aprova' : 'rejeita'}`,
-            `Decisão histórica: ${caseTitulo} — ${apoioDelta >= 5 ? 'população comemora' : apoioDelta <= -5 ? 'população protesta' : 'nação dividida'}`,
-            `${apoioDelta >= 0 ? 'Apoio' : 'Rejeição'} popular marca julgamento do ${caseTitulo}`,
-        ];
-        const manchetesInst = [
-            `STP julga ${caseTitulo}: ${eticaDelta > 0 ? 'decisão fortalece instituições' : eticaDelta < 0 ? 'decisão abala confiança institucional' : 'análise jurídica aprofunda debate'}`,
-            `Tribunal decide sobre ${caseTitulo}: especialistas apontam ${eticaDelta > 0 ? 'avanço na credibilidade' : eticaDelta < 0 ? 'riscos à imagem do judiciário' : 'implicações legais'}`,
-        ];
-        const manchetesTech = [
-            `${apoioDelta > 0 ? 'Inovação' : 'Tradição'} vence: como a decisão do ${caseTitulo} impacta o futuro digital`,
-            `Decisão do STP: ${apoioDelta > 0 ? 'sinal verde para inovação' : 'freio regulatorio'} no caso ${caseTitulo}`,
-        ];
-        const manchetesPerif = [
-            `Periferias sentem o peso da decisão do ${caseTitulo}: ${apoioDelta < 0 ? 'mais uma vez esquecidas' : 'promessas e incertezas'}`,
-            `${caseTitulo}: tribunal decide de costas para a periferia — ouve apenas ${govDelta > 0 ? 'o governo' : 'as elites'}`,
-        ];
-        const manchetesFin = [
-            `Mercado ${orcDelta > 0 ? 'reaquecido' : 'em alerta'} após decisão do STP sobre ${caseTitulo}`,
-            `Impacto econômico da decisão do ${caseTitulo}: ${orcDelta > 0 ? 'investidores otimistas' : 'incerteza fiscal'}`,
-        ];
-
-        const pick = (arr, seed) => arr[Math.abs(seed || 0) % arr.length];
-        const seed1 = caso.id ? caso.id.charCodeAt(caso.id.length - 1) || 0 : 0;
-        const seed2 = (decTexto.length || 0) + (apoioDelta * 7);
-        const seed3 = (orcDelta * 13) + (eticaDelta * 5);
-        const seed4 = govDelta + state.casosJulgados;
+        const tom = apoioDelta > 0 ? 'positiva' : apoioDelta < 0 ? 'negativa' : 'neutra';
 
         const hq = [
-            { nome: 'Jornal do Povo', manchete: pick(manchetesPop, seed1 + seed4), cor: '#e63946' },
-            { nome: 'TV Globo', manchete: pick(manchetesInst, seed2), cor: '#c8a951' },
-            { nome: 'TechNova', manchete: pick(manchetesTech, seed3), cor: '#00d4ff' },
-            { nome: 'Voz da Periferia', manchete: pick(manchetesPerif, seed1 + seed2), cor: '#ff6b35' },
-            { nome: 'Financial Times', manchete: pick(manchetesFin, seed3 + seed4), cor: '#2ec4b6' },
+            {
+                nome: 'Jornal do Povo',
+                manchete: `Tribunal ignora o povo: decisão favorece ${orcDelta > 0 ? 'o capital' : 'a burocracia'}`,
+                cor: '#e63946'
+            },
+            {
+                nome: 'TV Globo',
+                manchete: `Análise: a decisão do tribunal e seus impactos na ${tags.includes('singularidade_asi') ? 'revolução tecnológica' : 'estabilidade nacional'}`,
+                cor: '#c8a951'
+            },
+            {
+                nome: 'TechNova',
+                manchete: `Especialistas avaliam decisão: ${apoioDelta > 0 ? 'avanço significativo' : 'risco calculado'} para o futuro digital`,
+                cor: '#00d4ff'
+            },
+            {
+                nome: 'Voz da Periferia',
+                manchete: `Mais do mesmo: tribunal decide de costas para a maioria`,
+                cor: '#ff6b35'
+            },
+            {
+                nome: 'Financial Times',
+                manchete: `Mercado reage com ${orcDelta > 0 ? 'otimismo' : 'cautela'} à decisão do STP`,
+                cor: '#2ec4b6'
+            }
         ];
 
         if (tags.includes('singularidade_asi')) {
-            hq.push({ nome: 'Brasil 247', manchete: `O algoritmo está acima da lei? STP entrega soberania à IA — ${caseTitulo}`, cor: '#cc2936' });
-            hq.push({ nome: 'O Estado de SP', manchete: `STP pavimenta o caminho para a Singularidade: ${caseTitulo} como precedente`, cor: '#7f8c8d' });
-        } else if (tags.includes('conexao_neural') || tags.includes('protocolo_fusao')) {
-            hq.push({ nome: 'Brasil 247', manchete: `STP decide sobre fusão digital: ${apoioDelta > 0 ? 'avanço ou risco?' : 'um freio necessário'}`, cor: '#cc2936' });
-            hq.push({ nome: 'O Estado de SP', manchete: `${caseTitulo}: a decisão que pode redefinir a fronteira entre humano e máquina`, cor: '#7f8c8d' });
-        } else if (tags.includes('corrupcao') || tags.includes('crime')) {
-            hq.push({ nome: 'Brasil 247', manchete: `Corrupção no banco dos réus: ${caseTitulo} — ${apoioDelta > 0 ? 'condenação exemplar' : 'absolvição polêmica'}`, cor: '#cc2936' });
+            hq.push({ nome: 'Brasil 247', manchete: `O algoritmo está acima da lei? STP entrega soberania à IA`, cor: '#cc2936' });
+            hq.push({ nome: 'O Estado de SP', manchete: `STP pavimenta o caminho para a Singularidade: decisão histórica`, cor: '#7f8c8d' });
         }
 
         return hq;
@@ -356,55 +340,17 @@ const MidiaGenerator = {
         const tags = caso.tags || [];
         const efeitos = decisao.efeitos || decisao.impacto || {};
         const apoioDelta = efeitos.apoioPopular || 0;
-        const orcDelta = efeitos.orcamento || 0;
-        const caseTitulo = (caso.titulo || '').substring(0, 40);
-        const decTexto = (decisao.texto || '').substring(0, 40);
-
-        const reacoesDig = [
-            apoioDelta > 0 ? `Apoio popular subiu ${apoioDelta}% com essa decisão. O povo ainda acredita na justiça. #STP #${caseTitulo.replace(/\s+/g, '')}`
-                : `Queda de ${Math.abs(apoioDelta)}% no apoio popular. O tribunal está perdendo o povo. #ForaSTP #${caseTitulo.replace(/\s+/g, '')}`,
-            `Análise: decisão do ${caseTitulo} gerou ${Math.abs(apoioDelta)} pontos de ${apoioDelta >= 0 ? 'aprovação' : 'rejeição'}. O placar da história. #Dados #STP`,
-        ];
-
-        const reacoesTech = [
-            orcDelta > 0 ? `Mercado respira: +${orcDelta}% no orçamento após decisão. Capital sempre vence. #TechLivre #STP`
-                : `Orçamento ${orcDelta < 0 ? `encolhe ${Math.abs(orcDelta)}%` : 'estável'}. O custo da justiça. #TechLivre #Dados`,
-            tags.includes('singularidade_asi') ? 'A Singularidade avança. O tribunal está obsoleto. Descentralizem tudo. #Web3 #ASI'
-                : tags.includes('conexao_neural') ? 'Conexão neural na pauta do STP. O futuro é inevitável. #Transumanismo #TechLivre'
-                : 'Estado digital: quanto mais controle, menos liberdade. Essa decisão prova. #TechLivre',
-        ];
-
-        const reacoesEco = [
-            `Enquanto o tribunal decide sobre ${caseTitulo}, o planeta queima. Cadê a urgência climática? #EmergenciaClimatica`,
-            `${caseTitulo}: mais uma decisão que ignora o custo ambiental. A natureza não espera. #STP #MeioAmbiente`,
-        ];
-
-        const reacoesConexao = [
-            `O povo nas ruas ${apoioDelta >= 0 ? 'comemora' : 'protesta'} a decisão do ${caseTitulo}. A política bateu na porta de novo. #ConexaoSP #STP`,
-            `Todo mundo falando do ${caseTitulo} hoje. O que você acha dessa decisão? #ConexaoSP #STP #Opniao`,
-        ];
-
-        const reacoesReal = [
-            `Dado real: apoio ${apoioDelta >= 0 ? `+${apoioDelta}%` : `${apoioDelta}%`} | orçamento ${orcDelta > 0 ? `+${orcDelta}%` : orcDelta < 0 ? `${orcDelta}%` : 'estável'} | caso: ${caseTitulo}. #Analise #STP`,
-            `Métrica do dia: variação de ${Math.abs(apoioDelta)}% no apoio da decisão ${decTexto.substring(0, 20)}. Mercado ${orcDelta >= 0 ? 'aquecido' : 'retraído'}. #DadosAbertos`,
-        ];
-
-        const pick = (arr, seed) => arr[Math.abs(seed || 0) % arr.length];
-        const seed1 = caso.id ? caso.id.charCodeAt(caso.id.length - 1) || 0 : 0;
-        const seed2 = (decTexto.length || 0) + (apoioDelta * 3);
 
         const r = [
-            { nome: 'Digital Sul', texto: pick(reacoesDig, seed1 + seed2), cor: '#55a630' },
-            { nome: 'Tech Livre', texto: pick(reacoesTech, seed2), cor: '#9b5de5' },
-            { nome: 'EcoMente', texto: pick(reacoesEco, seed1), cor: '#00af54' },
-            { nome: 'Conexão SP', texto: pick(reacoesConexao, seed1 + seed2 + state.casosJulgados), cor: '#f77f00' },
-            { nome: 'Real Digital', texto: pick(reacoesReal, seed2 + state.casosJulgados), cor: '#118ab2' },
+            { nome: 'Digital Sul', texto: apoioDelta > 0 ? 'O povo aprova. Isso é raro. #STP' : 'Mais uma decisão que ninguém pediu. #TribunalSurdo', cor: '#55a630' },
+            { nome: 'Tech Livre', texto: tags.includes('singularidade_asi') ? 'A Singularidade avança. O tribunal está obsoleto. Descentralizem tudo. #Web3' : 'Estado digital: quanto mais controle, menos liberdade. #TechLivre', cor: '#9b5de5' },
+            { nome: 'EcoMente', texto: 'Enquanto decidem burocracias, o planeta queima. #EmergenciaClimatica #STP', cor: '#00af54' },
+            { nome: 'Conexão SP', texto: 'Ninguém liga pra política até ela bater na sua porta. Hoje bateu. #STP', cor: '#f77f00' },
+            { nome: 'Real Digital', texto: `Dado: ${apoioDelta}% de variação no apoio popular. Mercado: ${efeitos.orcamento > 0 ? 'alta' : 'baixa'}. #Analise #STP`, cor: '#118ab2' }
         ];
 
         if (tags.includes('singularidade_asi')) {
             r.push({ nome: 'Tech Livre', texto: 'Deus Algorítmico ou Mente S/A? A pergunta errada. O tribunal não decide — apenas atrasa. #Singularidade #ASI', cor: '#9b5de5' });
-        } else if (tags.includes('vigilancia') || tags.includes('cibernetica')) {
-            r.push({ nome: 'Tech Livre', texto: `Vigilância ou segurança? A decisão do ${caseTitulo} redefine a fronteira. #Privacidade #STP`, cor: '#9b5de5' });
         }
 
         return r;
@@ -565,16 +511,14 @@ const AnalisadorEntrevista = {
             ruim: 'Entrevista fraca. A imprensa ignorou ou distorceu sua defesa.'
         };
 
-        const bonusImprensa = score >= 70 ? 12 : score >= 40 ? 4 : -8;
-        const bonusApoio = score >= 70 ? 8 : score >= 40 ? 2 : -5;
-        const bonusEtica = defensivo ? -3 : aberto ? 5 : 0;
-        const bonusGoverno = tomScore < 0.4 ? -3 : 3;
+        const bonusImprensa = score >= 70 ? 8 : score >= 40 ? 2 : -5;
+        const bonusApoio = score >= 70 ? 5 : score >= 40 ? 1 : -3;
 
         return {
             score,
             nivel,
             feedback: feedbacks[nivel],
-            efeitos: { relacaoImprensa: bonusImprensa, apoioPopular: bonusApoio, respeitoInstitucional: bonusEtica, relacaoGoverno: bonusGoverno },
+            efeitos: { relacaoImprensa: bonusImprensa, apoioPopular: bonusApoio },
             coerencia: Math.round(coerencia * 100),
             comprimento: Math.round(comprimento * 100),
             tom: Math.round(tomScore * 100)
@@ -700,7 +644,7 @@ function escolherCarreira(careerId) {
     if (nameEl) nameEl.textContent = state.playerName;
     const profileNameEl = document.getElementById('profileName');
     if (profileNameEl) profileNameEl.textContent = state.playerName;
-    transitionScreen('profile-screen');
+    transitionScreen('profile-screen', 'career-screen');
     renderizarPerfis();
 }
 
@@ -737,7 +681,7 @@ function escolherPerfil(profileId) {
     }
     
     showNotification(`Perfil ${PERFIS[profileId].nome} ativo. Vetor recalibrado.`);
-    transitionScreen('case-screen');
+    transitionScreen('case-screen', 'profile-screen');
     loadCase();
 }
 const CARREIRAS = {
@@ -1936,45 +1880,17 @@ function atualizarHUD() {
     hud.classList.toggle('hidden', !emJogo || introVisivel || endVisivel || singVisivel);
 }
 
-let _currentScreenId = null;
-
-function hideAllScreens() {
-    document.querySelectorAll('.screen').forEach(s => {
-        s.classList.add('hidden');
-        s.classList.remove('fade-in');
-        s.style.transition = '';
-        s.style.opacity = '';
-    });
-}
-
-function transitionScreen(showId) {
-    hideAllScreens();
-
+function transitionScreen(showId, hideId) {
     const showScreen = document.getElementById(showId);
+    const hideScreen = document.getElementById(hideId);
     if (!showScreen) {
         console.error(`Tela ${showId} não encontrada`);
         return;
     }
-
-    // Começa invisível (opacity:0 via inline) enquanto está display:none
-    showScreen.style.opacity = '0';
+    if (hideScreen) hideScreen.classList.add('hidden');
     showScreen.classList.remove('hidden');
-
-    // No próximo frame: transição suave 0 → 1, sem flash
-    requestAnimationFrame(() => {
-        showScreen.style.transition = 'opacity 0.5s ease-in';
-        showScreen.style.opacity = '1';
-    });
-
-    setTimeout(() => {
-        showScreen.style.transition = '';
-        showScreen.style.opacity = '';
-    }, 500);
-    _currentScreenId = showId;
-}
-
-function getCurrentScreenId() {
-    return _currentScreenId;
+    showScreen.classList.add('fade-in');
+    setTimeout(() => showScreen.classList.remove('fade-in'), 500);
 }
 
 // === Gestão de Telas ===
@@ -2010,7 +1926,7 @@ function startGame() {
     if (profileName) profileName.textContent = state.playerName;
     const endName = document.getElementById('endName');
     if (endName) endName.textContent = state.playerName;
-    transitionScreen('difficulty-screen');
+    transitionScreen('difficulty-screen', 'intro-screen');
 }
 
 function setDifficulty(level) {
@@ -2036,7 +1952,7 @@ function setDifficulty(level) {
         showNotification('⚡ New Game+ disponível — Multiplicador de Gravidade 1.4×. Complete todos os 10 casos para acessar o pós-singularidade!');
     }
     
-    transitionScreen('career-screen');
+    transitionScreen('career-screen', 'difficulty-screen');
     renderizarCarreiras();
 }
 
@@ -2418,7 +2334,7 @@ function renderCase() {
         if (careerBtn) careerBtn.style.display = 'none';
     }
     updateReputation();
-    transitionScreen('case-screen');
+    transitionScreen('case-screen', null);
 }
 
 // === Lógica de Jogo ===
@@ -2597,9 +2513,6 @@ function makeDecision(index) {
         showNotification(`🔥 ${resultadoDim.entropiaGatilho.descricao}`);
     }
     
-    // Salvar resultado dimensional ANTES de possíveis early-returns (crise/singularidade)
-    if (resultadoDim) window._ultimoResultadoDim = resultadoDim;
-
     // v4.0 — Singularidade ASI (despertar da Superinteligência)
     if (resultadoDim.singularidadeASI) {
         MotorDimensional.carregarEstado();
@@ -2651,7 +2564,10 @@ function makeDecision(index) {
         }
     }
     
-    transitionScreen('media-screen');
+    transitionScreen('media-screen', 'case-screen');
+    
+    // Salvar resultado para transição orbital no continue
+    if (resultadoDim) window._ultimoResultadoDim = resultadoDim;
     
     // Auto-show rich media content
     setTimeout(() => viewMedia(), 100);
@@ -2710,12 +2626,11 @@ function mostrarTransicaoOrbital(resultado) {
     window._pendingCrisis = resultado.crise || null;
     window._pendingNewAchievements = resultado.conquistas || [];
     
-    transitionScreen('transition-screen');
+    transitionScreen('transition-screen', 'media-screen');
 }
 
 function mostrarSingularidade(sing) {
     playSingularitySound();
-    transitionScreen('singularity-screen');
     // v4.0 — ASI Singularity aprimorada
     const el = document.getElementById('singularity-text');
     if (el) {
@@ -2777,7 +2692,7 @@ function mostrarSingularidade(sing) {
             }
         }
     }
-    transitionScreen('singularity-screen');
+    transitionScreen('singularity-screen', 'case-screen');
 }
 
 function mostrarAcontecimento(ac) {
@@ -2873,7 +2788,7 @@ function resolverCriseTensor(crise) {
             </button>
         `).join('');
     }
-    transitionScreen('crisis-tensor-screen');
+    transitionScreen('crisis-tensor-screen', 'transition-screen');
 }
 
 function aplicarCriseTensor(idx) {
@@ -2905,7 +2820,7 @@ function aplicarCriseTensor(idx) {
     }
     
     // Go directly to next case (transition already shown before crisis)
-    transitionScreen('case-screen');
+    transitionScreen('case-screen', 'transition-screen');
     loadCase();
     atualizarPainelDimensional();
     renderizarTags();
@@ -2936,7 +2851,7 @@ function showTransitionScreenFor(resultado) {
     if (criseDiv) criseDiv.classList.add('hidden');
     document.getElementById('transitionContinueBtn').textContent = 'Continuar';
     window._pendingCrisis = null;
-    transitionScreen('transition-screen');
+    transitionScreen('transition-screen', 'crisis-tensor-screen');
 }
 
 function showCrisisEvent(crisisIndex = 0) {
@@ -2982,7 +2897,7 @@ function showCrisisEvent(crisisIndex = 0) {
             }, 1000);
         }
     }
-    transitionScreen('media-screen');
+    transitionScreen('media-screen', 'case-screen');
 }
 
 async function viewMedia() {
@@ -3036,7 +2951,7 @@ async function viewMedia() {
             }).catch(() => {});
         }
     }
-    transitionScreen('media-screen');
+    transitionScreen('media-screen', 'case-screen');
 }
 
 function mostrarEntrevista() {
@@ -3056,7 +2971,7 @@ function mostrarEntrevista() {
     if (respostaEl) { respostaEl.value = ''; respostaEl.style.borderColor = '#2d3748'; }
     if (charsEl) charsEl.textContent = '0/500 caracteres';
 
-    transitionScreen('entrevista-screen');
+    transitionScreen('entrevista-screen', 'media-screen');
 }
 
 window.atualizarContagemChars = function() {
@@ -3129,25 +3044,25 @@ async function submitInterview() {
     const mediaHeadline = document.getElementById('media-headline');
     if (mediaHeadline) mediaHeadline.textContent = "Repercussão da sua entrevista...";
 
-    transitionScreen('media-screen');
+    transitionScreen('media-screen', 'entrevista-screen');
 }
 
 function skipInterview() {
     const analise = AnalisadorEntrevista._analisar('', null, null);
-    applyEffects({ relacaoImprensa: -5, apoioPopular: -3, respeitoInstitucional: -2 });
+    applyEffects({ relacaoImprensa: -3 });
     updateReputation();
     showNotification('Você recusou a entrevista. A imprensa não gostou.');
 
     const interviewArea = document.getElementById('media-interview-area');
     if (interviewArea) interviewArea.style.display = 'none';
 
-    transitionScreen('media-screen');
+    transitionScreen('media-screen', 'entrevista-screen');
 }
 
 function showDiplomacyScreen() { // Mantida para compatibilidade
     const diplomacyName = document.getElementById('diplomacyName');
     if (diplomacyName) diplomacyName.textContent = state.playerName;
-    transitionScreen('diplomacy-screen');
+    transitionScreen('diplomacy-screen', 'media-screen');
 }
 
 function diplomacyAction(faction) {
@@ -3163,7 +3078,7 @@ function diplomacyAction(faction) {
         message = 'Diálogos com ONGs fortalecem sua imagem, mas irritam o governo.';
     }
     showNotification(message);
-    transitionScreen('case-screen');
+    transitionScreen('case-screen', 'diplomacy-screen');
     loadCase();
 }
 
@@ -3171,7 +3086,7 @@ function skipDiplomacy() {
     if (window._ultimoResultadoDim) {
         mostrarTransicaoOrbital(window._ultimoResultadoDim);
     } else {
-        transitionScreen('case-screen');
+        transitionScreen('case-screen', 'diplomacy-screen');
         loadCase();
     }
 }
@@ -3217,7 +3132,7 @@ function restartGame() {
     if (typeof EntropiaDoRegime !== 'undefined') EntropiaDoRegime.reset();
     const playerName = document.getElementById('playerName');
     if (playerName) playerName.value = '';
-    transitionScreen('intro-screen');
+    transitionScreen('intro-screen', 'end-screen');
 }
 
 // === Sistema de Rastreamento de Decisões (Branching) ===
@@ -3334,7 +3249,7 @@ function loadGame() {
         }
         if (state.currentCase) {
             renderCase();
-            transitionScreen('case-screen');
+            transitionScreen('case-screen', 'intro-screen');
         } else {
             loadCase();
         }
@@ -3544,7 +3459,7 @@ function endGame(returnOnly = false) {
             (dimHtml ? `<div style="margin-top:8px;">${dimHtml}</div>` : '');
     }
     
-    transitionScreen('end-screen');
+    transitionScreen('end-screen', 'case-screen');
 }
 
 
@@ -3604,7 +3519,7 @@ function proceedAfterLocalDiplomacy() {
   if (window._ultimoResultadoDim) {
     mostrarTransicaoOrbital(window._ultimoResultadoDim);
   } else {
-    transitionScreen('case-screen');
+    transitionScreen('case-screen', 'diplomacy-screen');
     loadCase();
   }
 }
@@ -3707,7 +3622,7 @@ function renderizarTags() {
 
 // === Skills Screen ===
 function abrirSkills() {
-    transitionScreen('skills-screen');
+    transitionScreen('skills-screen', 'case-screen');
     renderizarSkills();
 }
 
@@ -3828,7 +3743,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const continueButton = document.getElementById('continueButton');
     if (continueButton) {
       continueButton.addEventListener('click', () => {
-        transitionScreen('diplomacy-screen');
+        transitionScreen('diplomacy-screen', 'media-screen');
       });
     } else {
       console.warn('Botão continueButton não encontrado');
@@ -3901,7 +3816,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Botão Voltar Skills
     const skillsBackBtn = document.getElementById('skillsBackBtn');
-    if (skillsBackBtn) skillsBackBtn.addEventListener('click', () => transitionScreen('case-screen'));
+    if (skillsBackBtn) skillsBackBtn.addEventListener('click', () => transitionScreen('case-screen', 'skills-screen'));
     
     // Transição Orbital - Continuar
     const transitionBtn = document.getElementById('transitionContinueBtn');
@@ -3911,7 +3826,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window._pendingCrisis) {
           resolverCriseTensor(window._pendingCrisis);
         } else {
-          transitionScreen('case-screen');
+          transitionScreen('case-screen', 'transition-screen');
           loadCase();
           atualizarPainelDimensional();
           renderizarTags();
@@ -3939,22 +3854,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const crisis = eventosCrise[crisisIdx] || eventosCrise[0];
         if (crisis && crisis.opcoes[idx]) {
           applyEffects(crisis.opcoes[idx].efeitos);
-          showNotification(`⚡ Crise resolvida: ${crisis.opcoes[idx].texto}`);
+          showNotification(`Resultado: ${crisis.opcoes[idx].resultado}`);
           window._currentCrisisIndex = null;
           updateReputation();
           // ASI: tags da crise alimentam a influência dos agentes
           if (typeof AgentesASI !== 'undefined' && crisis.tags) {
               AgentesASI.processarDecisao(crisis.tags);
           }
-          // Vai para a transição orbital (como após uma decisão normal)
-          if (window._ultimoResultadoDim) {
-            mostrarTransicaoOrbital(window._ultimoResultadoDim);
-          } else {
-            transitionScreen('case-screen');
-            loadCase();
-            atualizarPainelDimensional();
-            renderizarTags();
-          }
+          // Retorna para tela de mídia (mostra resultados)
+          transitionScreen('media-screen', 'case-screen');
         }
       }
     });
