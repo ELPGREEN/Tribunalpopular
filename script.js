@@ -1689,25 +1689,7 @@ function atualizarSkillPointsDisplay() {
 }
 
 function updateReputation() {
-    const metrics = [
-        { id: 'orcamento', bar: 'orcamentoBar' },
-        { id: 'apoioPopular', bar: 'apoioPopularBar' },
-        { id: 'respeitoInstitucional', bar: 'respeitoInstitucionalBar' },
-        { id: 'influenciaPolitica', bar: 'influenciaPoliticaBar' },
-        { id: 'relacaoImprensa', bar: 'relacaoImprensaBar' },
-        { id: 'relacaoGoverno', bar: 'relacaoGovernoBar' },
-        { id: 'relacaoONGs', bar: 'relacaoONGsBar' }
-    ];
-    metrics.forEach(metric => {
-        const element = document.getElementById(metric.id);
-        const bar = document.getElementById(metric.bar);
-        if (element && bar) {
-            element.textContent = state[metric.id];
-            bar.value = state[metric.id];
-        } else {
-            console.warn(`Elemento ${metric.id} ou ${metric.bar} não encontrado`);
-        }
-    });
+    // Legacy update removida — UI usa apenas métricas dimensionais via atualizarHUD()
     atualizarHUD();
 }
 
@@ -2244,7 +2226,7 @@ function renderCase() {
             whisperEl.style.margin = '8px 0';
             whisperEl.style.transition = 'opacity 0.5s';
             whisperEl.style.opacity = '1';
-        });
+        }).catch(() => {});
     }
     caseImage.src = getImagemSrc(currentCase);
     caseImage.onerror = () => handleImageError(caseImage, currentCase);
@@ -2608,7 +2590,7 @@ function mostrarSingularidade(sing) {
                 `;
                 el?.after(revDiv);
             }
-        });
+        }).catch(() => {});
     }
 
     const btns = document.getElementById('singularity-buttons') || document.getElementById('singularityRestartBtn');
@@ -2881,7 +2863,7 @@ async function viewMedia() {
                 botDiv.id = 'agent-bots';
                 botDiv.innerHTML = `<hr style="border-color:${agente.cor}44;margin:8px 0;"><p style="font-size:0.85em;color:${agente.cor};font-weight:bold;">📡 Bots detectados na rede:</p>${botHtml}`;
                 mediaReactions.appendChild(botDiv);
-            });
+            }).catch(() => {});
         }
     }
     transitionScreen('media-screen', 'case-screen');
@@ -3048,7 +3030,7 @@ function restartGame() {
     decisionHistory.length = 0;
     Object.keys(gameFlags).forEach(k => delete gameFlags[k]);
     if (typeof MotorDimensional !== 'undefined') { MotorDimensional.iniciar(); MotorDimensional.salvarEstado(); }
-    if (typeof Skills !== 'undefined') { Skills.reset(); Skills.pontos = 0; Skills.skills.forEach(s => s.nivel = 0); }
+    if (typeof Skills !== 'undefined') { Skills.reset(); }
     window._entrevistaRealizada = null;
     window._currentCrisisIndex = null;
     if (typeof GlitchTerminal !== 'undefined') GlitchTerminal.desativar();
@@ -3245,12 +3227,25 @@ function renderAchievements() {
 }
 
 // === Relatório Pós-Caso ===
+const LEGACY_TO_DIM = {
+    apoioPopular: 'apoio',
+    respeitoInstitucional: 'estabilidade',
+    influenciaPolitica: 'diplomacia',
+    relacaoImprensa: 'etica',
+    relacaoGoverno: 'diplomacia',
+    relacaoONGs: 'etica',
+    orcamento: 'orcamento'
+};
 function showCaseReport(decision) {
     const reportDiv = document.getElementById('case-report');
     if (!reportDiv) return;
     const changes = [];
     for (const [k, v] of Object.entries(decision.efeitos || {})) {
-        if (v !== 0) changes.push(`${k}: ${v > 0 ? '+' : ''}${v}`);
+        if (v !== 0) {
+            const dimKey = LEGACY_TO_DIM[k] || k;
+            const label = dimKey.charAt(0).toUpperCase() + dimKey.slice(1);
+            changes.push(`${label}: ${v > 0 ? '+' : ''}${v}`);
+        }
     }
     reportDiv.innerHTML = `
         <div class="case-report" style="background:#1e293b;padding:12px;border-radius:6px;margin:10px 0;border-left:4px solid #b89c5b;">
